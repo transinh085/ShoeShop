@@ -18,12 +18,22 @@ namespace ShoeShop.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult Contact()
         {
             return View();
         }
 
-        public IActionResult Contact()
+        public IActionResult TrackOrder()
+        {
+            return View();
+        }
+
+        public IActionResult Help()
+        {
+			return View();
+		}
+
+        public IActionResult Products()
         {
             return View();
         }
