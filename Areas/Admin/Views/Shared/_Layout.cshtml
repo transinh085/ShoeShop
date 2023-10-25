@@ -27,7 +27,8 @@
     <!-- END Icons -->
     <!-- Stylesheets -->
     <!-- Dashmix framework -->
-    <link rel="stylesheet" id="css-main" href="~/admin/css/dashmix.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" id="css-main" href="~/admin/css/dashmix.css">
 
     @await RenderSectionAsync("Styles", required: false)
     <!-- END Stylesheets -->
@@ -82,7 +83,7 @@
                 <div class="content-side">
                     <ul class="nav-main">
                         <li class="nav-main-item">
-                            <a class="nav-main-link active" href="gs_backend.html">
+                            <a class="nav-main-link active" asp-controller="Home" asp-action="Index">
                                 <i class="nav-main-link-icon fa fa-rocket"></i>
                                 <span class="nav-main-link-name">Dashboard</span>
                                 <span class="nav-main-link-badge badge rounded-pill bg-primary">3</span>
@@ -228,6 +229,7 @@
     </div>
 
     <script src="~/admin/js/dashmix.app.min.js"></script>
+    <script src="~/admin/js/lib/jquery.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
