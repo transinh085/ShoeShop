@@ -101,7 +101,7 @@
 										</ul>
 									</li>
 									<li>
-										<a asp-controller="home" asp-action="products">Products</a>
+										<a href="products">Products</a>
 									</li>
 									<li>
 										<a href="blog.html">Blog</a>
@@ -137,7 +137,7 @@
 											</ul>
 											<div class="total_drop">
 												<div class="clearfix"><strong>Total</strong><span>$200.00</span></div>
-												<a href="cart.html" class="btn_1 outline">View Cart</a><a href="checkout.html" class="btn_1">Checkout</a>
+												<a href="cart" class="btn_1 outline">View Cart</a><a href="checkout.html" class="btn_1">Checkout</a>
 											</div>
 										</div>
 									</div>
@@ -148,12 +148,12 @@
 								</li>
 								<li>
 									<div class="dropdown dropdown-access">
-										<a href="account.html" class="access_link"><span>Account</span></a>
+										<a href="#sign-in-dialog" id="sign-in" class="access_link"><span>Account</span></a>
 										<div class="dropdown-menu">
 											<a asp-controller="authentication" asp-action="signin" class="btn_1">Sign In or Sign Up</a>
 											<ul>
 												<li>
-													<a asp-controller="home" asp-action="trackorder"><i class="ti-truck"></i>Track your Order</a>
+													<a href="trackorder"><i class="ti-truck"></i>Track your Order</a>
 												</li>
 												<li>
 													<a asp-controller="authentication" asp-action="signin"><i class="ti-package"></i>My Orders</a>
@@ -162,7 +162,7 @@
 													<a asp-controller="authentication" asp-action="signin"><i class="ti-user"></i>My Profile</a>
 												</li>
 												<li>
-													<a asp-controller="home" asp-action="help"><i class="ti-help-alt"></i>Help and Faq</a>
+													<a href="help"><i class="ti-help-alt"></i>Help and Faq</a>
 												</li>
 											</ul>
 										</div>
@@ -304,6 +304,53 @@
 	<!-- page -->
 
 	<div id="toTop"></div><!-- Back to top button -->
+	<!-- Sign-in-dialog -->
+	<div id="sign-in-dialog" class="zoom-anim-dialog mfp-hide">
+		<div class="modal_header">
+			<h3>Sign In</h3>
+		</div>
+		<form>
+			<div class="sign-in-wrapper">
+				<a href="#0" class="social_bt facebook">Login with Facebook</a>
+				<a href="#0" class="social_bt google">Login with Google</a>
+				<div class="divider"><span>Or</span></div>
+				<div class="form-group">
+					<label>Email</label>
+					<input type="email" class="form-control" name="email" id="email">
+					<i class="ti-email"></i>
+				</div>
+				<div class="form-group">
+					<label>Password</label>
+					<input type="password" class="form-control" name="password" id="password" value="">
+					<i class="ti-lock"></i>
+				</div>
+				<div class="clearfix add_bottom_15">
+					<div class="checkboxes float-start">
+						<label class="container_check">
+							Remember me
+							<input type="checkbox">
+							<span class="checkmark"></span>
+						</label>
+					</div>
+					<div class="float-end mt-1"><a id="forgot" href="javascript:void(0);">Forgot Password?</a></div>
+				</div>
+				<div class="text-center">
+					<input type="submit" value="Log In" class="btn_1 full-width">
+					Don’t have an account? <a href="account.html">Sign up</a>
+				</div>
+				<div id="forgot_pw">
+					<div class="form-group">
+						<label>Please confirm login email below</label>
+						<input type="email" class="form-control" name="email_forgot" id="email_forgot">
+						<i class="ti-email"></i>
+					</div>
+					<p>You will receive an email containing a link allowing you to reset your password to a new preferred one.</p>
+					<div class="text-center"><input type="submit" value="Reset Password" class="btn_1"></div>
+				</div>
+			</div>
+		</form>
+		<!--form -->
+	</div>
 	<!-- COMMON SCRIPTS -->
 	<script src="~/js/common_scripts.min.js"></script>
 	<script src="~/js/main.js"></script>

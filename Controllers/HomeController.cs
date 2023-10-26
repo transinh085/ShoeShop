@@ -18,26 +18,31 @@ namespace ShoeShop.Controllers
             return View();
         }
 
+        [Route("contact")]
         public IActionResult Contact()
         {
             return View();
         }
 
+        [Route("treackorder")]
         public IActionResult TrackOrder()
         {
             return View();
         }
 
+        [Route("help")]
         public IActionResult Help()
         {
 			return View();
 		}
 
+        [Route("products")]
         public IActionResult Products()
         {
             return View();
         }
 
+        [Route("cart")]
         public IActionResult Cart()
         {
             return View();
