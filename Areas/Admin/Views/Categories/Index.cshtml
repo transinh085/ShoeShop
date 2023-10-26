@@ -1,10 +1,12 @@
 ﻿@model IEnumerable<ShoeShop.Models.Category>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Quản lý danh mục";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
-
+@section Styles {
+    <link rel="stylesheet" href="~/admin/js/plugins/sweetalert2/sweetalert2.min.css">
+}
 <!-- Hero -->
 <div class="bg-body-light">
     <div class="content content-full">
@@ -15,7 +17,7 @@
                     <li class="breadcrumb-item">
                         <a href="javascript:void(0)">Dashboard</a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">Chuyên mục</li>
+                    <li class="breadcrumb-item active" aria-current="page">Danh mục</li>
                 </ol>
             </nav>
         </div>
@@ -26,7 +28,7 @@
 <div class="content">
     <div class="block block-rounded">
         <div class="block-header block-header-default">
-            <h3 class="block-title">Danh sách chuyên mục</h3>
+            <h3 class="block-title">Danh sách danh mục</h3>
             <div class="block-options">
                 <a class="btn btn-hero btn-primary" asp-action="Create">
                     <i class="fa-regular fa-plus"></i> Thêm mới
@@ -43,7 +45,7 @@
                         <th>
                             @Html.DisplayNameFor(model => model.Name)
                         </th>
-                        <th></th>
+                        <th class="text-center">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -56,10 +58,15 @@
                             <td>
                                 @Html.DisplayFor(modelItem => item.Name)
                             </td>
-                            <td>
-                                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                            <td class="text-center">
+                                <div class="btn-group">
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled" data-bs-toggle="tooltip" aria-label="Edit" data-bs-original-title="Edit">
+                                        <i class="fa fa-pencil-alt"></i>
+                                    </a>
+                                    <button type="button" data-id="@item.Id" class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled btn-delete" data-bs-toggle="tooltip" aria-label="Delete" data-bs-original-title="Delete">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     }
@@ -70,3 +77,35 @@
     </div>
 </div>
 
+@section Scripts {
+    <script src="~/admin/js/plugins/sweetalert2/sweetalert2.min.js"></script>
+    <script>
+        $(document).on("click", ".btn-delete", async function () {
+            let trid = $(this).data("id");
+            let result = await Swal.fire({
+                title: "Are you sure?",
+                text: "Bạn có chắc chắn muốn xoá nhóm môn học?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Vâng, tôi chắc chắn!",
+                cancelButtonText: "Hủy bỏ"
+            });
+
+            if (result.value) {
+                try {
+                    let response = await $.post(`./Categories/Delete/${trid}`);
+                    if (response) {
+                        Swal.fire("Deleted!", "Xóa môn học thành công!", "success");
+                        $(this).closest('tr').remove();
+                    } else {
+                        Swal.fire("Lỗi !", "Xoá môn học không thành công !)", "error");
+                    }
+                } catch (error) {
+                    console.error("Error:", error);
+                    Swal.fire("Lỗi !", "Xoá môn học không thành công !)", "error");
+                }
+            }
+        });
+
+    </script>
+}
