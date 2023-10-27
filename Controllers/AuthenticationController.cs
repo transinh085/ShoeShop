@@ -25,9 +25,10 @@ namespace ShoeShop.Controllers
 
 		public IActionResult Signin()
         {
-			var response = new SigninViewModel();
-			return View(response);
-		}
+            if (_signInManager.IsSignedIn(User)) return RedirectToAction("Index", "Home");
+            var response = new SigninViewModel();
+            return View(response);
+        }
 
 		public IActionResult Register()
 		{
@@ -37,6 +38,7 @@ namespace ShoeShop.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Signin(SigninViewModel loginViewModel)
 		{
+			if (_signInManager.IsSignedIn(User)) return RedirectToAction("Index", "Home");
 			if (!ModelState.IsValid) return View(loginViewModel);
 
 			var user = await _userManager.FindByEmailAsync(loginViewModel.EmailAddress);
@@ -51,6 +53,7 @@ namespace ShoeShop.Controllers
 					var result = await _signInManager.PasswordSignInAsync(user, loginViewModel.Password, false, false);
 					if (result.Succeeded)
 					{
+						Console.WriteLine("success");
 						return RedirectToAction("Index", "Home");
 					}
 				}

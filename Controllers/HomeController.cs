@@ -24,7 +24,7 @@ namespace ShoeShop.Controllers
             return View();
         }
 
-        [Route("treackorder")]
+        [Route("trackorder")]
         public IActionResult TrackOrder()
         {
             return View();

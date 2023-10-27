@@ -19,7 +19,7 @@
 			<div class="col-xl-6 col-lg-6 col-md-8">
 				<div class="box_account">
 					<h3 class="client">Already Client</h3>
-					<div class="form_container">
+					<form class="form_container" asp-action="Signin">
 						<div class="row no-gutters">
 							<div class="col-lg-6 pr-lg-1">
 								<a href="#0" class="social_bt facebook">Login with Facebook</a>
@@ -37,15 +37,15 @@
 						}
 						<div class="form-group">
 							<label asp-for="EmailAddress" class="form-label"></label>
-							<input asp-for="EmailAddress" class="form-control" placeholder="abc@email.com">
+							<input asp-for="EmailAddress" class="form-control mb-1" placeholder="abc@email.com">
 							<span asp-validation-for="EmailAddress" class="d-block text-danger mt-1"></span>
 						</div>
 						<div class="form-group">
 							<label asp-for="Password" class="form-label"></label>
-							<input asp-for="Password" class="form-control" placeholder="************">
+							<input asp-for="Password" class="form-control mb-1" placeholder="************">
 							<span asp-validation-for="Password" class="d-block text-danger mt-1"></span>
 						</div>
-						<div class="clearfix add_bottom_15">
+						<div class="clearfix">
 							<div class="checkboxes float-start">
 								<label class="container_check">
 									Remember me
@@ -55,9 +55,9 @@
 							</div>
 							<div class="float-end"><a id="forgot" href="javascript:void(0);">Lost Password?</a></div>
 						</div>
-						<div class="text-muted text-center">Don't have an Account? <a href="page-signin.html">Sign up</a></div>
+						<div class="text-muted text-center mb-2">Don't have an Account? <a href="page-signin.html">Sign up</a></div>
 						<div class="text-center"><input type="submit" value="Log In" class="btn_1 full-width"></div>
-					</div>
+					</form>
 					<!-- /form_container -->
 				</div>
 				<!-- /box_account -->
@@ -83,3 +83,8 @@
 	</div>
 	<!-- /container -->
 </main>
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}
