@@ -2507,16 +2507,7 @@ header.version_2 .main_header ul.top_tools > li:last-child {
     float: none;
   }
 }
-@media (max-width: 1199px) {
-  header.version_2 .main_header ul.top_tools > li:nth-child(2) {
-    display: none;
-  }
-}
-@media (max-width: 991px) {
-  header.version_2 .main_header ul.top_tools > li:nth-child(3) {
-    display: none;
-  }
-}
+
 header.version_2 .main_header ul.top_tools > li a {
   color: #444;
 }

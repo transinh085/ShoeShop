@@ -45,10 +45,9 @@ namespace ShoeShop.Controllers
 				if (passwordCheck)
 				{
 					//Password correct, sign in
-					var result = await _signInManager.PasswordSignInAsync(user, loginViewModel.Password, false, false);
+					var result = await _signInManager.PasswordSignInAsync(user, loginViewModel.Password, loginViewModel.RememberMe, true);
 					if (result.Succeeded)
 					{
-						Console.WriteLine("success");
 						return RedirectToAction("Index", "Home");
 					}
 				}
