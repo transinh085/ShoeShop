@@ -47,9 +47,9 @@
 						</div>
 						<div class="clearfix">
 							<div class="checkboxes float-start">
-								<label class="container_check">
-									Remember me
-									<input type="checkbox">
+								<label class="container_check" asp-for="RememberMe">
+									@Html.DisplayNameFor(m => m.RememberMe)
+									<input type="checkbox" asp-for="RememberMe">
 									<span class="checkmark"></span>
 								</label>
 							</div>
