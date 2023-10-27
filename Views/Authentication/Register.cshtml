@@ -1,4 +1,6 @@
-﻿@{
+﻿@using ShoeShop.ViewModels.Authentication;
+@model RegisterViewModel;
+@{
 	ViewData["Title"] = "Register";
 }
 
@@ -7,7 +9,6 @@
 }
 
 <main class="bg_gray">
-
 	<div class="container margin_60">
 		<div class="page_header">
 			<h1 class="text-center">Create an Account</h1>
@@ -17,141 +18,35 @@
 			<div class="col-xl-6 col-lg-6 col-md-8">
 				<div class="box_account">
 					<h3 class="new_client">New Client</h3> <small class="float-right pt-2">* Required Fields</small>
-					<div class="form_container">
+					@if (TempData["Error"] != null)
+					{
+						<div class="col-md-12 alert alert-danger mt-3">
+							<span><b>Sorry!</b> - @TempData["Error"]</span>
+						</div>
+					}
+					<form class="form_container" asp-action="Register">
 						<div class="form-group">
-							<input type="email" class="form-control" name="email" id="email_2" placeholder="Email*">
+							<label asp-for="UserName" class="form-label"></label>
+							<input asp-for="UserName" class="form-control mb-1" placeholder="Alex hgbaodev">
+							<span asp-validation-for="UserName" class="d-block text-danger mt-1"></span>
 						</div>
 						<div class="form-group">
-							<input type="password" class="form-control" name="password_in_2" id="password_in_2" value="" placeholder="Password*">
+							<label asp-for="EmailAddress" class="form-label"></label>
+							<input asp-for="EmailAddress" class="form-control mb-1" placeholder="abc@email.com">
+							<span asp-validation-for="EmailAddress" class="d-block text-danger mt-1"></span>
 						</div>
-						<hr>
 						<div class="form-group">
-							<label class="container_radio" style="display: inline-block; margin-right: 15px;">
-								Private
-								<input type="radio" name="client_type" checked value="private">
-								<span class="checkmark"></span>
-							</label>
-							<label class="container_radio" style="display: inline-block;">
-								Company
-								<input type="radio" name="client_type" value="company">
-								<span class="checkmark"></span>
-							</label>
+							<label asp-for="Password" class="form-label">Password</label>
+							<input asp-for="Password" class="form-control mb-1" placeholder="************">
+							<span asp-validation-for="Password" class="d-block text-danger mt-1"></span>
 						</div>
-						<div class="private box">
-							<div class="row no-gutters">
-								<div class="col-6 pr-1">
-									<div class="form-group">
-										<input type="text" class="form-control" placeholder="Name*">
-									</div>
-								</div>
-								<div class="col-6 pl-1">
-									<div class="form-group">
-										<input type="text" class="form-control" placeholder="Last Name*">
-									</div>
-								</div>
-								<div class="col-12">
-									<div class="form-group">
-										<input type="text" class="form-control" placeholder="Full Address*">
-									</div>
-								</div>
-							</div>
-							<!-- /row -->
-							<div class="row no-gutters">
-								<div class="col-6 pr-1">
-									<div class="form-group">
-										<input type="text" class="form-control" placeholder="City*">
-									</div>
-								</div>
-								<div class="col-6 pl-1">
-									<div class="form-group">
-										<input type="text" class="form-control" placeholder="Postal Code*">
-									</div>
-								</div>
-							</div>
-							<!-- /row -->
-
-							<div class="row no-gutters">
-								<div class="col-6 pr-1">
-									<div class="form-group">
-										<div class="custom-select-form">
-											<select class="wide add_bottom_10" name="country" id="country">
-												<option value="" selected>Country*</option>
-												<option value="Europe">Europe</option>
-												<option value="United states">United states</option>
-												<option value="Asia">Asia</option>
-											</select>
-										</div>
-									</div>
-								</div>
-								<div class="col-6 pl-1">
-									<div class="form-group">
-										<input type="text" class="form-control" placeholder="Telephone *">
-									</div>
-								</div>
-							</div>
-							<!-- /row -->
-
-						</div>
-						<!-- /private -->
-						<div class="company box" style="display: none;">
-							<div class="row no-gutters">
-								<div class="col-12">
-									<div class="form-group">
-										<input type="text" class="form-control" placeholder="Company Name*">
-									</div>
-								</div>
-								<div class="col-12">
-									<div class="form-group">
-										<input type="text" class="form-control" placeholder="Full Address">
-									</div>
-								</div>
-							</div>
-							<!-- /row -->
-							<div class="row no-gutters">
-								<div class="col-6 pr-1">
-									<div class="form-group">
-										<input type="text" class="form-control" placeholder="City*">
-									</div>
-								</div>
-								<div class="col-6 pl-1">
-									<div class="form-group">
-										<input type="text" class="form-control" placeholder="Postal Code*">
-									</div>
-								</div>
-							</div>
-							<!-- /row -->
-							<div class="row no-gutters">
-								<div class="col-6 pr-1">
-									<div class="form-group">
-										<div class="custom-select-form">
-											<select class="wide add_bottom_10" name="country" id="country_2">
-												<option value="" selected>Country*</option>
-												<option value="Europe">Europe</option>
-												<option value="United states">United states</option>
-												<option value="Asia">Asia</option>
-											</select>
-										</div>
-									</div>
-								</div>
-								<div class="col-6 pl-1">
-									<div class="form-group">
-										<input type="text" class="form-control" placeholder="Telephone *">
-									</div>
-								</div>
-							</div>
-							<!-- /row -->
-						</div>
-						<!-- /company -->
-						<hr>
 						<div class="form-group">
-							<label class="container_check">
-								Accept <a href="#0">Terms and conditions</a>
-								<input type="checkbox">
-								<span class="checkmark"></span>
-							</label>
+							<label asp-for="ConfirmPassword" class="form-label">Comfirm password</label>
+							<input asp-for="ConfirmPassword" class="form-control mb-1" placeholder="************">
+							<span asp-validation-for="ConfirmPassword" class="d-block text-danger mt-1"></span>
 						</div>
 						<div class="text-center"><input type="submit" value="Register" class="btn_1 full-width"></div>
-					</div>
+					</form>
 					<!-- /form_container -->
 				</div>
 				<!-- /box_account -->
@@ -161,3 +56,9 @@
 	</div>
 	<!-- /container -->
 </main>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}
