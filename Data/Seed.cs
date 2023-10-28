@@ -19,13 +19,25 @@ namespace ShoeShop.Data
 					{
 						new Category
 						{
-							Name = "Thể thao"
+							Name = "Sport"
 						},
 						new Category
 						{
-							Name = "Chạy bộ"
+							Name = "Jogging"
+                        },
+						new Category
+						{
+							Name = "Running"
+                        },
+                        new Category
+						{
+							Name = "Basketball"
 						},
-					});
+						new Category
+						{
+							Name = "Hiking"
+						}
+                    });
 					context.SaveChanges();
 				}
 			}

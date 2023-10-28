@@ -139,7 +139,6 @@ namespace ShoeShop.Areas.Admin.Controllers
 
         // POST: Admin/Colors/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Color == null)
