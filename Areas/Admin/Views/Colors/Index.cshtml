@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<ShoeShop.Models.Color>
 
 @{
-    ViewData["Title"] = "Quản lý màu sắc";
+    ViewData["Title"] = "Quản lý Colors";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
@@ -13,13 +13,13 @@
 <div class="bg-body-light">
     <div class="content content-full">
         <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
-            <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">Màu sắc</h1>
+            <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">Colors</h1>
             <nav class="flex-shrink-0 my-2 my-sm-0 ms-sm-3" aria-label="breadcrumb">
                 <ol class="breadcrumb breadcrumb-alt">
                     <li class="breadcrumb-item">
                         <a href="javascript:void(0)">Dashboard</a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">Màu sắc</li>
+                    <li class="breadcrumb-item active" aria-current="page">Colors</li>
                 </ol>
             </nav>
         </div>
@@ -31,10 +31,10 @@
 <div class="content">
     <div class="block block-rounded">
         <div class="block-header block-header-default">
-            <h3 class="block-title">Danh sách màu sắc</h3>
+            <h3 class="block-title">List Colors</h3>
             <div class="block-options">
                 <a class="btn btn-hero btn-primary" asp-action="Create">
-                    <i class="fa-regular fa-plus"></i> Thêm mới
+                    <i class="fa-regular fa-plus"></i> Add
                 </a>
             </div>
         </div>
@@ -87,25 +87,25 @@
             let trid = $(this).data("id");
             let result = await Swal.fire({
                 title: "Are you sure?",
-                text: "Bạn có chắc chắn muốn màu sắc?",
+                text: "Would you like to delete this color?",
                 icon: "warning",
                 showCancelButton: true,
-                confirmButtonText: "Vâng, tôi chắc chắn!",
-                cancelButtonText: "Hủy bỏ"
+                confirmButtonText: "Yes, I'm sure!",
+                cancelButtonText: "Cancel"
             });
 
             if (result.value) {
                 try {
                     let response = await $.post(`./Colors/Delete/${trid}`);
                     if (response) {
-                        Swal.fire("Deleted!", "Xóa màu sắc thành công!", "success");
+                        Swal.fire("Deleted!", "Successfully deleted the color.", "success");
                         $(this).closest('tr').remove();
                     } else {
-                        Swal.fire("Lỗi !", "Xoá màu sắc không thành công !)", "error");
+                        Swal.fire("Lỗi !", "Deletion of the color was not successful.", "error");
                     }
                 } catch (error) {
                     console.error("Error:", error);
-                    Swal.fire("Lỗi !", "Xoá màu sắc không thành công !)", "error");
+                    Swal.fire("Lỗi !", "Deletion of the color was not successful.", "error");
                 }
             }
         });

@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<ShoeShop.Models.Category>
 
 @{
-    ViewData["Title"] = "Quản lý danh mục";
+    ViewData["Title"] = "Quản lý Categories";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 @section Styles {
@@ -11,13 +11,13 @@
 <div class="bg-body-light">
     <div class="content content-full">
         <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
-            <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">Chuyên mục</h1>
+            <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">Categories</h1>
             <nav class="flex-shrink-0 my-2 my-sm-0 ms-sm-3" aria-label="breadcrumb">
                 <ol class="breadcrumb breadcrumb-alt">
                     <li class="breadcrumb-item">
                         <a href="javascript:void(0)">Dashboard</a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">Danh mục</li>
+                    <li class="breadcrumb-item active" aria-current="page">Categories</li>
                 </ol>
             </nav>
         </div>
@@ -28,10 +28,10 @@
 <div class="content">
     <div class="block block-rounded">
         <div class="block-header block-header-default">
-            <h3 class="block-title">Danh sách danh mục</h3>
+            <h3 class="block-title">List Categories</h3>
             <div class="block-options">
                 <a class="btn btn-hero btn-primary" asp-action="Create">
-                    <i class="fa-regular fa-plus"></i> Thêm mới
+                    <i class="fa-regular fa-plus"></i> Add
                 </a>
             </div>
         </div>
@@ -84,25 +84,25 @@
             let trid = $(this).data("id");
             let result = await Swal.fire({
                 title: "Are you sure?",
-                text: "Bạn có chắc chắn muốn xoá nhóm môn học?",
+                text: "Would you like to delete this category?",
                 icon: "warning",
                 showCancelButton: true,
-                confirmButtonText: "Vâng, tôi chắc chắn!",
-                cancelButtonText: "Hủy bỏ"
+                confirmButtonText: "Yes, I'm sure",
+                cancelButtonText: "Cannel"
             });
 
             if (result.value) {
                 try {
                     let response = await $.post(`./Categories/Delete/${trid}`);
                     if (response) {
-                        Swal.fire("Deleted!", "Xóa môn học thành công!", "success");
+                        Swal.fire("Deleted!", "Successfully deleted the category.", "success");
                         $(this).closest('tr').remove();
                     } else {
-                        Swal.fire("Lỗi !", "Xoá môn học không thành công !)", "error");
+                        Swal.fire("Lỗi !", "Deletion of the category was not successful.", "error");
                     }
                 } catch (error) {
                     console.error("Error:", error);
-                    Swal.fire("Lỗi !", "Xoá môn học không thành công !)", "error");
+                    Swal.fire("Lỗi !", "Deletion of the category was not successful.", "error");
                 }
             }
         });
