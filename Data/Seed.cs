@@ -7,15 +7,21 @@ namespace ShoeShop.Data
 	{
 		public static void SeedData(IApplicationBuilder applicationBuilder)
 		{
+			Seed.CategorySeeder(applicationBuilder);
+			Seed.ColorSeeder(applicationBuilder);
+		}
+
+		public static void CategorySeeder(IApplicationBuilder applicationBuilder)
+		{
 			using (var serviceScope = applicationBuilder.ApplicationServices.CreateScope())
 			{
 				var context = serviceScope.ServiceProvider.GetService<AppDbContext>();
 
 				context.Database.EnsureCreated();
 
-				if (!context.Categorys.Any())
+				if (!context.Categories.Any())
 				{
-					context.Categorys.AddRange(new List<Category>()
+					context.Categories.AddRange(new List<Category>()
 					{
 						new Category
 						{
@@ -24,12 +30,12 @@ namespace ShoeShop.Data
 						new Category
 						{
 							Name = "Jogging"
-                        },
+						},
 						new Category
 						{
 							Name = "Running"
-                        },
-                        new Category
+						},
+						new Category
 						{
 							Name = "Basketball"
 						},
@@ -37,7 +43,33 @@ namespace ShoeShop.Data
 						{
 							Name = "Hiking"
 						}
-                    });
+					});
+					context.SaveChanges();
+				}
+			}
+		}
+
+		public static void ColorSeeder(IApplicationBuilder applicationBuilder)
+		{
+			using (var serviceScope = applicationBuilder.ApplicationServices.CreateScope())
+			{
+				var context = serviceScope.ServiceProvider.GetService<AppDbContext>();
+
+				context.Database.EnsureCreated();
+
+				if (!context.Colors.Any())
+				{
+					context.Colors.AddRange(new List<Color>()
+					{
+						new Color
+						{
+							Name = "White"
+						},
+						new Color
+						{
+							Name = "Black"
+						}
+					});
 					context.SaveChanges();
 				}
 			}
