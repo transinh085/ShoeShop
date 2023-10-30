@@ -1110,8 +1110,8 @@
 												"$ref": "AAAAAAGLccIT9Qia+DY="
 											},
 											"font": "Arial;13;1",
-											"left": 448,
-											"top": 117,
+											"left": 512,
+											"top": 77,
 											"width": 121.26171875,
 											"height": 13,
 											"text": "aspnetusertokens"
@@ -1136,8 +1136,8 @@
 														"$ref": "AAAAAAGLccJEewill1A="
 													},
 													"font": "Arial;13;0",
-													"left": 453,
-													"top": 140,
+													"left": 517,
+													"top": 100,
 													"width": 111.26171875,
 													"height": 13
 												},
@@ -1151,8 +1151,8 @@
 														"$ref": "AAAAAAGLccJbIwisk68="
 													},
 													"font": "Arial;13;0",
-													"left": 453,
-													"top": 155,
+													"left": 517,
+													"top": 115,
 													"width": 111.26171875,
 													"height": 13
 												},
@@ -1166,8 +1166,8 @@
 														"$ref": "AAAAAAGLccJzowiz+tw="
 													},
 													"font": "Arial;13;0",
-													"left": 453,
-													"top": 170,
+													"left": 517,
+													"top": 130,
 													"width": 111.26171875,
 													"height": 13
 												},
@@ -1181,22 +1181,22 @@
 														"$ref": "AAAAAAGLccKR7Qi6XDU="
 													},
 													"font": "Arial;13;0",
-													"left": 453,
-													"top": 185,
+													"left": 517,
+													"top": 145,
 													"width": 111.26171875,
 													"height": 13
 												}
 											],
 											"font": "Arial;13;0",
-											"left": 448,
-											"top": 135,
+											"left": 512,
+											"top": 95,
 											"width": 121.26171875,
 											"height": 68
 										}
 									],
 									"font": "Arial;13;0",
-									"left": 448,
-									"top": 112,
+									"left": 512,
+									"top": 72,
 									"width": 121.26171875,
 									"height": 91,
 									"nameLabel": {
@@ -1649,7 +1649,7 @@
 											},
 											"font": "Arial;13;0",
 											"left": 553,
-											"top": 221,
+											"top": 181,
 											"height": 13,
 											"alpha": -0.5235987755982988,
 											"distance": 30,
@@ -1666,7 +1666,7 @@
 										"$ref": "AAAAAAGLcbl88AfrqZ8="
 									},
 									"lineStyle": 2,
-									"points": "656:238;568:238;568:202",
+									"points": "656:238;568:238;568:162",
 									"nameLabel": {
 										"$ref": "AAAAAAGLccURtglrA7M="
 									},
