@@ -49,7 +49,33 @@ namespace ShoeShop.Data
 			}
 		}
 
-		public static void ColorSeeder(IApplicationBuilder applicationBuilder)
+        public static void BrandSeeder(IApplicationBuilder applicationBuilder)
+        {
+            using (var serviceScope = applicationBuilder.ApplicationServices.CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetService<AppDbContext>();
+
+                context.Database.EnsureCreated();
+
+                if (!context.Brands.Any())
+                {
+                    context.Brands.AddRange(new List<Brand>()
+                    {
+                        new Brand
+                        {
+                            Name = "Adidas"
+                        },
+                        new Brand
+                        {
+                            Name = "Nike"
+                        }
+                    });
+                    context.SaveChanges();
+                }
+            }
+        }
+
+        public static void ColorSeeder(IApplicationBuilder applicationBuilder)
 		{
 			using (var serviceScope = applicationBuilder.ApplicationServices.CreateScope())
 			{
