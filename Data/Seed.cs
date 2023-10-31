@@ -9,6 +9,7 @@ namespace ShoeShop.Data
 		{
 			Seed.CategorySeeder(applicationBuilder);
 			Seed.ColorSeeder(applicationBuilder);
+			Seed.BrandSeeder(applicationBuilder);
 		}
 
 		public static void CategorySeeder(IApplicationBuilder applicationBuilder)
