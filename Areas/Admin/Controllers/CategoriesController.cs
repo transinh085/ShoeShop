@@ -23,9 +23,9 @@ namespace ShoeShop.Areas.Admin.Controllers
         // GET: Admin/Categories
         public async Task<IActionResult> Index()
         {
-              return _context.Categorys != null ? 
-                          View(await _context.Categorys.ToListAsync()) :
-                          Problem("Entity set 'AppDbContext.Categorys'  is null.");
+              return _context.Categories != null ? 
+                          View(await _context.Categories.ToListAsync()) :
+                          Problem("Entity set 'AppDbContext.Categories'  is null.");
         }
 
         // GET: Admin/Categories/Create
@@ -53,12 +53,12 @@ namespace ShoeShop.Areas.Admin.Controllers
         // GET: Admin/Categories/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Categorys == null)
+            if (id == null || _context.Categories == null)
             {
                 return NotFound();
             }
 
-            var category = await _context.Categorys.FindAsync(id);
+            var category = await _context.Categories.FindAsync(id);
             if (category == null)
             {
                 return NotFound();
@@ -105,14 +105,14 @@ namespace ShoeShop.Areas.Admin.Controllers
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Categorys == null)
+            if (_context.Categories == null)
             {
-                return Problem("Entity set 'AppDbContext.Categorys'  is null.");
+                return Problem("Entity set 'AppDbContext.Categories'  is null.");
             }
-            var category = await _context.Categorys.FindAsync(id);
+            var category = await _context.Categories.FindAsync(id);
             if (category != null)
             {
-                _context.Categorys.Remove(category);
+                _context.Categories.Remove(category);
             }
             
             await _context.SaveChangesAsync();
@@ -121,7 +121,7 @@ namespace ShoeShop.Areas.Admin.Controllers
 
         private bool CategoryExists(int id)
         {
-          return (_context.Categorys?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.Categories?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
