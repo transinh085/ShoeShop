@@ -7,7 +7,9 @@ namespace ShoeShop.Data
 	public class AppDbContext : IdentityDbContext<AppUser>
 	{
 		public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
-		public DbSet<Category> Categorys { get; set; }
-		public DbSet<ShoeShop.Models.Color>? Color { get; set; }
+		public DbSet<Category> Categories { get; set; }
+		public DbSet<Color> Colors { get; set; }
+		public DbSet<Brand> Brands { get; set; }
+
 	}
 }
