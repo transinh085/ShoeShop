@@ -36,12 +36,6 @@ namespace ShoeShop.Controllers
 			return View();
 		}
 
-        [Route("products")]
-        public IActionResult Products()
-        {
-            return View();
-        }
-
         [Route("cart")]
         public IActionResult Cart()
         {

@@ -220,6 +220,21 @@ namespace ShoeShop.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("ShoeShop.Models.Brand", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Brands");
+                });
+
             modelBuilder.Entity("ShoeShop.Models.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -232,7 +247,7 @@ namespace ShoeShop.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categorys");
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("ShoeShop.Models.Color", b =>
@@ -247,7 +262,7 @@ namespace ShoeShop.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Color");
+                    b.ToTable("Colors");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

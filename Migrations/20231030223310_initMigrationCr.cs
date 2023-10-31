@@ -7,7 +7,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace ShoeShop.Migrations
 {
     /// <inheritdoc />
-    public partial class InitMigration : Migration
+    public partial class initMigrationCr : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -60,7 +60,7 @@ namespace ShoeShop.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Categorys",
+                name: "Categories",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -69,7 +69,21 @@ namespace ShoeShop.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Categorys", x => x.Id);
+                    table.PrimaryKey("PK_Categories", x => x.Id);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Colors",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(type: "longtext", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Colors", x => x.Id);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
@@ -241,7 +255,10 @@ namespace ShoeShop.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Categorys");
+                name: "Categories");
+
+            migrationBuilder.DropTable(
+                name: "Colors");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

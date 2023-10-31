@@ -11,87 +11,87 @@ using ShoeShop.Models;
 namespace ShoeShop.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class ColorsController : Controller
+    public class BrandsController : Controller
     {
         private readonly AppDbContext _context;
 
-        public ColorsController(AppDbContext context)
+        public BrandsController(AppDbContext context)
         {
             _context = context;
         }
 
-        // GET: Admin/Colors
+        // GET: Admin/Brands
         public async Task<IActionResult> Index()
         {
-              return _context.Colors != null ? 
-                          View(await _context.Colors.ToListAsync()) :
-                          Problem("Entity set 'AppDbContext.Colors'  is null.");
+              return _context.Brands != null ? 
+                          View(await _context.Brands.ToListAsync()) :
+                          Problem("Entity set 'AppDbContext.Brands'  is null.");
         }
 
-        // GET: Admin/Colors/Details/5
+        // GET: Admin/Brands/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Colors == null)
+            if (id == null || _context.Brands == null)
             {
                 return NotFound();
             }
 
-            var color = await _context.Colors
-				.FirstOrDefaultAsync(m => m.Id == id);
-            if (color == null)
+            var brand = await _context.Brands
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (brand == null)
             {
                 return NotFound();
             }
 
-            return View(color);
+            return View(brand);
         }
 
-        // GET: Admin/Colors/Create
+        // GET: Admin/Brands/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Admin/Colors/Create
+        // POST: Admin/Brands/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] Color color)
+        public async Task<IActionResult> Create([Bind("Id,Name")] Brand brand)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(color);
+                _context.Add(brand);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(color);
+            return View(brand);
         }
 
-        // GET: Admin/Colors/Edit/5
+        // GET: Admin/Brands/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Colors == null)
+            if (id == null || _context.Brands == null)
             {
                 return NotFound();
             }
 
-            var color = await _context.Colors.FindAsync(id);
-            if (color == null)
+            var brand = await _context.Brands.FindAsync(id);
+            if (brand == null)
             {
                 return NotFound();
             }
-            return View(color);
+            return View(brand);
         }
 
-        // POST: Admin/Colors/Edit/5
+        // POST: Admin/Brands/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Color color)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Brand brand)
         {
-            if (id != color.Id)
+            if (id != brand.Id)
             {
                 return NotFound();
             }
@@ -100,12 +100,12 @@ namespace ShoeShop.Areas.Admin.Controllers
             {
                 try
                 {
-                    _context.Update(color);
+                    _context.Update(brand);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ColorExists(color.Id))
+                    if (!BrandExists(brand.Id))
                     {
                         return NotFound();
                     }
@@ -116,48 +116,49 @@ namespace ShoeShop.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(color);
+            return View(brand);
         }
 
-        // GET: Admin/Colors/Delete/5
+        // GET: Admin/Brands/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Colors == null)
+            if (id == null || _context.Brands == null)
             {
                 return NotFound();
             }
 
-            var color = await _context.Colors
-				.FirstOrDefaultAsync(m => m.Id == id);
-            if (color == null)
+            var brand = await _context.Brands
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (brand == null)
             {
                 return NotFound();
             }
 
-            return View(color);
+            return View(brand);
         }
 
-        // POST: Admin/Colors/Delete/5
+        // POST: Admin/Brands/Delete/5
         [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Colors == null)
+            if (_context.Brands == null)
             {
-                return Problem("Entity set 'AppDbContext.Color'  is null.");
+                return Problem("Entity set 'AppDbContext.Brands'  is null.");
             }
-            var color = await _context.Colors.FindAsync(id);
-            if (color != null)
+            var brand = await _context.Brands.FindAsync(id);
+            if (brand != null)
             {
-                _context.Colors.Remove(color);
+                _context.Brands.Remove(brand);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ColorExists(int id)
+        private bool BrandExists(int id)
         {
-          return (_context.Colors?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.Brands?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
