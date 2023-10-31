@@ -23,21 +23,21 @@ namespace ShoeShop.Areas.Admin.Controllers
         // GET: Admin/Colors
         public async Task<IActionResult> Index()
         {
-              return _context.Colors != null ? 
-                          View(await _context.Colors.ToListAsync()) :
-                          Problem("Entity set 'AppDbContext.Colors'  is null.");
+              return _context.Color != null ? 
+                          View(await _context.Color.ToListAsync()) :
+                          Problem("Entity set 'AppDbContext.Color'  is null.");
         }
 
         // GET: Admin/Colors/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Colors == null)
+            if (id == null || _context.Color == null)
             {
                 return NotFound();
             }
 
-            var color = await _context.Colors
-				.FirstOrDefaultAsync(m => m.Id == id);
+            var color = await _context.Color
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (color == null)
             {
                 return NotFound();
@@ -71,12 +71,12 @@ namespace ShoeShop.Areas.Admin.Controllers
         // GET: Admin/Colors/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Colors == null)
+            if (id == null || _context.Color == null)
             {
                 return NotFound();
             }
 
-            var color = await _context.Colors.FindAsync(id);
+            var color = await _context.Color.FindAsync(id);
             if (color == null)
             {
                 return NotFound();
@@ -122,13 +122,13 @@ namespace ShoeShop.Areas.Admin.Controllers
         // GET: Admin/Colors/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Colors == null)
+            if (id == null || _context.Color == null)
             {
                 return NotFound();
             }
 
-            var color = await _context.Colors
-				.FirstOrDefaultAsync(m => m.Id == id);
+            var color = await _context.Color
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (color == null)
             {
                 return NotFound();
@@ -141,14 +141,14 @@ namespace ShoeShop.Areas.Admin.Controllers
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Colors == null)
+            if (_context.Color == null)
             {
                 return Problem("Entity set 'AppDbContext.Color'  is null.");
             }
-            var color = await _context.Colors.FindAsync(id);
+            var color = await _context.Color.FindAsync(id);
             if (color != null)
             {
-                _context.Colors.Remove(color);
+                _context.Color.Remove(color);
             }
             
             await _context.SaveChangesAsync();
@@ -157,7 +157,7 @@ namespace ShoeShop.Areas.Admin.Controllers
 
         private bool ColorExists(int id)
         {
-          return (_context.Colors?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.Color?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
