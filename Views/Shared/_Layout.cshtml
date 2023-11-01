@@ -158,7 +158,7 @@
 									@if (SignInManager.IsSignedIn(User))
 									{
 										<div class="dropdown dropdown-access">
-											<a asp-controller="authentication" asp-action="signin" class="access_link"><span>Account</span></a>
+											<a href="#" class="access_link"><span>Account</span></a>
 											<div class="dropdown-menu">
 												<a asp-controller="authentication" asp-action="signin" class="btn_1">Sign In or Sign Up</a>
 												<ul>
@@ -175,7 +175,7 @@
 														<a href="help"><i class="ti-help-alt"></i>Help and Faq</a>
 													</li>
 													<li>
-														<a asp-controller="authentication" asp-action="logout"><i class="ti-help-alt"></i>Logout</a>
+														<a asp-controller="authentication" asp-action="logout"><i class="ti-shift-left"></i>Logout</a>
 													</li>
 												</ul>
 											</div>
