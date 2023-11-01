@@ -27,16 +27,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 	.AddCookie();
 //builder.Services.AddSingleton<ViewComponent, ShoeCardsViewComponent>();
 
-builder.Services.ConfigureApplicationCookie(options =>
-{
-	options.AccessDeniedPath = new PathString("/Account/AccessDenied");
-	options.Cookie.Name = "Cookie";
-	options.Cookie.HttpOnly = true;
-	options.ExpireTimeSpan = TimeSpan.FromMinutes(720);
-	options.LoginPath = new PathString("/authentication/signin");
-	options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
-	options.SlidingExpiration = true;
-});
 
 var app = builder.Build();
 
