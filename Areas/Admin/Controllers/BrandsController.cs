@@ -7,6 +7,7 @@ using ShoeShop.Models;
 namespace ShoeShop.Areas.Admin.Controllers
 {
 	[Authorize]
+	//[Authorize(Roles = "admin")]
 	[Area("Admin")]
     public class BrandsController : Controller
     {
