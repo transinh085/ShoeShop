@@ -7,7 +7,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace ShoeShop.Migrations
 {
     /// <inheritdoc />
-    public partial class initMigrationCr : Migration
+    public partial class migrationDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -35,9 +35,10 @@ namespace ShoeShop.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "varchar(255)", nullable: false),
-                    Gender = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    BirthDay = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Gender = table.Column<bool>(type: "tinyint(1)", nullable: true),
+                    BirthDay = table.Column<DateOnly>(type: "date", nullable: true),
                     ProfileImageUrl = table.Column<string>(type: "longtext", nullable: true),
+                    JoinTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
@@ -56,6 +57,20 @@ namespace ShoeShop.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Brands",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(type: "longtext", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Brands", x => x.Id);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
@@ -253,6 +268,9 @@ namespace ShoeShop.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Brands");
 
             migrationBuilder.DropTable(
                 name: "Categories");

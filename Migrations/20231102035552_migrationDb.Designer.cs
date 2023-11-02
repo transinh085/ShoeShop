@@ -11,8 +11,8 @@ using ShoeShop.Data;
 namespace ShoeShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231030224450_addMigrationBrands")]
-    partial class addMigrationBrands
+    [Migration("20231102035552_migrationDb")]
+    partial class migrationDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -158,8 +158,8 @@ namespace ShoeShop.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("BirthDay")
-                        .HasColumnType("datetime(6)");
+                    b.Property<DateOnly?>("BirthDay")
+                        .HasColumnType("date");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -172,8 +172,11 @@ namespace ShoeShop.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<bool>("Gender")
+                    b.Property<bool?>("Gender")
                         .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime?>("JoinTime")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("tinyint(1)");
