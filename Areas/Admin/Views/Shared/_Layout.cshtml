@@ -26,12 +26,11 @@
     <link rel="apple-touch-icon" sizes="180x180" href="~/admin/media/favicons/apple-touch-icon-180x180.png">
     <!-- END Icons -->
     <!-- Stylesheets -->
+     @await RenderSectionAsync("Styles", required: false)
     <!-- Dashmix framework -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" id="css-main" href="~/admin/css/dashmix.css">
     <link rel="stylesheet" href="~/admin/css/custom.css">
-
-    @await RenderSectionAsync("Styles", required: false)
     <!-- END Stylesheets -->
 </head>
 <body>
@@ -127,7 +126,7 @@
                                 <i class="nav-main-link-icon fa fa-bolt"></i>
                                 <span class="nav-main-link-name">Colors</span>
                             </a>
-                        </li
+                        </li>
                     </ul>
                 </div>
                 <!-- END Side Navigation -->
