@@ -125,13 +125,13 @@ namespace ShoeShop.Data
 						UserName = "transinh085",
 						Email = adminUserEmail,
 						EmailConfirmed = true,
-					};
+                        ProfileImageUrl = "https://avatars.githubusercontent.com/u/45101901?v=4"
+                    };
 					await userManager.CreateAsync(newAdminUser, "Coding@1234?");
 					await userManager.AddToRoleAsync(newAdminUser, UserRoles.Admin);
 				}
 
 				string appUserEmail = "hgbao2k3@gmail.com";
-
 				var appUser = await userManager.FindByEmailAsync(appUserEmail);
 				if (appUser == null)
 				{
@@ -140,11 +140,37 @@ namespace ShoeShop.Data
 						UserName = "hgbaodev",
 						Email = appUserEmail,
 						EmailConfirmed = true,
-					};
+                        ProfileImageUrl = "https://avatars.githubusercontent.com/u/120194990?v=4"
+                    };
 					await userManager.CreateAsync(newAppUser, "Coding@1234?");
-					await userManager.AddToRoleAsync(newAppUser, UserRoles.Customer);
+					await userManager.AddToRoleAsync(newAppUser, UserRoles.Admin);
 				}
-			}
+
+                // Tạo 20 tài khoản khách hàng
+                for (int i = 0; i < 20; i++)
+                {
+                    var customerEmail = $"customer{i + 1}@example.com";
+                    var customerUserName = $"customer{i + 1}";
+
+                    var existingCustomer = await userManager.FindByEmailAsync(customerEmail);
+
+                    if (existingCustomer == null)
+                    {
+                        var newCustomer = new AppUser()
+                        {
+                            UserName = customerUserName,
+                            Email = customerEmail,
+                            EmailConfirmed = true,
+                            // Thêm hình ảnh tiềm năng cho tài khoản khách hàng
+                            ProfileImageUrl = "https://avatars.githubusercontent.com/u/120194990?v=4"
+                        };
+
+                        // Tạo tài khoản khách hàng và thêm vào vai trò "Customer"
+                        await userManager.CreateAsync(newCustomer, "Coding@1234?");
+                        await userManager.AddToRoleAsync(newCustomer, UserRoles.Customer);
+                    }
+                }
+            }
 		}
 	}
 }
