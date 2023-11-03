@@ -1,18 +1,33 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using ShoeShop.Data;
 
 namespace ShoeShop.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class ProductsController : Controller
 	{
-		public IActionResult Index()
+        private readonly AppDbContext _context;
+
+        public ProductsController(AppDbContext context)
+        {
+            _context = context;
+        }
+
+        public IActionResult Index()
 		{
 			return View();
 		}
 
-		public IActionResult Create()
+		public async Task<IActionResult> Create()
 		{
-			return View();
+			var brands = await _context.Brands.ToListAsync();
+			var categories = await _context.Categories.ToListAsync();
+            var colors = await _context.Colors.ToListAsync();
+            ViewBag.Brands = brands;
+            ViewBag.Categories = categories;
+            ViewBag.Colors = colors;
+            return View();
 		}
 	}
 }
