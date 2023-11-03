@@ -7,11 +7,7 @@ using ShoeShop.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews().AddRazorOptions(options =>
-{
-	//options.ViewLocationFormats.Add("/Components/ShoeCards/Default.cshtml");
-});
-;
+builder.Services.AddControllersWithViews();
 
 
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -25,7 +21,6 @@ builder.Services.AddMemoryCache();
 builder.Services.AddSession();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
 	.AddCookie();
-//builder.Services.AddSingleton<ViewComponent, ShoeCardsViewComponent>();
 
 builder.Services.ConfigureApplicationCookie(options =>
 {

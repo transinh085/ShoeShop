@@ -32,19 +32,13 @@
                             <input type="text" class="form-control" id="dm-ecom-product-name" name="dm-ecom-product-name">
                         </div>
                         <div class="mb-4">
-                            <!-- CKEditor (js-ckeditor-inline + js-ckeditor ids are initialized in Helpers.jsCkeditor()) -->
-                            <!-- For more info and examples you can check out http://ckeditor.com -->
                             <label class="form-label">Description</label>
                             <textarea id="js-ckeditor" name="dm-ecom-product-description"></textarea>
                         </div>
                         <div class="row mb-4">
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <label class="form-label" for="dm-ecom-product-price">Price in USD ($)</label>
                                 <input type="text" class="form-control" id="dm-ecom-product-price" name="dm-ecom-product-price" value="59,00">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label" for="dm-ecom-product-stock">Stock</label>
-                                <input type="text" class="form-control" id="dm-ecom-product-stock" name="dm-ecom-product-stock" value="29">
                             </div>
                         </div>
                     </form>
@@ -56,75 +50,47 @@
                 <div class="block-header block-header-default">
                     <h3 class="block-title">Variant</h3>
                     <div class="block-options">
-                        <button type="button" class="btn btn-alt-primary btn-sm btn-hero" data-bs-toggle="modal" data-bs-target="#modal-block-select2"><i class="fa-regular fa-plus"></i> Add</button>
-                        <div class="modal" id="modal-block-select2" tabindex="-1" role="dialog" aria-labelledby="modal-block-select2" aria-hidden="true">
-                            <div class="modal-dialog modal-lg" role="document">
-                                <div class="modal-content">
-                                    <div class="block block-rounded block-transparent mb-0">
-                                        <div class="block-header block-header-default">
-                                            <h3 class="block-title">Select2 in a modal</h3>
-                                            <div class="block-options">
-                                                <button type="button" class="btn-block-option" data-bs-dismiss="modal" aria-label="Close">
-                                                    <i class="fa fa-fw fa-times"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="block-content">
-                                            <form action="be_forms_plugins.html" method="POST" onsubmit="return false;">
-                                                <div class="mb-4">
-                                                    <label class="form-label" for="example-select2-modal">Color</label>
-                                                    <select class="js-select2 form-select" id="example-select2-modal" name="example-select2-modal" style="width: 100%;" data-container="#modal-block-select2" data-placeholder="Choose one..">
-                                                        <option></option>
-                                                        <option value="1">HTML</option>
-                                                        <option value="2">CSS</option>
-                                                        <option value="3">JavaScript</option>
-                                                        <option value="4">PHP</option>
-                                                        <option value="5">MySQL</option>
-                                                        <option value="6">Ruby</option>
-                                                        <option value="7">Angular</option>
-                                                        <option value="8">React</option>
-                                                        <option value="9">Vue.js</option>
-                                                    </select>
-                                                </div>
-                                                <div class="mb-4">
-                                                    <label class="form-label" for="example-select2-multiple-modal">Size</label>
-                                                    <select class="js-select2 form-select" id="example-select2-multiple-modal" name="example-select2-multiple-modal" style="width: 100%;" data-container="#modal-block-select2" data-placeholder="Choose many.." multiple>
-                                                        <option></option>
-                                                        <option value="1" selected>HTML</option>
-                                                        <option value="2" selected>CSS</option>
-                                                        <option value="3">JavaScript</option>
-                                                        <option value="4">PHP</option>
-                                                        <option value="5">MySQL</option>
-                                                        <option value="6">Ruby</option>
-                                                        <option value="7">Angular</option>
-                                                        <option value="8">React</option>
-                                                        <option value="9">Vue.js</option>
-                                                    </select>
-                                                </div>     
-                                                <div class="mb-4">
-                                                    <div class="upload-image-container">
-                                                        <input type="file" name="upload-image" class="upload-image-input" hidden multiple />
-                                                        <div class="no-image">
-                                                            <p>Drop files here to upload</p>
-                                                        </div>
-                                                        <div class="has-image">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                        <div class="block-content block-content-full text-end bg-body">
-                                            <button type="button" class="btn btn-sm btn-alt-secondary me-1" data-bs-dismiss="modal">Close</button>
-                                            <button type="button" class="btn btn-sm btn-primary" data-bs-dismiss="modal">Perfect</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <button type="button" class="btn btn-alt-primary btn-sm btn-hero" ><i class="fa-regular fa-plus"></i> Add</button>
                     </div>
                 </div>
                 <div class="block-content block-content-full">
-                    
+                    <form action="be_forms_plugins.html" method="POST" onsubmit="return false;">
+                        <div class="mb-4">
+                            <label class="form-label" for="color-id">Color</label>
+                            <select class="js-select2 form-select" id="color-id" name="color-id" style="width: 100%;" data-container="#modal-block-select2" data-placeholder="Choose one..">
+                                <option></option>
+                                @foreach (var color in ViewBag.Colors)
+                                {
+                                    <option value="@color.Id">@color.Name</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label" for="size-id">Size</label>
+                            <select class="js-select2 form-select" id="size-id" name="size-id" style="width: 100%;" data-container="#modal-block-select2" data-placeholder="Choose many.." multiple>
+                                <option></option>
+                                <option value="1" selected>HTML</option>
+                                <option value="2" selected>CSS</option>
+                                <option value="3">JavaScript</option>
+                                <option value="4">PHP</option>
+                                <option value="5">MySQL</option>
+                                <option value="6">Ruby</option>
+                                <option value="7">Angular</option>
+                                <option value="8">React</option>
+                                <option value="9">Vue.js</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <div class="upload-image-container">
+                                <input type="file" name="upload-image" class="upload-image-input" hidden multiple />
+                                <div class="no-image">
+                                    <p>Select files to upload</p>
+                                </div>
+                                <div class="has-image">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
             <!-- END Variant-->
@@ -142,37 +108,27 @@
                             </div>
                         </div>
                         <div class="mb-4">
-                            <!-- Select2 (.js-select2 class is initialized in Helpers.jqSelect2()) -->
-                            <!-- For more info and examples you can check out https://github.com/select2/select2 -->
-                            <label class="form-label" for="dm-ecom-product-meta-keywords">Brand</label>
-                            <select class="js-select2 form-select" id="dm-ecom-product-meta-keywords" name="dm-ecom-product-meta-keywords" style="width: 100%;" data-placeholder="Choose many.." multiple>
-                                <option></option><!-- Required for data-placeholder attribute to work with Select2 plugin -->
-                                <option value="1" selected>Action</option>
-                                <option value="2" selected>RPG</option>
-                                <option value="3">Racing</option>
-                                <option value="4">Strategy</option>
-                                <option value="5">Adventure</option>
-                                <option value="6">Strategy</option>
-                                <option value="7">Puzzle</option>
-                                <option value="8">Horror</option>
-                                <option value="9">MMO</option>
+                            <label class="form-label" for="dm-ecom-product-name">Slug</label>
+                            <input type="text" class="form-control" id="dm-ecom-product-slug" name="dm-ecom-product-slug">
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label" for="brand-id">Brand</label>
+                            <select class="js-select2 form-select" id="brand-id" name="brand-id" style="width: 100%;" data-placeholder="Choose brand..">
+                                <option></option>
+                                @foreach (var brand in ViewBag.Brands)
+                                {
+                                    <option value="@brand.Id">@brand.Name</option>
+                                }
                             </select>
                         </div>
                         <div class="mb-4">
-                            <!-- Select2 (.js-select2 class is initialized in Helpers.jqSelect2()) -->
-                            <!-- For more info and examples you can check out https://github.com/select2/select2 -->
-                            <label class="form-label" for="dm-ecom-product-category">Category</label>
-                            <select class="js-select2 form-select" id="dm-ecom-product-category" name="dm-ecom-product-category" style="width: 100%;" data-placeholder="Choose one..">
-                                <option></option><!-- Required for data-placeholder attribute to work with Select2 plugin -->
-                                <option value="1">Cables</option>
-                                <option value="2" selected>Video Games</option>
-                                <option value="3">Tablets</option>
-                                <option value="4">Laptops</option>
-                                <option value="5">PC</option>
-                                <option value="6">Home Cinema</option>
-                                <option value="7">Sound</option>
-                                <option value="8">Office</option>
-                                <option value="9">Adapters</option>
+                            <label class="form-label" for="category-id">Category</label>
+                            <select class="js-select2 form-select" id="category-id" name="category-id" style="width: 100%;" data-placeholder="Choose one..">
+                                <option></option>
+                                @foreach (var brand in ViewBag.Categories)
+                                {
+                                    <option value="@brand.Id">@brand.Name</option>
+                                }
                             </select>
                         </div>
                         <div class="mb-4">
