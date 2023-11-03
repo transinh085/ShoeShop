@@ -125,6 +125,7 @@ namespace ShoeShop.Data
 						UserName = "transinh085",
 						Email = adminUserEmail,
 						EmailConfirmed = true,
+						PhoneNumber = "0123456789",
                         ProfileImageUrl = "https://avatars.githubusercontent.com/u/45101901?v=4"
                     };
 					await userManager.CreateAsync(newAdminUser, "Coding@1234?");
@@ -140,6 +141,7 @@ namespace ShoeShop.Data
 						UserName = "hgbaodev",
 						Email = appUserEmail,
 						EmailConfirmed = true,
+                        PhoneNumber = "0123456789",
                         ProfileImageUrl = "https://avatars.githubusercontent.com/u/120194990?v=4"
                     };
 					await userManager.CreateAsync(newAppUser, "Coding@1234?");
@@ -161,7 +163,7 @@ namespace ShoeShop.Data
                             UserName = customerUserName,
                             Email = customerEmail,
                             EmailConfirmed = true,
-                            // Thêm hình ảnh tiềm năng cho tài khoản khách hàng
+                            PhoneNumber = "0123456789",
                             ProfileImageUrl = "https://avatars.githubusercontent.com/u/120194990?v=4"
                         };
 
