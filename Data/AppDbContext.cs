@@ -10,6 +10,7 @@ namespace ShoeShop.Data
 		public DbSet<Category> Categories { get; set; }
 		public DbSet<Color> Colors { get; set; }
 		public DbSet<Brand> Brands { get; set; }
+		public DbSet<ShoeShop.Models.Size>? Size { get; set; }
 
 	}
 }
