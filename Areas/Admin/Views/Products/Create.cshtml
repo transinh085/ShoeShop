@@ -1,0 +1,190 @@
+﻿@{
+    ViewData["Title"] = "Add Product";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/admin/js/plugins/select2/css/select2.min.css">
+}
+
+@section Scripts {
+    <script src="~/admin/js/plugins/select2/js/select2.full.min.js"></script>
+    <script src="~/admin/js/plugins/ckeditor/ckeditor.js"></script>
+    <script src="~/admin/js/upload-image.js"></script>
+
+    <!-- Page JS Helpers (Select2 + Bootstrap Maxlength + CKEditor plugins) -->
+    <script>Dashmix.helpersOnLoad(['jq-select2', 'js-ckeditor']);</script>
+}
+
+<!-- Page Content -->
+<div class="content">
+    <div class="row">
+        <div class="col-8">
+            <!-- Info -->
+            <div class="block block-rounded">
+                <div class="block-header block-header-default">
+                    <h3 class="block-title">Add product</h3>
+                </div>
+                <div class="block-content">
+                    <form action="be_pages_ecom_product_edit.html" method="POST" onsubmit="return false;">
+                        <div class="mb-4">
+                            <label class="form-label" for="dm-ecom-product-name">Name</label>
+                            <input type="text" class="form-control" id="dm-ecom-product-name" name="dm-ecom-product-name">
+                        </div>
+                        <div class="mb-4">
+                            <!-- CKEditor (js-ckeditor-inline + js-ckeditor ids are initialized in Helpers.jsCkeditor()) -->
+                            <!-- For more info and examples you can check out http://ckeditor.com -->
+                            <label class="form-label">Description</label>
+                            <textarea id="js-ckeditor" name="dm-ecom-product-description"></textarea>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label" for="dm-ecom-product-price">Price in USD ($)</label>
+                                <input type="text" class="form-control" id="dm-ecom-product-price" name="dm-ecom-product-price" value="59,00">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="dm-ecom-product-stock">Stock</label>
+                                <input type="text" class="form-control" id="dm-ecom-product-stock" name="dm-ecom-product-stock" value="29">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- END Info -->
+            <!-- Variant -->
+            <div class="block block-rounded">
+                <div class="block-header block-header-default">
+                    <h3 class="block-title">Variant</h3>
+                    <div class="block-options">
+                        <button type="button" class="btn btn-alt-primary btn-sm btn-hero" data-bs-toggle="modal" data-bs-target="#modal-block-select2"><i class="fa-regular fa-plus"></i> Add</button>
+                        <div class="modal" id="modal-block-select2" tabindex="-1" role="dialog" aria-labelledby="modal-block-select2" aria-hidden="true">
+                            <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="block block-rounded block-transparent mb-0">
+                                        <div class="block-header block-header-default">
+                                            <h3 class="block-title">Select2 in a modal</h3>
+                                            <div class="block-options">
+                                                <button type="button" class="btn-block-option" data-bs-dismiss="modal" aria-label="Close">
+                                                    <i class="fa fa-fw fa-times"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="block-content">
+                                            <form action="be_forms_plugins.html" method="POST" onsubmit="return false;">
+                                                <div class="mb-4">
+                                                    <label class="form-label" for="example-select2-modal">Color</label>
+                                                    <select class="js-select2 form-select" id="example-select2-modal" name="example-select2-modal" style="width: 100%;" data-container="#modal-block-select2" data-placeholder="Choose one..">
+                                                        <option></option>
+                                                        <option value="1">HTML</option>
+                                                        <option value="2">CSS</option>
+                                                        <option value="3">JavaScript</option>
+                                                        <option value="4">PHP</option>
+                                                        <option value="5">MySQL</option>
+                                                        <option value="6">Ruby</option>
+                                                        <option value="7">Angular</option>
+                                                        <option value="8">React</option>
+                                                        <option value="9">Vue.js</option>
+                                                    </select>
+                                                </div>
+                                                <div class="mb-4">
+                                                    <label class="form-label" for="example-select2-multiple-modal">Size</label>
+                                                    <select class="js-select2 form-select" id="example-select2-multiple-modal" name="example-select2-multiple-modal" style="width: 100%;" data-container="#modal-block-select2" data-placeholder="Choose many.." multiple>
+                                                        <option></option>
+                                                        <option value="1" selected>HTML</option>
+                                                        <option value="2" selected>CSS</option>
+                                                        <option value="3">JavaScript</option>
+                                                        <option value="4">PHP</option>
+                                                        <option value="5">MySQL</option>
+                                                        <option value="6">Ruby</option>
+                                                        <option value="7">Angular</option>
+                                                        <option value="8">React</option>
+                                                        <option value="9">Vue.js</option>
+                                                    </select>
+                                                </div>     
+                                                <div class="mb-4">
+                                                    <div class="upload-image-container">
+                                                        <input type="file" name="upload-image" class="upload-image-input" hidden multiple />
+                                                        <div class="no-image">
+                                                            <p>Drop files here to upload</p>
+                                                        </div>
+                                                        <div class="has-image">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="block-content block-content-full text-end bg-body">
+                                            <button type="button" class="btn btn-sm btn-alt-secondary me-1" data-bs-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-sm btn-primary" data-bs-dismiss="modal">Perfect</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="block-content block-content-full">
+                    
+                </div>
+            </div>
+            <!-- END Variant-->
+        </div>
+        <div class="col-4">
+            <!-- Meta Data -->
+            <div class="block block-rounded">
+                <div class="block-content">
+                    <form action="be_pages_ecom_product_edit.html" method="POST" onsubmit="return false;">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <label class="form-label">Active</label>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" value="" id="dm-ecom-product-published" name="dm-ecom-product-published">
+                                <label class="form-check-label" for="dm-ecom-product-published"></label>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <!-- Select2 (.js-select2 class is initialized in Helpers.jqSelect2()) -->
+                            <!-- For more info and examples you can check out https://github.com/select2/select2 -->
+                            <label class="form-label" for="dm-ecom-product-meta-keywords">Brand</label>
+                            <select class="js-select2 form-select" id="dm-ecom-product-meta-keywords" name="dm-ecom-product-meta-keywords" style="width: 100%;" data-placeholder="Choose many.." multiple>
+                                <option></option><!-- Required for data-placeholder attribute to work with Select2 plugin -->
+                                <option value="1" selected>Action</option>
+                                <option value="2" selected>RPG</option>
+                                <option value="3">Racing</option>
+                                <option value="4">Strategy</option>
+                                <option value="5">Adventure</option>
+                                <option value="6">Strategy</option>
+                                <option value="7">Puzzle</option>
+                                <option value="8">Horror</option>
+                                <option value="9">MMO</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <!-- Select2 (.js-select2 class is initialized in Helpers.jqSelect2()) -->
+                            <!-- For more info and examples you can check out https://github.com/select2/select2 -->
+                            <label class="form-label" for="dm-ecom-product-category">Category</label>
+                            <select class="js-select2 form-select" id="dm-ecom-product-category" name="dm-ecom-product-category" style="width: 100%;" data-placeholder="Choose one..">
+                                <option></option><!-- Required for data-placeholder attribute to work with Select2 plugin -->
+                                <option value="1">Cables</option>
+                                <option value="2" selected>Video Games</option>
+                                <option value="3">Tablets</option>
+                                <option value="4">Laptops</option>
+                                <option value="5">PC</option>
+                                <option value="6">Home Cinema</option>
+                                <option value="7">Sound</option>
+                                <option value="8">Office</option>
+                                <option value="9">Adapters</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <button type="submit" class="btn btn-primary btn-hero">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- END Meta Data -->
+            
+        </div>
+    </div>
+    
+</div>
+<!-- END Page Content -->

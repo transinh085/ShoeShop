@@ -64,7 +64,7 @@ namespace ShoeShop.Data
                     {
                         new Brand
                         {
-                            Name = "Adidas"
+                            Name = "Adidas",
                         },
                         new Brand
                         {
