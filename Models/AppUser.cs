@@ -12,5 +12,7 @@ namespace ShoeShop.Models
 
 		public DateTime? JoinTime { get; set; } = DateTime.Now;
 
+		public bool? Status { get; set; }
+
 	}
 }
