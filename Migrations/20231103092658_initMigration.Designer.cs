@@ -11,8 +11,8 @@ using ShoeShop.Data;
 namespace ShoeShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231102035552_migrationDb")]
-    partial class migrationDb
+    [Migration("20231103092658_initMigration")]
+    partial class initMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -206,6 +206,9 @@ namespace ShoeShop.Migrations
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("longtext");
+
+                    b.Property<bool?>("Status")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("tinyint(1)");

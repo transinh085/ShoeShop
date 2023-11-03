@@ -7,7 +7,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace ShoeShop.Migrations
 {
     /// <inheritdoc />
-    public partial class migrationDb : Migration
+    public partial class initMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -39,6 +39,7 @@ namespace ShoeShop.Migrations
                     BirthDay = table.Column<DateOnly>(type: "date", nullable: true),
                     ProfileImageUrl = table.Column<string>(type: "longtext", nullable: true),
                     JoinTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    Status = table.Column<bool>(type: "tinyint(1)", nullable: true),
                     UserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),

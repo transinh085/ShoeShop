@@ -35,9 +35,8 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 var app = builder.Build();
 
-if (args.Length == 1 && args[0].ToLower() == "seeddata")
+if (args.Length == 1 && args[0].ToLower() == "seed")
 {
-	await Seed.SeedUsersAndRolesAsync(app);
 	Seed.SeedData(app);
 }
 
