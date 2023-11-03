@@ -5,8 +5,8 @@ let hasImage = document.querySelector('.has-image');
 let noImage = document.querySelector('.no-image');
 
 uploadContainer.addEventListener("click", () => {
-    uploadImgInput.click(); 
-}) 
+    uploadImgInput.click();
+})
 
 uploadImgInput.addEventListener("change", (e) => {
     let fileInput = uploadImgInput.files;
@@ -51,9 +51,12 @@ let colorEl = $("#color-id");
 let sizeEl = $("#size-id");
 
 colorEl.on("change.select2", function (e) {
-    console.info("colorEl change");
+    if ($(this).val()) {
+        sizeEl.prop("disabled", false);
+    }
 });
 
 sizeEl.on("change.select2", function (e) {
     console.info("sizeEl change");
 });
+
