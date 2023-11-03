@@ -12,12 +12,14 @@ uploadContainer.addEventListener("click", () => {
 
 uploadImgInput.addEventListener("change", (e) => {
   let fileInput = uploadImgInput.files;
-
+    console.info(fileInput);
   for (let i = 0; i < fileInput.length; i++) {
     if (files.every((item) => item.name != fileInput[i].name)) {
       files.push(fileInput[i]);
     }
-  }
+    }
+
+    $(this).val(null);
 
   showImage();
 });
@@ -66,15 +68,16 @@ colorEl.on("change.select2", function (e) {
 });
 
 sizeEl.on("change.select2", function (e) {
-  showVariant($("#color-id option:selected").text(), sizeEl.val());
+    showVariantSize($("#color-id option:selected").text(), sizeEl.val());
 });
 
-const showVariant = (color, sizes) => {
+const showVariantSize = (color, sizes) => {
   let html = "";
   sizes.forEach(function (item, index) {
-      html += `<tr class="row-size" data-id="${item}">
+      let sizeName = $(`#size-id option[value='${item}']`).text();
+      html += `<tr class="row-size" data-id="${item}" data-name="${sizeName}">
     <th scope="row">${index++}</th>
-    <td>${color + " / " + item}</td>
+    <td>${color + " / " + sizeName}</td>
     <td>
         <input type="number" class="form-control form-control-sm w-50 input-stock">
     </td>
@@ -94,14 +97,15 @@ const showVariant = (color, sizes) => {
 
 $("#btn-add-variant").click(() => {
     const variant = {
-        color: colorEl.val(),
+        color_id: colorEl.val(),
+        color_name: $("#color-id option:selected").text(),
         sizes: getSize(),
         images: files,
         thumbnail: $(".preview-image-item img.active").data("id")
     };
     variants.push(variant);
-    console.info(variants);
-    //resetDialogVariant();
+    showVariant();
+    resetDialogVariant();
 })
 
 const getSize = () => {
@@ -111,6 +115,7 @@ const getSize = () => {
     sizesRow.each(function () {
         const ob = {
             id: $(this).data("id"),
+            name: $(this).data("name"),
             stock: $(this).find(".input-stock").val(),
             active: $(this).find(".input-active").prop("checked")
         };
@@ -126,3 +131,33 @@ const resetDialogVariant = () => {
     colorEl.val([]).trigger('change');
     sizeEl.val([]).trigger('change');
 }
+
+const showVariant = () => {
+    let html = '';
+    variants.forEach((variant, index) => {
+        const { color_id, color_name, images, sizes, thumbnail } = variant;
+        const textSize = sizes.map(item => item.name).join(", ");
+        html += `<tr><th>
+          <img class="img-variant" src="${URL.createObjectURL(images[thumbnail ?? 0])}" alt="" />
+        </th>
+         <td>${color_name}</td>
+         <td>${textSize}</td>
+         <td class="text-center">
+         <div class="btn-group">
+             <button data-index="${index}" type="button" class="btn-edit-variant btn btn-sm btn-alt-secondary" data-bs-toggle="tooltip" title="Edit">
+                    <i class="fa fa-pencil-alt"></i>
+             </button>
+             <button data-index="${index}" type="button" class="btn-delete-variant btn btn-sm btn-alt-secondary" data-bs-toggle="tooltip" title="Delete">
+                    <i class="fa fa-times"></i>
+             </button>
+         </div>
+        </td></tr>`;
+    })
+    $("#variant-color").html(html);
+}
+
+$(document).on("click", ".btn-delete-variant", function () {
+    let index = $(this).data("index");
+    variants.splice(index, 1);
+    showVariant()
+});

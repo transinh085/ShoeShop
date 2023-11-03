@@ -6622,7 +6622,7 @@
 									"_parent": {
 										"$ref": "AAAAAAGLcc8BRAsc7pQ="
 									},
-									"name": "color_name",
+									"name": "color_id",
 									"type": "VARCHAR",
 									"length": 0
 								},
