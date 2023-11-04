@@ -40,16 +40,17 @@
         </div>
         <div class="block-content">
             <div class="table-responsive">
-                <table class="table table-striped table-borderless table-vcenter">
+                <table class="table table-vcenter">
                     <thead>
                         <tr class="bg-body-dark">
                             <th class="d-none d-sm-table-cell text-center" style="width: 40px;">#</th>
                             <th class="text-center" style="width: 70px;"><i class="si si-user"></i></th>
-                            <th>Name</th>
+                            <th class="d-none d-sm-table-cell">Name</th>
                             <th class="d-none d-sm-table-cell">Email</th>
                             <th class="d-none d-sm-table-cell">Phone</th>
-                            <th class="d-none d-sm-table-cell">JoinTime</th>
-                            <th class="d-none d-lg-table-cell" style="width: 15%;">Status</th>
+                            <th class="d-none d-sm-table-cell">Gender</th>
+                            <th class="d-none d-sm-table-cell">BirthDay</th>
+                            <th class="d-none d-lg-table-cell">Status</th>
                             <th class="text-center" style="width: 80px;">Actions</th>
                         </tr>
                     </thead>
@@ -77,32 +78,32 @@
                 <div class="block-content" style="max-height: 650px; overflow-y: auto">
                     <form novalidate="novalidate" onsubmit="return false;" class="js-validation"
                           id="btabs-static-home" role="tabpanel" aria-labelledby="btabs-static-home-tab" tabindex="0">
-                        <div class="mb-4">
+                        <div class="mb-2">
                             <label class="form-label" for="val-fullname">FullName <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="val-fullname" name="val-fullname" placeholder="Enter a fullname..">
                         </div>
-                        <div class="mb-4">
-                            <label class="form-label" for="val-username">Name <span class="text-danger">*</span></label>
+                        <div class="mb-2">
+                            <label class="form-label" for="val-username">UserName <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="val-username" name="val-username" placeholder="Enter a username..">
                         </div>
-                        <div class="mb-4">
+                        <div class="mb-2">
                             <label class="form-label" for="val-email">Email <span class="text-danger">*</span></label>
                             <input type="email" class="form-control" id="val-email" name="val-email" placeholder="Your valid email..">
                         </div>
-                        <div class="mb-4">
+                        <div class="mb-2">
                             <label class="form-label" for="val-phone">Phone <span class="text-danger">*</span></label>
                             <input class="form-control" id="val-phone" name="val-phone" placeholder="Your valid phone..">
                         </div>
-                        <div class="mb-4">
+                        <div class="mb-2">
                             <label for="val-birthday" class="form-label">BirthDay <span class="text-danger">*</span></label>
                             <input type="text" class="js-flatpickr form-control form-control-alt" id="val-birthday"
                                    name="val-birthday" placeholder="Please enter birthday...">
                         </div>
-                        <div class="mb-4">
+                        <div class="mb-2">
                             <label class="form-label" for="val-password">Password <span class="text-danger">*</span></label>
                             <input type="password" class="form-control" id="val-password" name="val-password" placeholder="Choose a safe one..">
                         </div>
-                        <div class="mb-4 d-flex gap-4">
+                        <div class="mb-2 d-flex gap-4">
                             <label for="gender-male" class="form-label">Gender</label>
                             <div class="space-x-2">
                                 <div class="form-check form-check-inline">
@@ -139,13 +140,87 @@
     </div>
 </div>
 
+<div class="modal fade" id="modal-edit-customer" tabindex="-1" role="dialog" aria-labelledby="modal-customer"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="block block-rounded block-themed block-transparent mb-0">
+                <div class="block-header bg-primary-dark">
+                    <h3 class="block-title">Edit customer</h3>
+                    <div class="block-options">
+                        <button type="button" class="btn-block-option" data-bs-dismiss="modal" aria-label="Close">
+                            <i class="fa fa-fw fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="block-content" style="max-height: 650px; overflow-y: auto">
+                    <form novalidate="novalidate" onsubmit="return false;" class="js-validation-edit" tabindex="0">
+                        <div class="mb-2">
+                            <label class="form-label" for="val-fullname-edit">FullName <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="val-fullname-edit" name="val-fullname-edit" placeholder="Enter a fullname..">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label" for="val-username-edit">UserName <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="val-username-edit" name="val-username-edit" placeholder="Enter a username..">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label" for="val-email-edit">Email <span class="text-danger">*</span></label>
+                            <input type="email" class="form-control" id="val-email-edit" name="val-email-edit" placeholder="Your valid email..">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label" for="val-phone-edit">Phone <span class="text-danger">*</span></label>
+                            <input class="form-control" id="val-phone-edit" name="val-phone-edit" placeholder="Your valid phone..">
+                        </div>
+                        <div class="mb-2">
+                            <label for="val-birthday-edit" class="form-label">BirthDay <span class="text-danger">*</span></label>
+                            <input type="text" class="js-flatpickr form-control form-control-alt" id="val-birthday-edit"
+                                   name="val-birthday-edit" placeholder="Please enter birthday...">
+                        </div>
+                        <div class="mb-2 d-flex gap-4">
+                            <label for="gender-male-edit" class="form-label">Gender</label>
+                            <div class="space-x-2">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" id="gender-male-edit" name="user_gender-edit" value="1" checked>
+                                    <label class="form-check-label" for="gender-male-edit">Male</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" id="gender-female-edit" name="user_gender-edit" value="0">
+                                    <label class="form-check-label" for="gender-female-edit">Female</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center gap-5">
+                            <label for="user_status-edit" class="form-label">Status</label>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="user_status-edit" checked>
+                                <label class="form-check-label" for="user_status-edit"></label>
+                            </div>
+                        </div>
+                        <div class="block-content block-content-full text-end">
+                            <button type="button" class="btn btn-sm btn-alt-secondary me-1"
+                                    data-bs-dismiss="modal">
+                                Exit
+                            </button>
+                            <button type="submit" class="btn btn-sm btn-primary add-user-element"
+                                    id="btn-edit-user">
+                                Edit
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <script src="~/admin/js/plugins/sweetalert2/sweetalert2.min.js"></script>
     <script src="~/admin/js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
     <script src="~/admin/js/plugins/flatpickr/flatpickr.min.js"></script>
     <script src="~/admin/js/plugins/jquery-validation/jquery.validate.min.js"></script>
     <script src="~/admin/js/plugins/jquery-validation/additional-methods.js"></script>
-    <script>Dashmix.helpersOnLoad(['js-flatpickr', 'jq-datepicker']);</script>
+    <script src="~/admin/js/plugins/bootstrap-notify/bootstrap-notify.min.js"></script>
+    <script>Dashmix.helpersOnLoad(['js-flatpickr', 'jq-datepicker', 'jq-notify']);</script>
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
@@ -220,6 +295,43 @@
                             }
                         });
 
+                        jQuery(".js-validation-edit").validate({
+                            ignore: [],
+                            rules: {
+                                "val-fullname": {
+                                    required: true,
+                                },
+                                "val-username": {
+                                    required: true,
+                                },
+                                "val-email": {
+                                    required: true,
+                                    emailWithDot: true,
+                                },
+                                "val-birthday": {
+                                    required: true,
+                                },
+                                "val-phone": {
+                                    required: true,
+                                }
+                            },
+                            messages: {
+                                "val-fullname": {
+                                    required: "Please enter a fullname",
+                                },
+                                "val-username": {
+                                    required: "Please enter a username",
+                                },
+                                "val-email": "Please enter a valid email address",
+                                "val-birthday": {
+                                    required: "Please select a birthday",
+                                },
+                                "val-phone": {
+                                    required: "Please enter phone",
+                                }
+                            }
+                        });
+
                     }
                     static init() {
                         this.initValidation()
@@ -231,6 +343,7 @@
 
             // Tạo một hàm để lấy danh sách "allCustomers" từ API
             var customers = null;
+            var id = null;
             function getCustomerList() {
                 fetch('/Admin/Customers/allCustomers')
                     .then(response => {
@@ -246,21 +359,12 @@
                         customers.forEach((item, index) => {
                             index++
                             let st = item.status ? '<span class="badge bg-success">Enable</span>' : '<span class="badge bg-danger">Disable</span>'
-                            let dateObject = new Date(item.joinTime);
-
-                            // Trích xuất ngày, tháng và năm từ đối tượng Date
-                            let year = dateObject.getFullYear();
-                            let month = dateObject.getMonth() + 1; // Tháng bắt đầu từ 0
-                            let day = dateObject.getDate();
-
-                            // Hiển thị ngày tháng năm
-                            let formattedDate = day + "/" + month + "/" + year;
                             htmlCus += `<tr>
                                                     <td class="d-none d-sm-table-cell text-center">${index}</td>
                                                     <td class="text-center">
                                                                                                 <img class="img-avatar img-avatar48" src="${!item.profileImageUrl ? '/admin/media/avatars/avatar1.jpg' : item.profileImageUrl}" alt="">
                                                     </td>
-                                                    <td class="fw-semibold">
+                                                    <td class="d-none d-sm-table-cell">
                                                                         <a href="javascript:void(0)">${item.fullName}</a>
                                                     </td>
                                                     <td class="d-none d-sm-table-cell">
@@ -270,21 +374,23 @@
                                                                         ${item.phoneNumber}
                                                     </td>
                                                     <td class="d-none d-sm-table-cell">
-                                                                        ${formattedDate}
+                                                                        ${item.gender == 0 ? 'Male' : 'Female'}
+                                                    </td>
+                                                    <td class="d-none d-sm-table-cell">
+                                                                        ${formatDateFromString(item.birthDay)}
                                                     </td>
                                                     <td class="d-none d-lg-table-cell">
                                                                         ${st}
                                                     </td>
-                                                    <td class="text-center">
-                                                        <div class="btn-group">
-                                                            <button type="button" class="btn btn-sm btn-alt-secondary" data-bs-toggle="tooltip" title="Edit">
-                                                                <i class="fa fa-pencil-alt"></i>
-                                                            </button>
-                                                            <button type="button" class="btn btn-sm btn-alt-secondary" data-bs-toggle="tooltip" title="Delete">
-                                                                <i class="fa fa-times"></i>
-                                                            </button>
-                                                        </div>
-                                                    </td>
+
+                                                                <td class="text-center col-action">
+                                                      <a class="btn btn-sm btn-alt-secondary user-edit show" href="javascript:void(0)" data-bs-toggle="tooltip" aria-label="Edit" data-bs-original-title="Edit" data-action="edit" data-id="${item.id}">
+                                          <i class="fa fa-fw fa-pencil"></i>
+                                      </a>
+                                                      <a class="btn btn-sm btn-alt-secondary user-delete show" href="javascript:void(0)" data-bs-toggle="tooltip" aria-label="Delete" data-bs-original-title="Delete" data-action="delete" data-id="${item.id}">
+                                          <i class="fa fa-fw fa-times"></i>
+                                      </a>
+                                  </td>
                                                 </tr>`
                         })
                         document.getElementById("listCustomer").innerHTML = htmlCus;
@@ -304,18 +410,25 @@
                 $("#val-email").removeClass("is-invalid");
                 $("#val-birthday").removeClass("is-invalid");
                 $("#val-password").removeClass("is-invalid");
+                $("#val-fullname").removeClass("is-invalid");
+                $("#val-phone").removeClass("is-invalid");
+
                 // Tương tự cho các trường khác
 
                 // Xóa thẻ HTML hiển thị lỗi validation
                 $(".invalid-feedback").remove();
 
-                $("#val-username").val("");
                 $("#val-email").val("");
+                $("#val-username").val("");
                 $("#val-birthday").val("");
                 $("#val-password").val("");
+                $("#val-fullname").val("");
+                $("#val-phone").val("");
                 $("#gender-male").prop("checked", true);
                 $("#user_status").prop("checked", true);
             });
+
+
 
 
             $("#btn-add-user").on("click", function (e) {
@@ -344,9 +457,6 @@
                         Gender: gender,
                         Status: status
                     };
-
-                    console.log(userData)
-
                     $.ajax({
                         type: "POST",
                         url: "/Admin/Customers/AddCustomer",
@@ -354,22 +464,146 @@
                         success: function (response) {
                             // Xử lý phản hồi từ máy chủ, ví dụ: đóng modal và reset form
                             console.log(response);
-                            3
                             // Đóng modal (tuỳ vào mã HTML/CSS của modal)
                             $("#modal-customer").modal("hide");
                             getCustomerList();
+                            Dashmix.helpers('jq-notify', {
+                                type: 'success', icon: 'fa fa-check me-1', message: 'Successfully added customers' });
 
                         },
                         error: function (xhr, status, error) {
                             // Xử lý lỗi nếu có
-                            console.log("Error: " + error);
+                            console.log('Conflict')
+                            console.log(xhr.responseJSON.error);
+                            console.log(error);
+                            console.log(status);
+                            if (xhr?.responseJSON?.error)
+                                Dashmix.helpers('jq-notify', { type: 'warning', icon: 'fa fa-exclamation me-1', message: xhr.responseJSON.error });
                         }
                     });
-
                 }
             });
 
+            
+
+            $(document).on("click", "[data-action='edit']", function () {
+                id = $(this).data("id");
+
+                let customer = customers.find(c => c.id === id);
+                console.log(customer)
+                if (customer) {
+                    $("#val-fullname-edit").val(customer.fullName);
+                    $("#val-username-edit").val(customer.userName);
+                    $("#val-email-edit").val(customer.email);
+                    $("#val-phone-edit").val(customer.phoneNumber);
+                    let dateObject = new Date(customer.birthDay);
+
+                    // Trích xuất ngày, tháng và năm từ đối tượng Date
+                    let year = dateObject.getFullYear();
+                    let month = dateObject.getMonth() + 1; // Tháng bắt đầu từ 0
+                    let day = dateObject.getDate();
+                    let formattedDate = year+"-"+month+"-"+day;
+                    $("#val-birthday-edit").val(formattedDate);
+                    $("#gender-male-edit").prop("checked", customer.gender === 0);
+                    $("#gender-female-edit").prop("checked", customer.gender === 1);
+                    $("#user_status-edit").prop("checked", customer.status);
+                }
+
+                $("#modal-edit-customer").modal("show");
+            });
+
+            $("#btn-edit-user").on("click", function (e) {
+                e.preventDefault(); 
+
+                if ($(".js-validation-edit").valid()) {
+                    var fullname = $("#val-fullname-edit").val();
+                    var username = $("#val-username-edit").val();
+                    var email = $("#val-email-edit").val();
+                    var phone = $("#val-phone-edit").val();
+                    var birthday = $("#val-birthday-edit").val();
+                    var gender = $("input[name='user_gender']:checked").val();
+                    var status = $("#user_status").is(":checked");
+
+                    var userData = {
+                        FullName: fullname,
+                        UserName: username,
+                        Email: email,
+                        PhoneNumber: phone,
+                        Password: "passowrd",
+                        BirthDay: birthday,
+                        Gender: gender,
+                        Status: status
+                    };
+                    $.ajax({
+                        type: "PUT", 
+                        url: "/Admin/Customers/UpdateCustomer/" + id,
+                        data: userData,
+                        success: function (response) {
+                            console.log(response);
+                            $("#modal-edit-customer").modal("hide");
+                            getCustomerList();
+                            Dashmix.helpers('jq-notify', {
+                                type: 'success', icon: 'fa fa-check me-1', message: 'Successfully updated customer'
+                            });
+                        },
+                        error: function (xhr, status, error) {
+                            console.log('Conflict');
+                            console.log(xhr.responseJSON.error);
+                            console.log(error);
+                            console.log(status);
+                            if (xhr?.responseJSON?.error)
+                                Dashmix.helpers('jq-notify', { type: 'warning', icon: 'fa fa-exclamation me-1', message: xhr.responseJSON.error });
+                        }
+                    });
+                }
+            });
+
+            $(document).on("click", "[data-action='delete']", async function () {
+                let trid = $(this).data("id");
+                let result = await Swal.fire({
+                    title: "Are you sure?",
+                    text: "Would you like to delete this customer?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes, I'm sure",
+                    cancelButtonText: "Cancel"
+                });
+
+                if (result.value) {
+                    try {
+                        let response = await $.ajax({
+                            url: `/Admin/Customers/DeleteCustomer/${trid}`,
+                            type: "DELETE",
+                            success: function () {
+                                Swal.fire("Deleted!", "Successfully deleted the customer.", "success");
+                            },
+                            error: function (xhr, status, error) {
+                                console.error("Error:", error);
+                                Swal.fire("Error!", "Deletion of the customer was not successful.", "error");
+                            }
+                        });
+
+                        if (response) {
+                            getCustomerList();
+                        }
+                    } catch (error) {
+                        console.error("Error:", error);
+                        Swal.fire("Error!", "Deletion of the customer was not successful.", "error");
+                    }
+                }
+            });
+
+
+
         })
+        function formatDateFromString(dateString) {
+            const dateObject = new Date(dateString);
+            const year = dateObject.getFullYear();
+            const month = dateObject.getMonth() + 1;
+            const day = dateObject.getDate();
+            const formattedDate = `${day}/${month}/${year}`;
+            return formattedDate;
+        }
     </script>
 }
 
