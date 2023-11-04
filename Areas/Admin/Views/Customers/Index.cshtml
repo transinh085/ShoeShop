@@ -39,29 +39,31 @@
             </div>
         </div>
         <div class="block-content">
-            <table class="table table-striped table-borderless table-vcenter">
-                <thead>
-                    <tr class="bg-body-dark">
-                        <th class="d-none d-sm-table-cell text-center" style="width: 40px;">#</th>
-                        <th class="text-center" style="width: 70px;"><i class="si si-user"></i></th>
-                        <th>Name</th>
-                        <th class="d-none d-sm-table-cell">Email</th>
-                        <th class="d-none d-sm-table-cell">Phone</th>
-                        <th class="d-none d-sm-table-cell">JoinTime</th>
-                        <th class="d-none d-lg-table-cell" style="width: 15%;">Status</th>
-                        <th class="text-center" style="width: 80px;">Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="listCustomer">
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="table table-striped table-borderless table-vcenter">
+                    <thead>
+                        <tr class="bg-body-dark">
+                            <th class="d-none d-sm-table-cell text-center" style="width: 40px;">#</th>
+                            <th class="text-center" style="width: 70px;"><i class="si si-user"></i></th>
+                            <th>Name</th>
+                            <th class="d-none d-sm-table-cell">Email</th>
+                            <th class="d-none d-sm-table-cell">Phone</th>
+                            <th class="d-none d-sm-table-cell">JoinTime</th>
+                            <th class="d-none d-lg-table-cell" style="width: 15%;">Status</th>
+                            <th class="text-center" style="width: 80px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listCustomer">
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
 
 <div class="modal fade" id="modal-customer" tabindex="-1" role="dialog" aria-labelledby="modal-customer"
      aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="block block-rounded block-themed block-transparent mb-0">
                 <div class="block-header bg-primary-dark">
@@ -72,9 +74,13 @@
                         </button>
                     </div>
                 </div>
-                <div class="block-content">
+                <div class="block-content" style="max-height: 650px; overflow-y: auto">
                     <form novalidate="novalidate" onsubmit="return false;" class="js-validation"
                           id="btabs-static-home" role="tabpanel" aria-labelledby="btabs-static-home-tab" tabindex="0">
+                        <div class="mb-4">
+                            <label class="form-label" for="val-fullname">FullName <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="val-fullname" name="val-fullname" placeholder="Enter a fullname..">
+                        </div>
                         <div class="mb-4">
                             <label class="form-label" for="val-username">Name <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="val-username" name="val-username" placeholder="Enter a username..">
@@ -82,6 +88,10 @@
                         <div class="mb-4">
                             <label class="form-label" for="val-email">Email <span class="text-danger">*</span></label>
                             <input type="email" class="form-control" id="val-email" name="val-email" placeholder="Your valid email..">
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label" for="val-phone">Phone <span class="text-danger">*</span></label>
+                            <input class="form-control" id="val-phone" name="val-phone" placeholder="Your valid phone..">
                         </div>
                         <div class="mb-4">
                             <label for="val-birthday" class="form-label">BirthDay <span class="text-danger">*</span></label>
@@ -144,38 +154,72 @@
             ! function () {
                 class e {
                     static initValidation() {
-                        Dashmix.helpers("jq-validation"), jQuery(".js-validation").validate({
+                        // Add custom validation methods
+                        $.validator.addMethod("passwordLength", function (value) {
+                            return value.length >= 6;
+                        }, "Passwords must be at least 6 characters.");
+
+                        $.validator.addMethod("passwordNonAlphanumeric", function (value) {
+                            return /[^\w]/.test(value);
+                        }, "Passwords must have at least one non-alphanumeric character.");
+
+                        $.validator.addMethod("passwordLowercase", function (value) {
+                            return /[a-z]/.test(value);
+                        }, "Passwords must have at least one lowercase ('a'-'z').");
+
+                        $.validator.addMethod("passwordUppercase", function (value) {
+                            return /[A-Z]/.test(value);
+                        }, "Passwords must have at least one uppercase ('A'-'Z').");
+
+                        // Use custom validation methods in your rules
+                        Dashmix.helpers("jq-validation");
+                        jQuery(".js-validation").validate({
                             ignore: [],
                             rules: {
+                                "val-fullname": {
+                                    required: true,
+                                },
                                 "val-username": {
-                                    required: !0,
+                                    required: true,
                                 },
                                 "val-email": {
-                                    required: !0,
-                                    emailWithDot: !0
+                                    required: true,
+                                    emailWithDot: true,
                                 },
                                 "val-password": {
-                                    required: !0,
+                                    required: true,
+                                    passwordLength: true,
+                                    passwordNonAlphanumeric: true,
+                                    passwordLowercase: true,
+                                    passwordUppercase: true,
                                 },
                                 "val-birthday": {
-                                    required: !0
+                                    required: true,
+                                },
+                                "val-phone": {
+                                    required: true,
                                 }
                             },
                             messages: {
+                                "val-fullname": {
+                                    required: "Please enter a fullname",
+                                },
                                 "val-username": {
                                     required: "Please enter a username",
-                                    minlength: "Your username must consist of at least 3 characters"
                                 },
                                 "val-email": "Please enter a valid email address",
                                 "val-password": {
                                     required: "Please provide a password",
-                                    minlength: "Your password must be at least 5 characters long"
                                 },
                                 "val-birthday": {
-                                    required: "Please select a birthday"
+                                    required: "Please select a birthday",
+                                },
+                                "val-phone": {
+                                    required: "Please enter phone",
                                 }
                             }
-                        })
+                        });
+
                     }
                     static init() {
                         this.initValidation()
@@ -201,13 +245,23 @@
                         let htmlCus = '';
                         customers.forEach((item, index) => {
                             index++
+                            let st = item.status ? '<span class="badge bg-success">Enable</span>' : '<span class="badge bg-danger">Disable</span>'
+                            let dateObject = new Date(item.joinTime);
+
+                            // Trích xuất ngày, tháng và năm từ đối tượng Date
+                            let year = dateObject.getFullYear();
+                            let month = dateObject.getMonth() + 1; // Tháng bắt đầu từ 0
+                            let day = dateObject.getDate();
+
+                            // Hiển thị ngày tháng năm
+                            let formattedDate = day + "/" + month + "/" + year;
                             htmlCus += `<tr>
                                                     <td class="d-none d-sm-table-cell text-center">${index}</td>
                                                     <td class="text-center">
-                                                                        <img class="img-avatar img-avatar48" src="${item.profileImageUrl}" alt="">
+                                                                                                <img class="img-avatar img-avatar48" src="${!item.profileImageUrl ? '/admin/media/avatars/avatar1.jpg' : item.profileImageUrl}" alt="">
                                                     </td>
                                                     <td class="fw-semibold">
-                                                                        <a href="javascript:void(0)">${item.userName}</a>
+                                                                        <a href="javascript:void(0)">${item.fullName}</a>
                                                     </td>
                                                     <td class="d-none d-sm-table-cell">
                                                                         ${item.email}
@@ -216,10 +270,10 @@
                                                                         ${item.phoneNumber}
                                                     </td>
                                                     <td class="d-none d-sm-table-cell">
-                                                                        ${item.joinTime}
+                                                                        ${formattedDate}
                                                     </td>
                                                     <td class="d-none d-lg-table-cell">
-                                                        <span class="badge bg-danger">Disable</span>
+                                                                        ${st}
                                                     </td>
                                                     <td class="text-center">
                                                         <div class="btn-group">
@@ -243,36 +297,55 @@
             // Gọi hàm để lấy danh sách
             getCustomerList();
 
+            // Gán sự kiện khi modal được ẩn (đóng)
+            $("#modal-customer").on("hidden.bs.modal", function () {
+                // Xóa các lớp CSS liên quan đến lỗi validation
+                $("#val-username").removeClass("is-invalid");
+                $("#val-email").removeClass("is-invalid");
+                $("#val-birthday").removeClass("is-invalid");
+                $("#val-password").removeClass("is-invalid");
+                // Tương tự cho các trường khác
+
+                // Xóa thẻ HTML hiển thị lỗi validation
+                $(".invalid-feedback").remove();
+
+                $("#val-username").val("");
+                $("#val-email").val("");
+                $("#val-birthday").val("");
+                $("#val-password").val("");
+                $("#gender-male").prop("checked", true);
+                $("#user_status").prop("checked", true);
+            });
+
+
             $("#btn-add-user").on("click", function (e) {
                 e.preventDefault(); // Ngăn chặn form gửi đi (để xử lý validation trước)
 
                 // Kiểm tra nếu form validation thành công
                 if ($(".js-validation").valid()) {
                     // Lấy dữ liệu từ các trường input
+                    var fullname = $("#val-fullname").val();
                     var username = $("#val-username").val();
                     var email = $("#val-email").val();
+                    var phone = $("#val-phone").val();
                     var birthday = $("#val-birthday").val();
                     var password = $("#val-password").val();
                     var gender = $("input[name='user_gender']:checked").val();
                     var status = $("#user_status").is(":checked");
 
-                    // Hiển thị dữ liệu trong console
-                    console.log("Username: " + username);
-                    console.log("Email: " + email);
-                    console.log("Birthday: " + birthday);
-                    console.log("Password: " + password);
-                    console.log("Gender: " + gender);
-                    console.log("Status: " + status);
-
                     // Tạo một đối tượng chứa dữ liệu cần gửi lên máy chủ
                     var userData = {
+                        FullName: fullname,
                         UserName: username,
                         Email: email,
+                        PhoneNumber: phone,
                         BirthDay: birthday,
                         Password: password,
                         Gender: gender,
                         Status: status
                     };
+
+                    console.log(userData)
 
                     $.ajax({
                         type: "POST",
@@ -280,19 +353,12 @@
                         data: userData, // Dữ liệu cần gửi lên máy chủ
                         success: function (response) {
                             // Xử lý phản hồi từ máy chủ, ví dụ: đóng modal và reset form
-                            let customer = JSON.parse(response)
-                            console.log(customer);
-
+                            console.log(response);
+                            3
                             // Đóng modal (tuỳ vào mã HTML/CSS của modal)
                             $("#modal-customer").modal("hide");
+                            getCustomerList();
 
-                            // Reset form (tuỳ vào mã HTML của form)
-                            $("#val-username").val("");
-                            $("#val-email").val("");
-                            $("#val-birthday").val("");
-                            $("#val-password").val("");
-                            $("input[name='user_gender']").prop("checked", false);
-                            $("#user_status").prop("checked", false);
                         },
                         error: function (xhr, status, error) {
                             // Xử lý lỗi nếu có

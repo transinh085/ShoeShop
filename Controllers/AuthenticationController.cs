@@ -85,7 +85,6 @@ namespace ShoeShop.Controllers
 				Email = registerViewModel.EmailAddress,
 			};
 			var newUserResponse = await _userManager.CreateAsync(newUser, registerViewModel.Password);
-			Console.WriteLine("add: "+newUserResponse.ToString());
 			if (newUserResponse.Succeeded)
 				await _userManager.AddToRoleAsync(newUser, UserRoles.Customer);
 

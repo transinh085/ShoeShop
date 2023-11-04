@@ -176,6 +176,9 @@ namespace ShoeShop.Migrations
                     b.Property<int?>("Gender")
                         .HasColumnType("int");
 
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<DateTime?>("JoinTime")
                         .HasColumnType("datetime(6)");
 

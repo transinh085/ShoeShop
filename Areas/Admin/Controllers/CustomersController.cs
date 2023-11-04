@@ -1,11 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ShoeShop.Data;
 using ShoeShop.Models;
-using ShoeShop.ViewModels;
-using ShoeShop.ViewModels.Authentication;
 
 namespace ShoeShop.Areas.Admin.Controllers
 {
@@ -42,7 +39,7 @@ namespace ShoeShop.Areas.Admin.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> AddCustomer([Bind("UserName,Email,PhoneNumber,BirthDay,Password,Gender,Status")] CustomerViewModel customerView)
+        public async Task<IActionResult> AddCustomer([Bind("FullName,UserName,Email,PhoneNumber,BirthDay,Password,Gender,Status")] CustomerViewModel customerView)
         {
             if (ModelState.IsValid)
             {
@@ -57,11 +54,22 @@ namespace ShoeShop.Areas.Admin.Controllers
                 }
                 var newUser = new AppUser()
                 {
+                    FullName = customerView.FullName,
                     UserName = customerView.UserName,
                     Email = customerView.Email,
+                    EmailConfirmed = true,
+                    PhoneNumber = customerView.PhoneNumber,
+                    ProfileImageUrl = "https://avatars.githubusercontent.com/u/120194990?v=4",
+                    Status = customerView.Status,
+                    Gender = customerView.Gender,
+                    BirthDay = customerView.BirthDay,
                 };
                 var newUserResponse = await userManager.CreateAsync(newUser, customerView.Password);
-                return Ok(customerView);
+
+                if (newUserResponse.Succeeded)
+                    await userManager.AddToRoleAsync(newUser, UserRoles.Customer);
+                user = await userManager.FindByEmailAsync(customerView.Email);
+                return Ok(user);
             }
             else
             {

@@ -4,6 +4,10 @@ using System.ComponentModel.DataAnnotations;
 
 public class CustomerViewModel
 {
+    [Display(Name = "FullName")]
+    [Required(ErrorMessage = "FullName is required")]
+    public string FullName { get; set; }
+
     [Display(Name = "Name")]
     [Required(ErrorMessage = "Name is required")]
     public string UserName { get; set; }
