@@ -1,8 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using ShoeShop.Data;
+using ShoeShop.Models;
 using ShoeShop.ViewModels.Product;
 using System.Diagnostics;
+using System.Drawing;
+using Image = ShoeShop.Models.Image;
 
 namespace ShoeShop.Areas.Admin.Controllers
 {
@@ -38,47 +42,85 @@ namespace ShoeShop.Areas.Admin.Controllers
 
         [HttpPost]
         [Consumes("multipart/form-data")]
-        public IActionResult Create([FromForm] ProductViewModel productViewModel)
+        public async Task<IActionResult> Create([FromForm] ProductViewModel productViewModel)
         {
-            string? productName = productViewModel.Name;
-            Console.WriteLine(productName);
-            decimal productPrice = productViewModel.Price;
-            string productDescription = productViewModel.Description;
-            bool productStatus = productViewModel.Status;
-            string productSlug = productViewModel.Slug;
-            string productCategory = productViewModel.Category;
-            string productBrand = productViewModel.Brand;
-
-            foreach (var variant in productViewModel.Variants)
+            using (var transaction = await _context.Database.BeginTransactionAsync())
             {
-                string colorId = variant.ColorId;
-
-                foreach (var size in variant.Sizes)
+                try
                 {
-                    int sizeId = size.Id;
-                    int sizeStock = size.Stock;
-                    bool sizeActive = size.Active;
-                }
-
-                foreach (var image in variant.Images)
-                {
-                    if (image.Length > 0)
+                    Product product = new Product()
                     {
-                        string uniqueFileName = Guid.NewGuid().ToString() + "_" + image.FileName;
-                        string filePath = Path.Combine("wwwroot/img/products", uniqueFileName);
+                        Name = productViewModel.Name,
+                        Price = productViewModel.Price,
+                        Description = productViewModel.Description,
+                        IsActive = productViewModel.Status,
+                        Slug = productViewModel.Slug,
+                        CategoryId = Convert.ToInt32(productViewModel.Category),
+                        BrandId = Convert.ToInt32(productViewModel.Brand),
+                    };
 
-                        using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    _context.Add(product);
+                    await _context.SaveChangesAsync();
+
+                    for (int i = 0; i < productViewModel.Variants.Count; i++)
+                    {
+                        VariantViewModel variantViewModel = productViewModel.Variants[i];
+                        Variant variant = new Variant()
                         {
-                            image.CopyTo(fileStream);
+                            ProductId = product.Id,
+                            ColorId = variantViewModel.ColorId,
+                            Position = i + 1
+                        };
+
+                        _context.Add(variant);
+                        await _context.SaveChangesAsync();
+
+                        foreach (var size in variantViewModel.Sizes)
+                        {
+                            VariantSize variantSize = new VariantSize()
+                            {
+                                VariantId = variant.Id,
+                                SizeId = size.SizeId,
+                                Quantity = size.Stock,
+                                IsActive = size.Active
+                            };
+                            _context.Add(variantSize);
                         }
-                        Console.WriteLine(filePath);
+
+                        foreach (var image in variantViewModel.Images)
+                        {
+                            if (image.Length > 0)
+                            {
+                                string uniqueFileName = Guid.NewGuid().ToString() + "_" + image.FileName;
+                                string filePath = Path.Combine("wwwroot/img/products", uniqueFileName);
+
+                                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                                {
+                                    image.CopyTo(fileStream);
+                                }
+
+                                Image img = new Image()
+                                {
+                                    Name = uniqueFileName,
+                                    VariantId = variant.Id
+                                };
+
+                                _context.Add(img);
+                            }
+                        }
                     }
+
+                    await _context.SaveChangesAsync();
+                    transaction.Commit();
+
+                    return Ok(new { message = "Created product successfully!" });
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    return BadRequest(new { message = "Failed to create product." });
                 }
             }
-
-            // Xử lý dữ liệu sản phẩm và hình ảnh theo nhu cầu của bạn
-
-            return Ok(new { message = "Dữ liệu sản phẩm đã được xử lý thành công!" });
         }
     }
 }

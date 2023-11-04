@@ -11,6 +11,9 @@ namespace ShoeShop.Data
 		public DbSet<Color> Colors { get; set; }
 		public DbSet<Brand> Brands { get; set; }
 		public DbSet<Size> Sizes { get; set; }
-
-	}
+		public DbSet<Product> Products { get; set; }
+		public DbSet<Variant> Variants { get; set; }
+		public DbSet<Image> Images { get; set; }
+		public DbSet<VariantSize> VariantSizes { get; set; }
+    }
 }

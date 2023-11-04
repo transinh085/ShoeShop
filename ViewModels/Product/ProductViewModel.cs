@@ -16,7 +16,7 @@ namespace ShoeShop.ViewModels.Product
 
     public class VariantViewModel
     {
-        public string? ColorId { get; set; }
+        public int ColorId { get; set; }
         public List<SizeViewModel>? Sizes { get; set; }
         public List<IFormFile> Images { get; set; }
         public int Thumbnail { get; set; }
@@ -24,7 +24,7 @@ namespace ShoeShop.ViewModels.Product
 
     public class SizeViewModel
     {
-        public int Id { get; set; }
+        public int SizeId { get; set; }
         public int Stock { get; set; }
         public bool Active { get; set; }
     }

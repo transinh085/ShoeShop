@@ -191,8 +191,7 @@ $("#btn-save-product").click(() => {
 
         // Thêm các kích thước cho biến thể hiện tại
         variant.sizes.forEach((size, sizeIndex) => {
-            formData.append(`Variants[${variantIndex}].Sizes[${sizeIndex}].Id`, size.id);
-            formData.append(`Variants[${variantIndex}].Sizes[${sizeIndex}].Name`, size.name);
+            formData.append(`Variants[${variantIndex}].Sizes[${sizeIndex}].SizeId`, size.sizeId);
             formData.append(`Variants[${variantIndex}].Sizes[${sizeIndex}].Stock`, size.stock);
             formData.append(`Variants[${variantIndex}].Sizes[${sizeIndex}].Active`, size.active);
         });
