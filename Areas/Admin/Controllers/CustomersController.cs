@@ -164,7 +164,5 @@ namespace ShoeShop.Areas.Admin.Controllers
             }
         }
 
-
-
     }
 }

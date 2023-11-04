@@ -98,7 +98,8 @@
 [data-notify] {
     z-index: 9999 !important;
 }
-    .upload-image-container #upload-image-error {
+
+.upload-image-container #upload-image-error {
     position: absolute;
     bottom: 0;
     transform: translateY(calc(100% + 10px));
