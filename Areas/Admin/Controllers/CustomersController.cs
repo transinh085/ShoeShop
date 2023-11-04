@@ -29,7 +29,10 @@ namespace ShoeShop.Areas.Admin.Controllers
             var users = await userManager.Users.ToListAsync();
 
             // Sử dụng LINQ để lọc danh sách người dùng có quyền "Customer"
-            var customerUsers = users.Where(u => userManager.IsInRoleAsync(u, UserRoles.Customer).Result).ToList();
+            var customerUsers = users
+                .Where(u => userManager.IsInRoleAsync(u, UserRoles.Customer).Result)
+                .Where(u => u.IsDeleted == false)
+                .ToList();
 
             // Sắp xếp danh sách theo JoinTime (thời gian gia nhập) giảm dần
             customerUsers = customerUsers.OrderByDescending(u => u.JoinTime).ToList();
@@ -44,6 +47,7 @@ namespace ShoeShop.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var user = await userManager.FindByEmailAsync(customerView.Email);
+                var checkUserName = await userManager.FindByNameAsync(customerView.UserName);
                 if (customerView.Status != true)
                 {
                     return BadRequest(new { error = "Status must be true." });
@@ -52,6 +56,10 @@ namespace ShoeShop.Areas.Admin.Controllers
                 {
                     return Conflict(new { error = "Email address is already in use." });
                 }
+                if (checkUserName != null)
+                {
+                    return Conflict(new { error = "User name is already in use." });
+                }
                 var newUser = new AppUser()
                 {
                     FullName = customerView.FullName,
@@ -59,7 +67,6 @@ namespace ShoeShop.Areas.Admin.Controllers
                     Email = customerView.Email,
                     EmailConfirmed = true,
                     PhoneNumber = customerView.PhoneNumber,
-                    ProfileImageUrl = "https://avatars.githubusercontent.com/u/120194990?v=4",
                     Status = customerView.Status,
                     Gender = customerView.Gender,
                     BirthDay = customerView.BirthDay,
@@ -78,7 +85,84 @@ namespace ShoeShop.Areas.Admin.Controllers
             }
         }
 
+        [HttpPut]
+        public async Task<IActionResult> UpdateCustomer(string id, [Bind("FullName,UserName,Email,PhoneNumber,BirthDay,Password,Gender,Status")] CustomerViewModel customerView)
+        {
+            if (ModelState.IsValid)
+            {
+                var existingUser = await userManager.FindByIdAsync(id);
 
+                if (existingUser == null)
+                {
+                    return NotFound(new { error = "User not found." });
+                }
+
+                if (customerView.Status != true)
+                {
+                    return BadRequest(new { error = "Status must be true." });
+                }
+
+                // Kiểm tra xem có email khác đã sử dụng không, ngoại trừ người dùng hiện tại
+                var userWithEmail = await userManager.FindByEmailAsync(customerView.Email);
+                if (userWithEmail != null && userWithEmail.Id != id)
+                {
+                    return Conflict(new { error = "Email address is already in use." });
+                }
+
+                // Cập nhật thông tin người dùng
+                existingUser.FullName = customerView.FullName;
+                existingUser.UserName = customerView.UserName;
+                existingUser.Email = customerView.Email;
+                existingUser.PhoneNumber = customerView.PhoneNumber;
+                existingUser.Status = customerView.Status;
+                existingUser.Gender = customerView.Gender;
+                existingUser.BirthDay = customerView.BirthDay;
+
+
+                var updateResult = await userManager.UpdateAsync(existingUser);
+
+                if (updateResult.Succeeded)
+                {
+                    return Ok(existingUser);
+                }
+                else
+                {
+                    var errors = updateResult.Errors.Select(error => error.Description);
+                    return BadRequest(new { error = "User update failed.", errors });
+                }
+            }
+            else
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                return BadRequest(errors);
+            }
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteCustomer(string id)
+        {
+            var existingUser = await userManager.FindByIdAsync(id);
+
+            if (existingUser == null)
+            {
+                return NotFound(new { error = "User not found." });
+            }
+
+            // Cập nhật trạng thái IsDeleted thành true để đánh dấu người dùng đã bị xoá
+            existingUser.IsDeleted = true;
+
+            var updateResult = await userManager.UpdateAsync(existingUser);
+
+            if (updateResult.Succeeded)
+            {
+                return Ok(new { message = "User deleted successfully." });
+            }
+            else
+            {
+                var errors = updateResult.Errors.Select(error => error.Description);
+                return BadRequest(new { error = "User deletion failed.", errors });
+            }
+        }
 
     }
 }

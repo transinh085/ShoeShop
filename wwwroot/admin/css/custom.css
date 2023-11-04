@@ -95,6 +95,10 @@
     object-fit: contain
 }
 
+[data-notify] {
+    z-index: 9999 !important;
+}
+
 .upload-image-container #upload-image-error {
     position: absolute;
     bottom: 0;

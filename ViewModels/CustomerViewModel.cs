@@ -8,8 +8,8 @@ public class CustomerViewModel
     [Required(ErrorMessage = "FullName is required")]
     public string FullName { get; set; }
 
-    [Display(Name = "Name")]
-    [Required(ErrorMessage = "Name is required")]
+    [Display(Name = "UserName")]
+    [Required(ErrorMessage = "UserName is required")]
     public string UserName { get; set; }
 
     [Display(Name = "Email")]
