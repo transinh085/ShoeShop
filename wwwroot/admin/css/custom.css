@@ -69,6 +69,10 @@
     border-radius: 8px
 }
 
+.preview-image-item img.active{
+    border: 2px solid #0665d0
+}
+
 .preview-image-item span {
     position: absolute;
     right: 4px;
@@ -82,4 +86,11 @@
     justify-content: center;
     background-color: rgb(0 0 0 / 40%);
     border-radius: 50%;
+}
+
+.img-variant{
+    width: 60px;
+    height: 60px;
+    border-radius: 5px;
+    object-fit: contain
 }

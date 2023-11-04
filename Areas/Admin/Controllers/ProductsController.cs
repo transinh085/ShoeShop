@@ -24,9 +24,11 @@ namespace ShoeShop.Areas.Admin.Controllers
 			var brands = await _context.Brands.ToListAsync();
 			var categories = await _context.Categories.ToListAsync();
             var colors = await _context.Colors.ToListAsync();
+            var sizes = await _context.Sizes.ToListAsync();
             ViewBag.Brands = brands;
             ViewBag.Categories = categories;
             ViewBag.Colors = colors;
+            ViewBag.Sizes = sizes;
             return View();
 		}
 	}

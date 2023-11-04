@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ShoeShop.Data;
 
@@ -10,9 +11,16 @@ using ShoeShop.Data;
 namespace ShoeShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+<<<<<<<< HEAD:Migrations/20231104054101_initDb.Designer.cs
+    [Migration("20231104054101_initDb")]
+    partial class initDb
+========
+    [Migration("20231103164612_InitMigration")]
+    partial class InitMigration
+>>>>>>>> 4537e69e219f75c709ab454e4697485efe4f809f:Migrations/20231103164612_InitMigration.Designer.cs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
