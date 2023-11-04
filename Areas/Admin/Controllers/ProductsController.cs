@@ -65,7 +65,7 @@ namespace ShoeShop.Areas.Admin.Controllers
                     if (image.Length > 0)
                     {
                         string uniqueFileName = Guid.NewGuid().ToString() + "_" + image.FileName;
-                        string filePath = Path.Combine("wwwroot/test", uniqueFileName);
+                        string filePath = Path.Combine("wwwroot/img/products", uniqueFileName);
 
                         using (var fileStream = new FileStream(filePath, FileMode.Create))
                         {

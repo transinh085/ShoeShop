@@ -94,3 +94,13 @@
     border-radius: 5px;
     object-fit: contain
 }
+
+.upload-image-container #upload-image-error {
+    position: absolute;
+    bottom: 0;
+    transform: translateY(calc(100% + 10px));
+}
+
+.upload-image-input.is-invalid ~ .upload-image-container {
+    border: .125rem dashed #e04f1a;
+}
