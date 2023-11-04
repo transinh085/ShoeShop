@@ -12,14 +12,13 @@ uploadContainer.addEventListener("click", () => {
 
 uploadImgInput.addEventListener("change", (e) => {
   let fileInput = uploadImgInput.files;
-    console.info(fileInput);
   for (let i = 0; i < fileInput.length; i++) {
     if (files.every((item) => item.name != fileInput[i].name)) {
       files.push(fileInput[i]);
     }
-    }
+   }
 
-    $(this).val(null);
+   uploadImgInput.value = '';
 
   showImage();
 });
@@ -61,103 +60,323 @@ const checkUI = () => {
 let colorEl = $("#color-id");
 let sizeEl = $("#size-id");
 
-colorEl.on("change.select2", function (e) {
-  if ($(this).val()) {
-    sizeEl.prop("disabled", false);
-  }
-});
-
-sizeEl.on("change.select2", function (e) {
-    showVariantSize($("#color-id option:selected").text(), sizeEl.val());
-});
-
-const showVariantSize = (color, sizes) => {
-  let html = "";
-  sizes.forEach(function (item, index) {
-      let sizeName = $(`#size-id option[value='${item}']`).text();
-      html += `<tr class="row-size" data-id="${item}" data-name="${sizeName}">
-    <th scope="row">${index++}</th>
-    <td>${color + " / " + sizeName}</td>
-    <td>
-        <input type="number" class="form-control form-control-sm w-50 input-stock">
-    </td>
-    <td class="form-check form-switch mb-0">
-        <div class="form-check form-switch">
-            <input class="form-check-input input-active" type="checkbox" checked>
-        </div>
-    </td></tr>`;
-  });
-    if (sizes.length > 0) {
-        $(".table-variant-container").show();
-    } else { 
-        $(".table-variant-container").hide();
-    }
-  $("#table-variant").html(html);
-};
-
 $("#btn-add-variant").click(() => {
-    const variant = {
-        color_id: colorEl.val(),
-        color_name: $("#color-id option:selected").text(),
-        sizes: getSize(),
-        images: files,
-        thumbnail: $(".preview-image-item img.active").data("id")
-    };
-    variants.push(variant);
-    showVariant();
-    resetDialogVariant();
+    if ($("#form-variant").valid()) {
+        const variant = getObjVariant();
+        variants.push(variant);
+        showVariant();
+        resetDialogVariant();
+        showVariantSize();
+        $("#modal-variant").modal("hide");
+    }
 })
-
-const getSize = () => {
-    let sizesRow = $(".row-size");
-    let result = [];
-
-    sizesRow.each(function () {
-        const ob = {
-            id: $(this).data("id"),
-            name: $(this).data("name"),
-            stock: $(this).find(".input-stock").val(),
-            active: $(this).find(".input-active").prop("checked")
-        };
-        result.push(ob);
-    });
-
-    return result;
-}
 
 const resetDialogVariant = () => { 
     files = [];
-    showImage();
+    showImage(files);
     colorEl.val([]).trigger('change');
     sizeEl.val([]).trigger('change');
+    $("#form-variant").validate().resetForm();
+    $("#form-variant").find(".is-invalid").removeClass("is-invalid");
 }
 
 const showVariant = () => {
-    let html = '';
-    variants.forEach((variant, index) => {
-        const { color_id, color_name, images, sizes, thumbnail } = variant;
-        const textSize = sizes.map(item => item.name).join(", ");
-        html += `<tr><th>
-          <img class="img-variant" src="${URL.createObjectURL(images[thumbnail ?? 0])}" alt="" />
+    const htmlArray = variants.map((variant, index) => {
+        const { colorName, sizes, thumbnail } = variant;
+        const textSize = sizes.map(item => item.sizeName).join(", ");
+        const imageUrl = URL.createObjectURL(variant.images[thumbnail ?? 0]);
+        return `<tr><th>
+            <img class="img-variant" src="${imageUrl}" alt="" />
         </th>
-         <td>${color_name}</td>
-         <td>${textSize}</td>
-         <td class="text-center">
-         <div class="btn-group">
-             <button data-index="${index}" type="button" class="btn-edit-variant btn btn-sm btn-alt-secondary" data-bs-toggle="tooltip" title="Edit">
+        <td>${colorName}</td>
+        <td>${textSize}</td>
+        <td class="text-center">
+            <div class="btn-group">
+                <button data-index="${index}" class="btn-up-variant btn btn-sm btn-alt-secondary" ${index == 0 ? "disabled" : ''}>
+                    <i class="fa fa-arrow-up"></i>
+                </button>
+                <button data-index="${index}" class="btn-down-variant btn btn-sm btn-alt-secondary" ${index == variants.length - 1 ? "disabled" : ''}>
+                    <i class="fa fa-arrow-down"></i>
+                </button>
+                <button data-index="${index}" class="btn-edit-variant btn btn-sm btn-alt-secondary">
                     <i class="fa fa-pencil-alt"></i>
-             </button>
-             <button data-index="${index}" type="button" class="btn-delete-variant btn btn-sm btn-alt-secondary" data-bs-toggle="tooltip" title="Delete">
+                </button>
+                <button data-index="${index}" class="btn-delete-variant btn btn-sm btn-alt-secondary">
                     <i class="fa fa-times"></i>
-             </button>
-         </div>
+                </button>
+            </div>
         </td></tr>`;
-    })
-    $("#variant-color").html(html);
+    });
+
+    const newHtml = htmlArray.join('');
+    const variantColorContainer = $("#variant-color");
+    if (newHtml !== variantColorContainer.html()) {
+        variantColorContainer.html(newHtml);
+    }
+
+    if (variants.length > 0) {
+        $(".variants-container").show();
+    } else {
+        $(".variants-container").hide();
+    }
+};
+
+$(".variants-container").on("click", ".btn-edit-variant", function (event) {
+    const index = $(this).data("index");
+    $("#btn-add-variant").hide();
+    $("#btn-update-variant").show();
+    $("#btn-update-variant").data("index", index);
+    showModalVariant(variants[index]);
+    $("#modal-variant").modal('show');
+});
+
+$(".variants-container").on("click", ".btn-delete-variant", function (event) {
+    const index = $(this).data("index");
+    variants.splice(index, 1);
+    showVariant();
+    showVariantSize();
+});
+
+$(".variants-container").on("click", ".btn-up-variant", function (event) {
+    const index = $(this).data("index");
+    if (index > 0 && index < variants.length) {
+        [variants[index], variants[index - 1]] = [variants[index - 1], variants[index]];
+        showVariant();
+    }
+});
+
+$(".variants-container").on("click", ".btn-down-variant", function (event) {
+    const index = $(this).data("index");
+    if (index >= 0 && index < variants.length - 1) {
+        [variants[index], variants[index + 1]] = [variants[index + 1], variants[index]];
+        showVariant();
+    }
+});
+
+
+$("#btn-save-product").click(() => {
+    const productData = {
+        Name: $('#product-name').val(),
+        Price: $('#product-price').val(),
+        Description: CKEDITOR.instances['js-ckeditor'].getData(),
+        Status: $('#product-status').prop("checked"),
+        Slug: $('#product-slug').val(),
+        Category: $('#category-id').val(),
+        Brand: $('#brand-id').val(),
+        Variants: variants 
+    };
+
+    console.info(productData);
+
+    var formData = new FormData();
+
+    // Thêm các thuộc tính của sản phẩm vào FormData
+    formData.append('Name', productData.Name);
+    formData.append('Price', productData.Price);
+    formData.append('Description', productData.Description);
+    formData.append('Status', productData.Status);
+    formData.append('Slug', productData.Slug);
+    formData.append('Category', productData.Category);
+    formData.append('Brand', productData.Brand);
+
+    // Thêm các biến thể của sản phẩm
+    productData.Variants.forEach((variant, variantIndex) => {
+        formData.append(`Variants[${variantIndex}].ColorId`, variant.colorId);
+        formData.append(`Variants[${variantIndex}].ColorName`, variant.colorName);
+
+        // Thêm các hình ảnh blob cho biến thể hiện tại
+        variant.images.forEach((imageBlob, imageIndex) => {
+            formData.append(`Variants[${variantIndex}].Images`, imageBlob, imageBlob.name);
+        });
+
+        // Thêm các kích thước cho biến thể hiện tại
+        variant.sizes.forEach((size, sizeIndex) => {
+            formData.append(`Variants[${variantIndex}].Sizes[${sizeIndex}].Id`, size.id);
+            formData.append(`Variants[${variantIndex}].Sizes[${sizeIndex}].Name`, size.name);
+            formData.append(`Variants[${variantIndex}].Sizes[${sizeIndex}].Stock`, size.stock);
+            formData.append(`Variants[${variantIndex}].Sizes[${sizeIndex}].Active`, size.active);
+        });
+    });
+
+    console.log(formData);
+
+    $.ajax({
+        type: 'POST',
+        url: '/Admin/Products/Create',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            console.log(response);
+        },
+        error: function (error) {
+            console.error(error);
+        }
+    });
+})
+
+const showModalVariant = (variant) => {
+    const { colorId, sizes, images, thumbnail } = variant;
+    const sizeArr = sizes.map(item => item.sizeId)
+    files = images;
+    showImage();
+    $(`.preview-image-item img[data-id='${thumbnail}']`).addClass('active');
+    colorEl.val(colorId).trigger('change');
+    sizeEl.val(sizeArr).trigger('change');
 }
 
-$(document).on("click", ".btn-delete-variant", function () {
-    let index = $(this).data("index");
-    variants.splice(index, 1);
-    showVariant()
+$("#btn-update-variant").click(function () {
+    const index = $(this).data("index");
+    variants[index] = getObjVariant();
+    showVariant();
+    showVariantSize();
+    $("#btn-add-variant").show();
+    $("#btn-update-variant").hide();
+    resetDialogVariant();
 });
+
+const getObjVariant = () => {
+    const colorId = colorEl.val();
+    const colorName = $("#color-id option:selected").text();
+    const sizes = sizeEl.val().map(sizeId => {
+        const sizeName = $(`#size-id option[value='${sizeId}']`).text();
+
+        console.info(`.input-stock[data-size='${sizeId}'][data-color='${colorId}']`);
+        console.info($(`.input-stock[data-size='${sizeId}'][data-color='${colorId}']`).val());
+
+        const stock = $(`.input-stock[data-size='${sizeId}'][data-color='${colorId}']`).val() ?? '';
+        return { sizeId, sizeName, stock, active: true };
+    });
+    const images = files;
+    const thumbnail = $(".preview-image-item img.active").data("id");
+    const variant = { colorId, colorName, sizes, images, thumbnail };
+    return variant;
+}
+
+const getSizes = () => {
+
+}
+
+const showVariantSize = () => {
+    let html = '';
+    if (variants.length > 0) {
+        $(".table-variant-container").show();
+    } else {
+        $(".table-variant-container").hide();
+    }
+    variants.forEach(variant => {
+        variant.sizes.forEach(function (item, index) {
+            const { sizeId, sizeName, stock, active } = item;
+            html += `<tr class="row-size" data-id="${sizeId}" data-name="${sizeName}">
+            <th scope="row">${++index}</th>
+            <td>${variant.colorName + ' / ' + sizeName}</td>
+            <td>
+                <input data-size="${sizeId}" data-color="${variant.colorId}" type="number" class="form-control form-control-sm w-50 input-stock" value="${stock}">
+            </td>
+            <td class="form-check form-switch mb-0">
+                <div class="form-check form-switch">
+                    <input data-size="${sizeId}" data-color="${variant.colorId}" class="form-check-input input-active" type="checkbox" checked="${active}">
+                </div>
+            </td></tr>`;
+        });
+    })
+
+    $("#table-variant").html(html);
+};
+
+$(document).on('input', '.input-stock', function () {
+    const sizeId = $(this).data('size');
+    const colorId = $(this).data('color');
+    const newStockValue = $(this).val();
+
+    const variant = variants.find(item => item.colorId == colorId);
+    let size = variant.sizes.find(item => item.sizeId == sizeId);
+    size.stock = newStockValue;
+});
+
+// Validate
+Dashmix.onLoad((() => class {
+    static initValidation() {
+        Dashmix.helpers("jq-validation"),
+        jQuery.validator.addMethod("checkFiles", function (value, element) {
+            return files.length > 0;
+         }, "Please upload at least one file");
+
+        jQuery("#form-variant").validate({
+            ignore: [],
+            rules: {
+                "color-id": {
+                    required: !0
+                },
+                "size-id": {
+                    required: !0
+                },
+                "upload-image": {
+                    checkFiles: true
+                }
+            },
+            messages: {
+                "color-id": "Please select a value!",
+                "size-id": "Please select values!",
+                "upload-image": "Please upload at least one file !"
+            }
+        });
+
+        jQuery("#product-form").validate({
+            ignore: [],
+            rules: {
+                "product-name": {
+                    required: !0
+                },
+                "product-price": {
+                    required: !0
+                },
+                "product-slug": {
+                    required: !0
+                },
+                "brand-id": {
+                    required: !0
+                },
+                "category-id": {
+                    required: !0
+                }
+            },
+            messages: {
+                "product-name": "Please enter a name!",
+                "product-price": "Please enter a price!",
+                "product-slug": "Please enter a slug!",
+                "brand-id": "Please select a value!",
+                "category-id": "Please select values!",
+            }
+        });
+
+        jQuery(".js-select2").on("change", (e => {
+            jQuery(e.currentTarget).valid()
+        }));
+
+        jQuery("#upload-image").on("change", (e => {
+            jQuery(e.currentTarget).valid()
+        }));
+    }
+
+    static init() {
+        this.initValidation()
+    }
+}.init()));
+
+const slugify = (str) => {
+    return String(str)
+        .normalize('NFKD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9 -]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-');
+}
+
+$("#product-name").blur(function () {
+    const name = $(this).val();
+    $("#product-slug").val(slugify(name));
+});
+
