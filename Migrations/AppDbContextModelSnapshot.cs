@@ -155,8 +155,8 @@ namespace ShoeShop.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<DateOnly?>("BirthDay")
-                        .HasColumnType("date");
+                    b.Property<DateTime?>("BirthDay")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -169,7 +169,14 @@ namespace ShoeShop.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<bool?>("Gender")
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int?>("Gender")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("IsDeleted")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<DateTime?>("JoinTime")

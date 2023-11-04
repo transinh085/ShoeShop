@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ShoeShop.Data;
 using ShoeShop.Models;
@@ -25,7 +20,7 @@ namespace ShoeShop.Areas.Admin.Controllers
         {
               return _context.Sizes != null ? 
                           View(await _context.Sizes.ToListAsync()) :
-                          Problem("Entity set 'AppDbContext.Size'  is null.");
+                          Problem("Entity set 'AppDbContext.Sizes'  is null.");
         }
 
         // GET: Admin/Sizes/Details/5
@@ -42,7 +37,6 @@ namespace ShoeShop.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-
             return View(size);
         }
 
@@ -144,7 +138,7 @@ namespace ShoeShop.Areas.Admin.Controllers
         {
             if (_context.Sizes == null)
             {
-                return Problem("Entity set 'AppDbContext.Size'  is null.");
+                return Problem("Entity set 'AppDbContext.Sizes'  is null.");
             }
             var size = await _context.Sizes.FindAsync(id);
             if (size != null)

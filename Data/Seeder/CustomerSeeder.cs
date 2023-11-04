@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Bogus;
+using Microsoft.AspNetCore.Identity;
 using ShoeShop.Models;
+using System;
 
 namespace ShoeShop.Data.Seeder
 {
     public class CustomerSeeder
     {
-        public CustomerSeeder(IApplicationBuilder applicationBuilder) {
+        public CustomerSeeder(IApplicationBuilder applicationBuilder)
+        {
             CustomerAsync(applicationBuilder).Wait();
         }
 
@@ -13,14 +16,14 @@ namespace ShoeShop.Data.Seeder
         {
             using (var serviceScope = applicationBuilder.ApplicationServices.CreateScope())
             {
-                //Roles
-                //Users
                 var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
-                // Tạo 20 tài khoản khách hàng
+
+                var faker = new Faker();
+
                 for (int i = 0; i < 20; i++)
                 {
-                    var customerEmail = $"customer{i + 1}@example.com";
-                    var customerUserName = $"customer{i + 1}";
+                    var customerEmail = faker.Internet.Email();
+                    var customerUserName = faker.Internet.UserName();
 
                     var existingCustomer = await userManager.FindByEmailAsync(customerEmail);
 
@@ -28,11 +31,14 @@ namespace ShoeShop.Data.Seeder
                     {
                         var newCustomer = new AppUser()
                         {
+                            FullName = faker.Name.FullName(),
                             UserName = customerUserName,
                             Email = customerEmail,
                             EmailConfirmed = true,
-                            PhoneNumber = "0123456789",
-                            ProfileImageUrl = "https://avatars.githubusercontent.com/u/120194990?v=4"
+                            PhoneNumber = faker.Phone.PhoneNumber(),
+                            Status = faker.Random.Bool(),
+                            Gender = faker.Random.Number(0, 1), // 0 for male, 1 for female
+                            BirthDay = faker.Date.Past(),
                         };
 
                         // Tạo tài khoản khách hàng và thêm vào vai trò "Customer"
@@ -43,4 +49,5 @@ namespace ShoeShop.Data.Seeder
             }
         }
     }
+
 }
