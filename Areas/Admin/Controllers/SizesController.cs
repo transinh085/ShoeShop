@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ShoeShop.Data;
 using ShoeShop.Models;
@@ -23,26 +18,25 @@ namespace ShoeShop.Areas.Admin.Controllers
         // GET: Admin/Sizes
         public async Task<IActionResult> Index()
         {
-              return _context.Size != null ? 
-                          View(await _context.Size.ToListAsync()) :
-                          Problem("Entity set 'AppDbContext.Size'  is null.");
+              return _context.Sizes != null ? 
+                          View(await _context.Sizes.ToListAsync()) :
+                          Problem("Entity set 'AppDbContext.Sizes'  is null.");
         }
 
         // GET: Admin/Sizes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Size == null)
+            if (id == null || _context.Sizes == null)
             {
                 return NotFound();
             }
 
-            var size = await _context.Size
+            var size = await _context.Sizes
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (size == null)
             {
                 return NotFound();
             }
-
             return View(size);
         }
 
@@ -71,12 +65,12 @@ namespace ShoeShop.Areas.Admin.Controllers
         // GET: Admin/Sizes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Size == null)
+            if (id == null || _context.Sizes == null)
             {
                 return NotFound();
             }
 
-            var size = await _context.Size.FindAsync(id);
+            var size = await _context.Sizes.FindAsync(id);
             if (size == null)
             {
                 return NotFound();
@@ -122,12 +116,12 @@ namespace ShoeShop.Areas.Admin.Controllers
         // GET: Admin/Sizes/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Size == null)
+            if (id == null || _context.Sizes == null)
             {
                 return NotFound();
             }
 
-            var size = await _context.Size
+            var size = await _context.Sizes
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (size == null)
             {
@@ -142,14 +136,14 @@ namespace ShoeShop.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Size == null)
+            if (_context.Sizes == null)
             {
-                return Problem("Entity set 'AppDbContext.Size'  is null.");
+                return Problem("Entity set 'AppDbContext.Sizes'  is null.");
             }
-            var size = await _context.Size.FindAsync(id);
+            var size = await _context.Sizes.FindAsync(id);
             if (size != null)
             {
-                _context.Size.Remove(size);
+                _context.Sizes.Remove(size);
             }
             
             await _context.SaveChangesAsync();
@@ -158,7 +152,7 @@ namespace ShoeShop.Areas.Admin.Controllers
 
         private bool SizeExists(int id)
         {
-          return (_context.Size?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.Sizes?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

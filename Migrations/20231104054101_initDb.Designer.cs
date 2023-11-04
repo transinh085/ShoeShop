@@ -11,8 +11,8 @@ using ShoeShop.Data;
 namespace ShoeShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231103092658_initMigration")]
-    partial class initMigration
+    [Migration("20231104054101_initDb")]
+    partial class initDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -158,8 +158,8 @@ namespace ShoeShop.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<DateOnly?>("BirthDay")
-                        .HasColumnType("date");
+                    b.Property<DateTime?>("BirthDay")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -172,8 +172,12 @@ namespace ShoeShop.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<bool?>("Gender")
-                        .HasColumnType("tinyint(1)");
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int?>("Gender")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("JoinTime")
                         .HasColumnType("datetime(6)");
@@ -272,6 +276,21 @@ namespace ShoeShop.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Colors");
+                });
+
+            modelBuilder.Entity("ShoeShop.Models.Size", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Sizes");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

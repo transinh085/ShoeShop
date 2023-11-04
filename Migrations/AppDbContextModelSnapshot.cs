@@ -155,8 +155,8 @@ namespace ShoeShop.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<DateOnly?>("BirthDay")
-                        .HasColumnType("date");
+                    b.Property<DateTime?>("BirthDay")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -169,8 +169,12 @@ namespace ShoeShop.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<bool?>("Gender")
-                        .HasColumnType("tinyint(1)");
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int?>("Gender")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("JoinTime")
                         .HasColumnType("datetime(6)");
@@ -283,7 +287,7 @@ namespace ShoeShop.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Size");
+                    b.ToTable("Sizes");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -28,11 +28,15 @@ namespace ShoeShop.Data.Seeder
                     {
                         var newCustomer = new AppUser()
                         {
+                            FullName = $"hgbaodev {i + 1}",
                             UserName = customerUserName,
                             Email = customerEmail,
                             EmailConfirmed = true,
                             PhoneNumber = "0123456789",
-                            ProfileImageUrl = "https://avatars.githubusercontent.com/u/120194990?v=4"
+                            ProfileImageUrl = "https://avatars.githubusercontent.com/u/120194990?v=4",
+                            Status = true,
+                            Gender = 0,
+                            BirthDay = DateTime.Now,
                         };
 
                         // Tạo tài khoản khách hàng và thêm vào vai trò "Customer"

@@ -13,62 +13,42 @@ namespace ShoeShop.Data.Seeder
             using (var serviceScope = applicationBuilder.ApplicationServices.CreateScope())
             {
                 var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
-                string adminUserEmail = "transinh085@gmail.com";
-
-                var adminUser = await userManager.FindByEmailAsync(adminUserEmail);
+                var adminUser = await userManager.FindByEmailAsync("transinh085@gmail.com");
                 if (adminUser == null)
                 {
                     var newAdminUser = new AppUser()
                     {
+                        FullName = "Trần Nhật Sinh",
                         UserName = "transinh085",
-                        Email = adminUserEmail,
+                        Email = "transinh085@gmail.com",
                         EmailConfirmed = true,
                         PhoneNumber = "0123456789",
-                        ProfileImageUrl = "https://avatars.githubusercontent.com/u/45101901?v=4"
+                        ProfileImageUrl = "https://avatars.githubusercontent.com/u/45101901?v=4",
+                        Status = true,
+                        Gender = 0,
+                        BirthDay = DateTime.Now,
                     };
                     await userManager.CreateAsync(newAdminUser, "Coding@1234?");
                     await userManager.AddToRoleAsync(newAdminUser, UserRoles.Admin);
                 }
 
-                string appUserEmail = "hgbao2k3@gmail.com";
-                var appUser = await userManager.FindByEmailAsync(appUserEmail);
+                var appUser = await userManager.FindByEmailAsync("hgbao2k3@gmail.com");
                 if (appUser == null)
                 {
                     var newAppUser = new AppUser()
                     {
+                        FullName = "Hoàng Gia Bảo",
                         UserName = "hgbaodev",
-                        Email = appUserEmail,
+                        Email = "hgbao2k3@gmail.com",
                         EmailConfirmed = true,
                         PhoneNumber = "0123456789",
-                        ProfileImageUrl = "https://avatars.githubusercontent.com/u/120194990?v=4"
+                        ProfileImageUrl = "https://avatars.githubusercontent.com/u/120194990?v=4",
+                        Status = true,
+                        Gender = 0,
+                        BirthDay = DateTime.Now,
                     };
                     await userManager.CreateAsync(newAppUser, "Coding@1234?");
                     await userManager.AddToRoleAsync(newAppUser, UserRoles.Admin);
-                }
-
-                // Tạo 20 tài khoản khách hàng
-                for (int i = 0; i < 20; i++)
-                {
-                    var customerEmail = $"customer{i + 1}@example.com";
-                    var customerUserName = $"customer{i + 1}";
-
-                    var existingCustomer = await userManager.FindByEmailAsync(customerEmail);
-
-                    if (existingCustomer == null)
-                    {
-                        var newCustomer = new AppUser()
-                        {
-                            UserName = customerUserName,
-                            Email = customerEmail,
-                            EmailConfirmed = true,
-                            PhoneNumber = "0123456789",
-                            ProfileImageUrl = "https://avatars.githubusercontent.com/u/120194990?v=4"
-                        };
-
-                        // Tạo tài khoản khách hàng và thêm vào vai trò "Customer"
-                        await userManager.CreateAsync(newCustomer, "Coding@1234?");
-                        await userManager.AddToRoleAsync(newCustomer, UserRoles.Customer);
-                    }
                 }
             }
         }

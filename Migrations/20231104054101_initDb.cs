@@ -7,7 +7,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace ShoeShop.Migrations
 {
     /// <inheritdoc />
-    public partial class initMigration : Migration
+    public partial class initDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -35,8 +35,9 @@ namespace ShoeShop.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "varchar(255)", nullable: false),
-                    Gender = table.Column<bool>(type: "tinyint(1)", nullable: true),
-                    BirthDay = table.Column<DateOnly>(type: "date", nullable: true),
+                    FullName = table.Column<string>(type: "longtext", nullable: false),
+                    Gender = table.Column<int>(type: "int", nullable: true),
+                    BirthDay = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     ProfileImageUrl = table.Column<string>(type: "longtext", nullable: true),
                     JoinTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     Status = table.Column<bool>(type: "tinyint(1)", nullable: true),
@@ -100,6 +101,20 @@ namespace ShoeShop.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Colors", x => x.Id);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Sizes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(type: "longtext", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Sizes", x => x.Id);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
@@ -278,6 +293,9 @@ namespace ShoeShop.Migrations
 
             migrationBuilder.DropTable(
                 name: "Colors");
+
+            migrationBuilder.DropTable(
+                name: "Sizes");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

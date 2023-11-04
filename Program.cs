@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ShoeShop.Data;
@@ -68,5 +68,6 @@ app.UseEndpoints(endpoints =>
 	name: "default",
 	pattern: "{controller=Home}/{action=Index}/{id?}");
 });
+
 
 app.Run();
