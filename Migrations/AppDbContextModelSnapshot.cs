@@ -308,11 +308,11 @@ namespace ShoeShop.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("IsDetele")
                         .HasColumnType("tinyint(1)");
@@ -326,14 +326,19 @@ namespace ShoeShop.Migrations
                     b.Property<string>("Slug")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Thumbnail")
-                        .HasColumnType("longtext");
+                    b.Property<bool>("Status")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int?>("ThumbnailId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("BrandId");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("ThumbnailId");
 
                     b.ToTable("Products");
                 });
@@ -367,12 +372,16 @@ namespace ShoeShop.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Thumbnail")
-                        .HasColumnType("longtext");
+                    b.Property<int?>("ThumbnailId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ColorId");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("ThumbnailId");
 
                     b.ToTable("Variants");
                 });
@@ -457,13 +466,11 @@ namespace ShoeShop.Migrations
 
             modelBuilder.Entity("ShoeShop.Models.Image", b =>
                 {
-                    b.HasOne("ShoeShop.Models.Variant", "Variant")
+                    b.HasOne("ShoeShop.Models.Variant", null)
                         .WithMany("Images")
                         .HasForeignKey("VariantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Variant");
                 });
 
             modelBuilder.Entity("ShoeShop.Models.Product", b =>
@@ -480,9 +487,15 @@ namespace ShoeShop.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("ShoeShop.Models.Image", "Thumbnail")
+                        .WithMany()
+                        .HasForeignKey("ThumbnailId");
+
                     b.Navigation("Brand");
 
                     b.Navigation("Category");
+
+                    b.Navigation("Thumbnail");
                 });
 
             modelBuilder.Entity("ShoeShop.Models.Variant", b =>
@@ -493,7 +506,19 @@ namespace ShoeShop.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("ShoeShop.Models.Product", null)
+                        .WithMany("Variants")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ShoeShop.Models.Image", "Thumbnail")
+                        .WithMany()
+                        .HasForeignKey("ThumbnailId");
+
                     b.Navigation("Color");
+
+                    b.Navigation("Thumbnail");
                 });
 
             modelBuilder.Entity("ShoeShop.Models.VariantSize", b =>
@@ -504,15 +529,13 @@ namespace ShoeShop.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ShoeShop.Models.Variant", "Variant")
+                    b.HasOne("ShoeShop.Models.Variant", null)
                         .WithMany("VariantSizes")
                         .HasForeignKey("VariantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Size");
-
-                    b.Navigation("Variant");
                 });
 
             modelBuilder.Entity("ShoeShop.Models.Brand", b =>
@@ -523,6 +546,11 @@ namespace ShoeShop.Migrations
             modelBuilder.Entity("ShoeShop.Models.Category", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("ShoeShop.Models.Product", b =>
+                {
+                    b.Navigation("Variants");
                 });
 
             modelBuilder.Entity("ShoeShop.Models.Size", b =>

@@ -293,6 +293,16 @@ $(document).on('input', '.input-stock', function () {
     size.stock = newStockValue;
 });
 
+$(document).on('input', '.input-active', function () {
+    const sizeId = $(this).data('size');
+    const colorId = $(this).data('color');
+    const newStockValue = $(this).prop("checked");
+
+    const variant = variants.find(item => item.colorId == colorId);
+    let size = variant.sizes.find(item => item.sizeId == sizeId);
+    size.active = newStockValue;
+});
+
 // Validate
 Dashmix.onLoad((() => class {
     static initValidation() {

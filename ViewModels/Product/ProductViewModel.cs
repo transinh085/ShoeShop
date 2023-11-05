@@ -11,13 +11,13 @@ namespace ShoeShop.ViewModels.Product
         public string? Slug { get; set; }
         public string? Category { get; set; }
         public string? Brand { get; set; }
-        public List<VariantViewModel>? Variants { get; set; }
+        public List<VariantViewModel> Variants { get; set; }
     }
 
     public class VariantViewModel
     {
         public int ColorId { get; set; }
-        public List<SizeViewModel>? Sizes { get; set; }
+        public List<SizeViewModel> Sizes { get; set; }
         public List<IFormFile> Images { get; set; }
         public int Thumbnail { get; set; }
     }

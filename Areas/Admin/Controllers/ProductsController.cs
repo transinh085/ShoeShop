@@ -4,8 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using ShoeShop.Data;
 using ShoeShop.Models;
 using ShoeShop.ViewModels.Product;
-using System.Diagnostics;
-using System.Drawing;
+using System.Text.Json;
 using Image = ShoeShop.Models.Image;
 
 namespace ShoeShop.Areas.Admin.Controllers
@@ -22,15 +21,24 @@ namespace ShoeShop.Areas.Admin.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
 		{
-			return View();
-		}
+            if(_context.Products != null)
+            {
+                var products = await _context.Products.Include(product => product.Category)
+                    .Include(product => product.Brand)
+                    .Include(product => product.Thumbnail)
+                    .OrderByDescending(product => product.CreatedAt)
+                    .ToListAsync();
+                return View(products);
+            }
+            return Problem("Entity set 'AppDbContext.Products'  is null.");
+        }
 
 		public async Task<IActionResult> Create()
 		{
-			var brands = await _context.Brands.ToListAsync();
-			var categories = await _context.Categories.ToListAsync();
+            var brands = await _context.Brands.ToListAsync();
+            var categories = await _context.Categories.ToListAsync();
             var colors = await _context.Colors.ToListAsync();
             var sizes = await _context.Sizes.ToListAsync();
             ViewBag.Brands = brands;
@@ -53,7 +61,7 @@ namespace ShoeShop.Areas.Admin.Controllers
                         Name = productViewModel.Name,
                         Price = productViewModel.Price,
                         Description = productViewModel.Description,
-                        IsActive = productViewModel.Status,
+                        Status = productViewModel.Status,
                         Slug = productViewModel.Slug,
                         CategoryId = Convert.ToInt32(productViewModel.Category),
                         BrandId = Convert.ToInt32(productViewModel.Brand),
@@ -87,6 +95,7 @@ namespace ShoeShop.Areas.Admin.Controllers
                             _context.Add(variantSize);
                         }
 
+                        int thumbI = 0;
                         foreach (var image in variantViewModel.Images)
                         {
                             if (image.Length > 0)
@@ -106,7 +115,10 @@ namespace ShoeShop.Areas.Admin.Controllers
                                 };
 
                                 _context.Add(img);
+                                if(thumbI == variantViewModel.Thumbnail) variant.Thumbnail = img;
+                                if(i == 0 && thumbI == variantViewModel.Thumbnail) product.Thumbnail = img;
                             }
+                            thumbI++;
                         }
                     }
 
@@ -121,6 +133,25 @@ namespace ShoeShop.Areas.Admin.Controllers
                     return BadRequest(new { message = "Failed to create product." });
                 }
             }
+        }
+
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null || _context.Products == null)
+            {
+                return NotFound();
+            }
+
+            var product = await _context.Products
+                .Include(product => product.Variants)
+                    .ThenInclude(variant => variant.Images)
+                .Include(product => product.Variants)
+                    .ThenInclude(variant => variant.Color)
+                .Include(product => product.Variants)
+                    .ThenInclude(variant => variant.VariantSizes)
+                        .ThenInclude(size => size.Size)
+                .FirstOrDefaultAsync(p => p.Id == id);
+            return Ok(new { message = product });
         }
     }
 }
