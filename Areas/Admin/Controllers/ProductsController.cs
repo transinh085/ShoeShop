@@ -4,14 +4,13 @@ using Microsoft.EntityFrameworkCore;
 using ShoeShop.Data;
 using ShoeShop.Models;
 using ShoeShop.ViewModels.Product;
-using System.Text.Json;
 using Image = ShoeShop.Models.Image;
 
 namespace ShoeShop.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class ProductsController : Controller
-	{
+    {
         private readonly AppDbContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
@@ -22,8 +21,8 @@ namespace ShoeShop.Areas.Admin.Controllers
         }
 
         public async Task<IActionResult> Index()
-		{
-            if(_context.Products != null)
+        {
+            if (_context.Products != null)
             {
                 var products = await _context.Products.Include(product => product.Category)
                     .Include(product => product.Brand)
@@ -35,8 +34,8 @@ namespace ShoeShop.Areas.Admin.Controllers
             return Problem("Entity set 'AppDbContext.Products'  is null.");
         }
 
-		public async Task<IActionResult> Create()
-		{
+        public async Task<IActionResult> Create()
+        {
             var brands = await _context.Brands.ToListAsync();
             var categories = await _context.Categories.ToListAsync();
             var colors = await _context.Colors.ToListAsync();
@@ -46,7 +45,7 @@ namespace ShoeShop.Areas.Admin.Controllers
             ViewBag.Colors = colors;
             ViewBag.Sizes = sizes;
             return View();
-		}
+        }
 
         [HttpPost]
         [Consumes("multipart/form-data")]
@@ -115,8 +114,8 @@ namespace ShoeShop.Areas.Admin.Controllers
                                 };
 
                                 _context.Add(img);
-                                if(thumbI == variantViewModel.Thumbnail) variant.Thumbnail = img;
-                                if(i == 0 && thumbI == variantViewModel.Thumbnail) product.Thumbnail = img;
+                                if (thumbI == variantViewModel.Thumbnail) variant.Thumbnail = img;
+                                if (i == 0 && thumbI == variantViewModel.Thumbnail) product.Thumbnail = img;
                             }
                             thumbI++;
                         }
@@ -142,7 +141,7 @@ namespace ShoeShop.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Products
+            ViewBag.Product = await _context.Products
                 .Include(product => product.Variants)
                     .ThenInclude(variant => variant.Images)
                 .Include(product => product.Variants)
@@ -151,7 +150,49 @@ namespace ShoeShop.Areas.Admin.Controllers
                     .ThenInclude(variant => variant.VariantSizes)
                         .ThenInclude(size => size.Size)
                 .FirstOrDefaultAsync(p => p.Id == id);
-            return Ok(new { message = product });
+
+
+            ViewBag.Brands = await _context.Brands.ToListAsync();
+            ViewBag.Categories = await _context.Categories.ToListAsync();
+            ViewBag.Colors = await _context.Colors.ToListAsync();
+            ViewBag.Sizes = await _context.Sizes.ToListAsync();
+
+            return View();
+        }
+
+        public async Task<IActionResult> GetVariant(int? id)
+        {
+            if (id == null || _context.Products == null)
+            {
+                return NotFound();
+            }
+
+            var variants = await _context.Variants
+                .Where(v => v.ProductId == id)
+                .Select(variant => new
+                {
+                    Id = variant.Id,
+                    ColorName = variant.Color.Name,
+                    Thumbnail = variant.Thumbnail.Name,
+                    Images = variant.Images.Select(image => image.Name).ToList(),
+                    Sizes = variant.VariantSizes.Select(size => new
+                    {
+                        SizeId = size.SizeId,
+                        Quantity = size.Quantity,
+                        Active = size.IsActive,
+                        SizeName = size.Size.Name
+                    }).ToList()
+                })
+                .ToListAsync();
+            return Ok(new { message = variants });
+        }
+
+        public async Task<IActionResult> Test()
+        {
+            var variants = await _context.Variants
+                .Select(v => v.Color.Name)
+                .ToListAsync();
+            return Ok(new { message = variants });
         }
     }
 }
