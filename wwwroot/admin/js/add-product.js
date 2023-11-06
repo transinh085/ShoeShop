@@ -26,6 +26,7 @@ uploadImgInput.addEventListener("change", (e) => {
 const showImage = () => {
   checkUI();
   let images = "";
+    console.info(files);
   files.forEach(function (file, index) {
       images += `<div class="preview-image-item" onClick=(setThumbnail(event))>
                      <img src="${URL.createObjectURL(file)}" alt="image" data-id="${index}"/>

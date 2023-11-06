@@ -66,75 +66,74 @@
      aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
-            <div class="block block-rounded block-themed block-transparent mb-0">
-                <div class="block-header bg-primary-dark">
-                    <h3 class="block-title">Add customer</h3>
-                    <div class="block-options">
-                        <button type="button" class="btn-block-option" data-bs-dismiss="modal" aria-label="Close">
-                            <i class="fa fa-fw fa-times"></i>
-                        </button>
+            <div class="modal-header block-header block-header-default">
+                <h3 class="block-title">Add customer</h3>
+                <div class="block-options">
+                    <button type="button" class="btn-block-option" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="fa fa-fw fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="block-content" style="max-height: 650px; overflow-y: auto">
+                <form novalidate="novalidate" onsubmit="return false;" class="js-validation"
+                        id="btabs-static-home" role="tabpanel" aria-labelledby="btabs-static-home-tab" tabindex="0">
+                    <div class="mb-2">
+                        <label class="form-label" for="val-fullname">FullName <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="val-fullname" name="val-fullname" placeholder="Enter a fullname..">
                     </div>
-                </div>
-                <div class="block-content" style="max-height: 650px; overflow-y: auto">
-                    <form novalidate="novalidate" onsubmit="return false;" class="js-validation"
-                          id="btabs-static-home" role="tabpanel" aria-labelledby="btabs-static-home-tab" tabindex="0">
-                        <div class="mb-2">
-                            <label class="form-label" for="val-fullname">FullName <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="val-fullname" name="val-fullname" placeholder="Enter a fullname..">
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label" for="val-username">UserName <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="val-username" name="val-username" placeholder="Enter a username..">
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label" for="val-email">Email <span class="text-danger">*</span></label>
-                            <input type="email" class="form-control" id="val-email" name="val-email" placeholder="Your valid email..">
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label" for="val-phone">Phone <span class="text-danger">*</span></label>
-                            <input class="form-control" id="val-phone" name="val-phone" placeholder="Your valid phone..">
-                        </div>
-                        <div class="mb-2">
-                            <label for="val-birthday" class="form-label">BirthDay <span class="text-danger">*</span></label>
-                            <input type="text" class="js-flatpickr form-control form-control-alt" id="val-birthday"
-                                   name="val-birthday" placeholder="Please enter birthday...">
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label" for="val-password">Password <span class="text-danger">*</span></label>
-                            <input type="password" class="form-control" id="val-password" name="val-password" placeholder="Choose a safe one..">
-                        </div>
-                        <div class="mb-2 d-flex gap-4">
-                            <label for="gender-male" class="form-label">Gender</label>
-                            <div class="space-x-2">
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" id="gender-male" name="user_gender" value="1" checked>
-                                    <label class="form-check-label" for="gender-male">Male</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" id="gender-female" name="user_gender" value="0">
-                                    <label class="form-check-label" for="gender-female">Female</label>
-                                </div>
+                    <div class="mb-2">
+                        <label class="form-label" for="val-username">UserName <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="val-username" name="val-username" placeholder="Enter a username..">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label" for="val-email">Email <span class="text-danger">*</span></label>
+                        <input type="email" class="form-control" id="val-email" name="val-email" placeholder="Your valid email..">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label" for="val-phone">Phone <span class="text-danger">*</span></label>
+                        <input class="form-control" id="val-phone" name="val-phone" placeholder="Your valid phone..">
+                    </div>
+                    <div class="mb-2">
+                        <label for="val-birthday" class="form-label">BirthDay <span class="text-danger">*</span></label>
+                        <input type="text" class="js-flatpickr form-control form-control-alt" id="val-birthday"
+                                name="val-birthday" placeholder="Please enter birthday...">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label" for="val-password">Password <span class="text-danger">*</span></label>
+                        <input type="password" class="form-control" id="val-password" name="val-password" placeholder="Choose a safe one..">
+                    </div>
+                    <div class="mb-2 d-flex gap-4">
+                        <label for="gender-male" class="form-label">Gender</label>
+                        <div class="space-x-2">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" id="gender-male" name="user_gender" value="1" checked>
+                                <label class="form-check-label" for="gender-male">Male</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" id="gender-female" name="user_gender" value="0">
+                                <label class="form-check-label" for="gender-female">Female</label>
                             </div>
                         </div>
-                        <div class="d-flex align-items-center gap-5">
-                            <label for="user_status" class="form-label">Status</label>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="user_status" checked>
-                                <label class="form-check-label" for="user_status"></label>
-                            </div>
+                    </div>
+                    <div class="d-flex align-items-center gap-5">
+                        <label for="user_status" class="form-label">Status</label>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="user_status" checked>
+                            <label class="form-check-label" for="user_status"></label>
                         </div>
-                        <div class="block-content block-content-full text-end">
-                            <button type="button" class="btn btn-sm btn-alt-secondary me-1"
-                                    data-bs-dismiss="modal">
-                                Exit
-                            </button>
-                            <button type="submit" class="btn btn-sm btn-primary add-user-element"
-                                    id="btn-add-user">
-                                Add
-                            </button>
-                        </div>
-                    </form>
-                </div>
+                    </div>
+                        
+                </form>
+            </div>
+            <div class="model-footer block-content block-content-full text-end bg-body">
+                <button type="button" class="btn btn-sm btn-alt-secondary me-1"
+                        data-bs-dismiss="modal">
+                    Exit
+                </button>
+                <button type="submit" class="btn btn-sm btn-primary add-user-element"
+                        id="btn-add-user">
+                    Add
+                </button>
             </div>
         </div>
     </div>
@@ -144,7 +143,6 @@
      aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
-            <div class="block block-rounded block-themed block-transparent mb-0">
                 <div class="block-header bg-primary-dark">
                     <h3 class="block-title">Edit customer</h3>
                     <div class="block-options">
@@ -153,7 +151,7 @@
                         </button>
                     </div>
                 </div>
-                <div class="block-content" style="max-height: 650px; overflow-y: auto">
+                <div class="block-content">
                     <form novalidate="novalidate" onsubmit="return false;" class="js-validation-edit" tabindex="0">
                         <div class="mb-2">
                             <label class="form-label" for="val-fullname-edit">FullName <span class="text-danger">*</span></label>
@@ -196,20 +194,20 @@
                                 <label class="form-check-label" for="user_status-edit"></label>
                             </div>
                         </div>
-                        <div class="block-content block-content-full text-end">
-                            <button type="button" class="btn btn-sm btn-alt-secondary me-1"
-                                    data-bs-dismiss="modal">
-                                Exit
-                            </button>
-                            <button type="submit" class="btn btn-sm btn-primary add-user-element"
-                                    id="btn-edit-user">
-                                Edit
-                            </button>
-                        </div>
+                        
                     </form>
                 </div>
             </div>
-        </div>
+            <div class="modal-footer block-content block-content-full text-end bg-body">
+                <button type="button" class="btn btn-sm btn-alt-secondary me-1"
+                        data-bs-dismiss="modal">
+                    Exit
+                </button>
+                <button type="submit" class="btn btn-sm btn-primary add-user-element"
+                        id="btn-edit-user">
+                    Edit
+                </button>
+            </div>
     </div>
 </div>
 

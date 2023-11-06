@@ -12,7 +12,7 @@
     <script src="~/admin/js/plugins/ckeditor/ckeditor.js"></script>
     <script src="~/admin/js/plugins/jquery-validation/jquery.validate.min.js"></script>
     <script src="~/admin/js/plugins/jquery-validation/additional-methods.js"></script>
-    <script src="~/admin/js/upload-image.js"></script>
+    <script src="~/admin/js/add-product.js"></script>
 
     <!-- Page JS Helpers (Select2 + Bootstrap Maxlength + CKEditor plugins) -->
     <script>Dashmix.helpersOnLoad(['jq-select2', 'js-ckeditor']);</script>
@@ -139,7 +139,7 @@
 <div class="modal" id="modal-variant" tabindex="-1" role="dialog" aria-labelledby="modal-variant" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
         <div class="modal-content">
-            <div class="model-header block-header block-header-default">
+            <div class="modal-header block-header block-header-default">
                 <h3 class="block-title">Variant</h3>
                 <div class="block-options">
                     <button type="button" class="btn-block-option" data-bs-dismiss="modal" aria-label="Close">
@@ -183,9 +183,8 @@
                         </div>
                     </form>
                 </div>
-
             </div>
-            <div class="model-footer block-content block-content-full text-end bg-body">
+            <div class="modal-footer block-content block-content-full text-end bg-body">
                 <button type="button" class="btn btn-sm btn-alt-secondary me-1" data-bs-dismiss="modal">Close</button>
                 <button type="button" id="btn-add-variant" class="btn btn-sm btn-primary">Save</button>
                 <button type="button" id="btn-update-variant" class="btn btn-sm btn-primary" data-bs-dismiss="modal" data-index="0" style="display: none">Update</button>

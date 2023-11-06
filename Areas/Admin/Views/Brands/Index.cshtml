@@ -42,10 +42,24 @@
                 <thead>
                     <tr>
                         <th>
-                            @Html.DisplayNameFor(model => model.Id)
+                            @* @if (ViewBag.NameSortParm == "Id")
+                            { *@
+                                @Html.ActionLink("Id", "Index", new { sortOrder = ViewBag.IdSortParm })
+                            }
+                            else
+                            {
+                                @Html.ActionLink("Id", "Index", new { sortOrder = "Id" })
+                            }
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.Name)
+                            @if (ViewBag.NameSortParm == "Name")
+                            {
+                                @Html.ActionLink("Name", "Index", new { sortOrder = ViewBag.NameSortParm })
+                            }
+                            else
+                            {
+                                @Html.ActionLink("Name", "Index", new { sortOrder = "Name" })
+                            }
                         </th>
                         <th class="text-center">Action</th>
                     </tr>
