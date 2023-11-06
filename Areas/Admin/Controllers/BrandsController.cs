@@ -6,7 +6,7 @@ using ShoeShop.Models;
 
 namespace ShoeShop.Areas.Admin.Controllers
 {
-	[Authorize]
+	//[Authorize]
 	//[Authorize(Roles = "admin")]
 	[Area("Admin")]
     public class BrandsController : Controller
@@ -19,10 +19,25 @@ namespace ShoeShop.Areas.Admin.Controllers
         }
 
         // GET: Admin/Brands
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder)
         {
-              return _context.Brands != null ? 
-                          View(await _context.Brands.ToListAsync()) :
+			ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "Name" : "";
+            ViewBag.IdSortParm = sortOrder == "Id" ? "IdDesc" : "Id";
+            var brands = from b in _context.Brands select b;
+			switch (sortOrder)
+			{
+				case "Name":
+					brands = brands.OrderByDescending(s => s.Name);
+					break;
+                case "Id":
+                    brands = brands.OrderByDescending(_ => _.Id);
+                    break;
+				default:
+					brands = brands.OrderBy(s => s.Name);
+					break;
+			}
+			return _context.Brands != null ? 
+                          View(await brands.ToListAsync()) :
                           Problem("Entity set 'AppDbContext.Brands'  is null.");
         }
 

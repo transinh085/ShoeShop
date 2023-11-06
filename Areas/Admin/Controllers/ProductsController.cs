@@ -129,7 +129,7 @@ namespace ShoeShop.Areas.Admin.Controllers
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                    return BadRequest(new { message = "Failed to create product." });
+                    return BadRequest(new { message = "Failed to create product."+ex.Message });
                 }
             }
         }

@@ -524,7 +524,7 @@ namespace ShoeShop.Migrations
             modelBuilder.Entity("ShoeShop.Models.VariantSize", b =>
                 {
                     b.HasOne("ShoeShop.Models.Size", "Size")
-                        .WithMany("VariantSizes")
+                        .WithMany()
                         .HasForeignKey("SizeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -551,11 +551,6 @@ namespace ShoeShop.Migrations
             modelBuilder.Entity("ShoeShop.Models.Product", b =>
                 {
                     b.Navigation("Variants");
-                });
-
-            modelBuilder.Entity("ShoeShop.Models.Size", b =>
-                {
-                    b.Navigation("VariantSizes");
                 });
 
             modelBuilder.Entity("ShoeShop.Models.Variant", b =>
