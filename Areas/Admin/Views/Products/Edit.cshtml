@@ -1,75 +1,199 @@
-﻿@model ShoeShop.Models.Product
-
-@{
-    ViewData["Title"] = "Edit";
+﻿@{
+    ViewData["Title"] = "Add Product";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+
+    var product = ViewBag.Product;
 }
 
-<h1>Edit</h1>
-@Html.DisplayNameFor(model => model.Variants)
-<h4>Product</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Slug" class="control-label"></label>
-                <input asp-for="Slug" class="form-control" />
-                <span asp-validation-for="Slug" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsDetele" /> @Html.DisplayNameFor(model => model.IsDetele)
-                </label>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Status" /> @Html.DisplayNameFor(model => model.Status)
-                </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="CategoryId" class="control-label"></label>
-                <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
-                <span asp-validation-for="CategoryId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="BrandId" class="control-label"></label>
-                <select asp-for="BrandId" class="form-control" asp-items="ViewBag.BrandId"></select>
-                <span asp-validation-for="BrandId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedAt" class="control-label"></label>
-                <input asp-for="CreatedAt" class="form-control" />
-                <span asp-validation-for="CreatedAt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+@section Styles {
+    <link rel="stylesheet" href="~/admin/js/plugins/select2/css/select2.min.css">
+}
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/admin/js/plugins/select2/js/select2.full.min.js"></script>
+    <script src="~/admin/js/plugins/ckeditor/ckeditor.js"></script>
+    <script src="~/admin/js/plugins/jquery-validation/jquery.validate.min.js"></script>
+    <script src="~/admin/js/plugins/jquery-validation/additional-methods.js"></script>
+    <script src="~/admin/js/upload-image.js"></script>
+
+    <script>Dashmix.helpersOnLoad(['jq-select2', 'js-ckeditor']);</script>
 }
+
+<!-- Page Content -->
+<form id="product-form" method="POST" onsubmit="return false;">
+    <div class="content">
+        <div class="row">
+            <div class="col-8">
+                <!-- Info -->
+                <div class="block block-rounded">
+                    <div class="block-header block-header-default">
+                        <h3 class="block-title">Add product</h3>
+                    </div>
+                    <div class="block-content">
+                        <div class="mb-4">
+                            <label class="form-label" for="product-name">Name</label>
+                            <input value="@product.Name" type="text" class="form-control" id="product-name" name="product-name">
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <label class="form-label" for="product-price">Price in USD ($)</label>
+                                <input value="@product.Price" type="text" class="form-control" id="product-price" name="product-price">
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label">Description</label>
+                            <textarea id="js-ckeditor" name="product-description">
+                                @product.Description
+                            </textarea>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- END Info -->
+                <!-- Variant -->
+                <div class="block block-rounded">
+                    <div class="block-header block-header-default">
+                        <h3 class="block-title">Variant</h3>
+                        <div class="block-options">
+                            <button type="button" class="btn btn-alt-primary btn-sm btn-hero" data-bs-toggle="modal" data-bs-target="#modal-variant"><i class="fa-regular fa-plus"></i> Add</button>
+                        </div>
+                    </div>
+                    <div class="block-content block-content-full variants-container" style="display: none">
+                        <table class="table align-middle">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Image</th>
+                                    <th scope="col">Variant</th>
+                                    <th scope="col">Size</th>
+                                    <th class="text-center" scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="variant-color">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- END Variant-->
+                <!-- Variant -->
+                <div class="block block-rounded table-variant-container" style="display: none">
+                    <div class="block-content block-content-full">
+                        <table class="table align-middle">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Variants</th>
+                                    <th scope="col">Stock</th>
+                                    <th scope="col">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-variant">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- END Variant-->
+            </div>
+            <div class="col-4">
+                <!-- Meta Data -->
+                <div class="block block-rounded">
+                    <div class="block-content">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <label class="form-label">Active</label>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" value="" id="product-status" name="product-status" checked="@product.Status">
+                                <label class="form-check-label" for="product-status"></label>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label" for="product-slug">Slug</label>
+                            <input value="@product.Slug" type="text" class="form-control" id="product-slug" name="product-slug">
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label" for="brand-id">Brand</label>
+                            <select class="js-select2 form-select" id="brand-id" name="brand-id" style="width: 100%;" data-placeholder="Choose brand..">
+                                <option></option>
+                                @foreach (var brand in ViewBag.Brands)
+                                {
+                                    <option value="@brand.Id" selected="@(brand.Id == product.BrandId)">@brand.Name</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label" for="category-id">Category</label>
+                            <select class="js-select2 form-select" id="category-id" name="category-id" style="width: 100%;" data-placeholder="Choose category..">
+                                <option></option>
+                                @foreach (var category in ViewBag.Categories)
+                                {
+                                    <option value="@category.Id" selected="@(category.Id == product.CategoryId)">@category.Name</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <button type="submit" class="btn btn-primary btn-hero" id="btn-save-product">Save</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- END Meta Data -->
+            </div>
+        </div>
+    </div>
+</form>
+<!-- Modal -->
+<div class="modal" id="modal-variant" tabindex="-1" role="dialog" aria-labelledby="modal-variant" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="model-header block-header block-header-default">
+                <h3 class="block-title">Variant</h3>
+                <div class="block-options">
+                    <button type="button" class="btn-block-option" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="fa fa-fw fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="modal-body block block-rounded block-transparent mb-0">
+                <div class="block-content">
+                    <form id="form-variant" onsubmit="return false;">
+                        <div class="mb-4">
+                            <label class="form-label" for="color-id">Color</label>
+                            <select class="js-select2 form-select" id="color-id" name="color-id" style="width: 100%;" data-container="#modal-variant" data-placeholder="Choose one..">
+                                <option></option>
+                                @foreach (var color in ViewBag.Colors)
+                                {
+                                    <option value="@color.Id">@color.Name</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label" for="size-id">Size</label>
+                            <select class="js-select2 form-select" id="size-id" name="size-id" style="width: 100%;" data-placeholder="Choose many.." data-container="#modal-variant" multiple>
+                                <option></option>
+                                @foreach (var size in ViewBag.Sizes)
+                                {
+                                    <option value="@size.Id">@size.Name</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label" for="upload-image">Images</label>
+                            <div class="upload-image-container">
+                                <input type="file" id="upload-image" name="upload-image" class="upload-image-input" hidden multiple />
+                                <div class="no-image">
+                                    <p>Select files to upload</p>
+                                </div>
+                                <div class="has-image">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+            <div class="model-footer block-content block-content-full text-end bg-body">
+                <button type="button" class="btn btn-sm btn-alt-secondary me-1" data-bs-dismiss="modal">Close</button>
+                <button type="button" id="btn-add-variant" class="btn btn-sm btn-primary">Save</button>
+                <button type="button" id="btn-update-variant" class="btn btn-sm btn-primary" data-bs-dismiss="modal" data-index="0" style="display: none">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END Page Content -->
