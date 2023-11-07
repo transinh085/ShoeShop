@@ -19,52 +19,16 @@ namespace ShoeShop.Areas.Admin.Controllers
             _context = context;
         }
 
-        // GET: Admin/Brands
-        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? page)
-        {
-            ViewBag.CurrentSort = sortOrder;
-            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "Name" : "";
-            ViewBag.IdSortParm = sortOrder == "Id" ? "IdDesc" : "Id";
-            if (searchString != null)
-            {
-                page = 1;
-            }
-            else
-            {
-                searchString = currentFilter;
-            }
+		// GET: Admin/Brands
+		public async Task<IActionResult> Index()
+		{
+			return _context.Brands != null ?
+						View(await _context.Brands.ToListAsync()) :
+						Problem("Entity set 'AppDbContext.Brands'  is null.");
+		}
 
-            ViewBag.CurrentFilter = searchString;
-
-            var brands = from b in _context.Brands select b;
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                brands = brands.Where(b => b.Name.Contains(searchString)
-                                       || b.Id.ToString().Contains(searchString));
-            }
-            switch (sortOrder)
-			{
-				case "Name":
-					brands = brands.OrderByDescending(s => s.Name);
-					break;
-                case "Id":
-                    brands = brands.OrderBy(_ => _.Id);
-                    break;
-                case "IdDesc":
-                    brands = brands.OrderByDescending(s => s.Id);
-                    break;
-				default:
-					brands = brands.OrderBy(s => s.Name);
-					break;
-			}
-
-            int pageSize = 100;
-            int pageNumber = (page ?? 1);
-            return View(brands.ToPagedList(pageNumber, pageSize));
-        }
-
-        // GET: Admin/Brands/Details/5
-        public async Task<IActionResult> Details(int? id)
+		// GET: Admin/Brands/Details/5
+		public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Brands == null)
             {

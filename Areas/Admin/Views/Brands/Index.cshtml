@@ -1,6 +1,4 @@
-﻿@model PagedList.IPagedList<ShoeShop.Models.Brand>
-@using PagedList.Mvc;
-<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+﻿@model IEnumerable<ShoeShop.Models.Brand>
 
 @{
     ViewData["Title"] = "Index";
@@ -55,10 +53,10 @@
                 <thead>
                     <tr>
                         <th>
-                            @Html.ActionLink("Id", "Index", new { sortOrder = ViewBag.IdSortParm })
+                            @Html.DisplayNameFor(model => model.Id)
                         </th>
                         <th>
-                            @Html.ActionLink("Name", "Index", new { sortOrder = ViewBag.NameSortParm })
+                            @Html.DisplayNameFor(model => model.Name)
                         </th>
                         <th class="text-center">Action</th>
                     </tr>
@@ -87,7 +85,6 @@
                     }
                 </tbody>
             </table>
-            Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
         </div>
     </div>
 </div>
