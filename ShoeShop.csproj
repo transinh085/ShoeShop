@@ -6,10 +6,6 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Content Remove="wwwroot\admin\js\pagination.js" />
-  </ItemGroup>
-
 	<ItemGroup>
 		<PackageReference Include="Bogus" Version="34.0.2" />
 		<PackageReference Include="Microsoft.AspNet.Mvc" Version="5.3.0" />
@@ -31,9 +27,5 @@
 	  <Folder Include="Areas\Admin\Data\" />
 	  <Folder Include="Areas\Admin\Models\" />
 	  <Folder Include="wwwroot\assets\js\pages\" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Include="wwwroot\admin\js\pagination.js" />
 	</ItemGroup>
 </Project>
