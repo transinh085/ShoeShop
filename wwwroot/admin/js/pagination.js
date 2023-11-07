@@ -17,6 +17,8 @@
             query: '',
             totalPages: 0,
             result: null,
+            truncate: true,
+            numLinksTwoSide: 1
         }
         this.getPagination()
         this.container.addEventListener("click", this.containerHandler.bind(this));

@@ -215,7 +215,7 @@
     // Kiểm tra nếu form validation thành công
     if ($(".js-validation").valid()) {
                     // Lấy dữ liệu từ các trường input
-                    var fullname = $("#val-fullname").val();
+    var fullname = $("#val-fullname").val();
     var username = $("#val-username").val();
     var email = $("#val-email").val();
     var phone = $("#val-phone").val();
@@ -244,7 +244,7 @@
         console.log(response);
     // Đóng modal (tuỳ vào mã HTML/CSS của modal)
     $("#modal-customer").modal("hide");
-    getCustomerList();
+    pagination.getPagination();
     Dashmix.helpers('jq-notify', {
         type: 'success', icon: 'fa fa-check me-1', message: 'Successfully added customers' });
 
@@ -318,7 +318,7 @@
     data: userData,
     success: function (response) {
     $("#modal-edit-customer").modal("hide");
-    getCustomerList();
+    pagination.getPagination();
     Dashmix.helpers('jq-notify', {
         type: 'success', icon: 'fa fa-check me-1', message: 'Successfully updated customer'
                             });
@@ -361,7 +361,7 @@
                         });
 
     if (response) {
-        getCustomerList();
+        pagination.getPagination();
                         }
                     } catch (error) {
         console.error("Error:", error);
