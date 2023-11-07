@@ -58,7 +58,7 @@ namespace ShoeShop.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Slug,Name,CreatedAt,CreateBy,TopicID,IsDetele")] Blog blog)
+        public async Task<IActionResult> Create([Bind("Id,Slug,Name,CreatedAt,CreateBy,TopicID,Content,IsDetele")] Blog blog)
         {
             if (ModelState.IsValid)
             {
@@ -92,7 +92,7 @@ namespace ShoeShop.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Slug,Name,CreatedAt,CreateBy,TopicID,IsDetele")] Blog blog)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Slug,Name,CreatedAt,CreateBy,TopicID,Content,IsDetele")] Blog blog)
         {
             if (id != blog.Id)
             {
