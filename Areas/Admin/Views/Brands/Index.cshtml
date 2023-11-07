@@ -1,4 +1,6 @@
-﻿@model IEnumerable<ShoeShop.Models.Brand>
+﻿@model PagedList.IPagedList<ShoeShop.Models.Brand>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 
 @{
     ViewData["Title"] = "Index";
@@ -38,28 +40,25 @@
             </div>
         </div>
         <div class="block-content">
+            <form action="/Admin/Brands" method="get">
+                <div class="row mb-3">
+                    <div class="input-group">
+                        <input type="text" class="form-control form-control-alt" id="SearchString" name="SearchString" placeholder="Nội dung câu hỏi...">
+                        <button type="submit" class="input-group-text bg-body border-0 btn-search">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+
             <table class="table">
                 <thead>
                     <tr>
                         <th>
-                            @* @if (ViewBag.NameSortParm == "Id")
-                            { *@
-                                @Html.ActionLink("Id", "Index", new { sortOrder = ViewBag.IdSortParm })
-                            }
-                            else
-                            {
-                                @Html.ActionLink("Id", "Index", new { sortOrder = "Id" })
-                            }
+                            @Html.ActionLink("Id", "Index", new { sortOrder = ViewBag.IdSortParm })
                         </th>
                         <th>
-                            @if (ViewBag.NameSortParm == "Name")
-                            {
-                                @Html.ActionLink("Name", "Index", new { sortOrder = ViewBag.NameSortParm })
-                            }
-                            else
-                            {
-                                @Html.ActionLink("Name", "Index", new { sortOrder = "Name" })
-                            }
+                            @Html.ActionLink("Name", "Index", new { sortOrder = ViewBag.NameSortParm })
                         </th>
                         <th class="text-center">Action</th>
                     </tr>
@@ -88,7 +87,7 @@
                     }
                 </tbody>
             </table>
-
+            Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
         </div>
     </div>
 </div>
@@ -96,6 +95,12 @@
 @section Scripts {
     <script src="~/admin/js/plugins/sweetalert2/sweetalert2.min.js"></script>
     <script>
+        // Lấy giá trị tìm kiếm từ query string của URL
+        var urlParams = new URLSearchParams(window.location.search);
+        var searchString = urlParams.get('SearchString');
+
+        // Gán giá trị tìm kiếm vào ô input value
+        document.getElementById('SearchString').value = searchString;
         $(document).on("click", ".btn-delete", async function () {
             let trid = $(this).data("id");
             let result = await Swal.fire({

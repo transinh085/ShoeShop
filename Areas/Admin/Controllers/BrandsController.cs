@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ShoeShop.Data;
 using ShoeShop.Models;
+using PagedList;
 
 namespace ShoeShop.Areas.Admin.Controllers
 {
@@ -19,26 +20,47 @@ namespace ShoeShop.Areas.Admin.Controllers
         }
 
         // GET: Admin/Brands
-        public async Task<IActionResult> Index(string sortOrder)
+        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
-			ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "Name" : "";
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "Name" : "";
             ViewBag.IdSortParm = sortOrder == "Id" ? "IdDesc" : "Id";
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
+
             var brands = from b in _context.Brands select b;
-			switch (sortOrder)
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                brands = brands.Where(b => b.Name.Contains(searchString)
+                                       || b.Id.ToString().Contains(searchString));
+            }
+            switch (sortOrder)
 			{
 				case "Name":
 					brands = brands.OrderByDescending(s => s.Name);
 					break;
                 case "Id":
-                    brands = brands.OrderByDescending(_ => _.Id);
+                    brands = brands.OrderBy(_ => _.Id);
+                    break;
+                case "IdDesc":
+                    brands = brands.OrderByDescending(s => s.Id);
                     break;
 				default:
 					brands = brands.OrderBy(s => s.Name);
 					break;
 			}
-			return _context.Brands != null ? 
-                          View(await brands.ToListAsync()) :
-                          Problem("Entity set 'AppDbContext.Brands'  is null.");
+
+            int pageSize = 100;
+            int pageNumber = (page ?? 1);
+            return View(brands.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: Admin/Brands/Details/5

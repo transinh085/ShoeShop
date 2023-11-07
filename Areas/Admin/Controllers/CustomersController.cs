@@ -22,23 +22,54 @@ namespace ShoeShop.Areas.Admin.Controllers
             return View();
         }
 
+
         [HttpGet, ActionName("allCustomers")]
-        public async Task<IActionResult> GetCustomerList()
+        public IActionResult GetCustomerList(int page = 1, int pageSize = 10, string query = "")
         {
             // Lấy danh sách người dùng
-            var users = await userManager.Users.ToListAsync();
+            var users = userManager.Users.ToList();
 
             // Sử dụng LINQ để lọc danh sách người dùng có quyền "Customer"
             var customerUsers = users
                 .Where(u => userManager.IsInRoleAsync(u, UserRoles.Customer).Result)
                 .Where(u => u.IsDeleted == false)
+                .OrderByDescending(u => u.JoinTime)
                 .ToList();
 
-            // Sắp xếp danh sách theo JoinTime (thời gian gia nhập) giảm dần
-            customerUsers = customerUsers.OrderByDescending(u => u.JoinTime).ToList();
+            if(!string.IsNullOrEmpty(query))
+            {
+                customerUsers = customerUsers.Where(u =>
+                    u.FullName.Contains(query, StringComparison.OrdinalIgnoreCase) ||
+                    u.Email.Contains(query, StringComparison.OrdinalIgnoreCase))
+                    .ToList();  
+            }
 
-            return Ok(customerUsers);
+            if (page < 1)
+            {
+                page = 1;
+            }
+
+            // Tính tổng số trang dựa trên số lượng khách hàng và kích thước trang
+            int totalItems = customerUsers.Count;
+            int totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+
+            // Lấy danh sách khách hàng của trang hiện tại
+            var currentPageCustomers = customerUsers
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            // Tạo một đối tượng chứa thông tin trang và danh sách khách hàng
+            var result = new
+            {
+                CurrentPage = page,
+                TotalPages = totalPages,
+                Customers = currentPageCustomers
+            };
+
+            return Ok(result);
         }
+
 
 
         [HttpPost]
