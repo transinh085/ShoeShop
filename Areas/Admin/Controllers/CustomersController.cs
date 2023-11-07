@@ -64,7 +64,7 @@ namespace ShoeShop.Areas.Admin.Controllers
             {
                 CurrentPage = page,
                 TotalPages = totalPages,
-                Customers = currentPageCustomers
+                Result = currentPageCustomers
             };
 
             return Ok(result);
