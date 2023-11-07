@@ -14,7 +14,7 @@
     <script src="~/admin/js/plugins/ckeditor/ckeditor.js"></script>
     <script src="~/admin/js/plugins/jquery-validation/jquery.validate.min.js"></script>
     <script src="~/admin/js/plugins/jquery-validation/additional-methods.js"></script>
-    <script src="~/admin/js/upload-image.js"></script>
+    <script src="~/admin/js/update-product.js"></script>
 
     <script>Dashmix.helpersOnLoad(['jq-select2', 'js-ckeditor']);</script>
 }
@@ -30,6 +30,7 @@
                         <h3 class="block-title">Add product</h3>
                     </div>
                     <div class="block-content">
+                        <input id="product-id" name="product-id" value="@product.Id" hidden/>
                         <div class="mb-4">
                             <label class="form-label" for="product-name">Name</label>
                             <input value="@product.Name" type="text" class="form-control" id="product-name" name="product-name">

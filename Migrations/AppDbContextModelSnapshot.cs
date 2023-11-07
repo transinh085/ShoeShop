@@ -233,6 +233,42 @@ namespace ShoeShop.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("ShoeShop.Models.Blog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("CreateBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("IsDetele")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Slug")
+                        .HasColumnType("longtext");
+
+                    b.Property<int?>("ThumbnailId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TopicID")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ThumbnailId");
+
+                    b.HasIndex("TopicID");
+
+                    b.ToTable("Blog");
+                });
+
             modelBuilder.Entity("ShoeShop.Models.Brand", b =>
                 {
                     b.Property<int>("Id")
@@ -357,6 +393,21 @@ namespace ShoeShop.Migrations
                     b.ToTable("Sizes");
                 });
 
+            modelBuilder.Entity("ShoeShop.Models.Topic", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Topic");
+                });
+
             modelBuilder.Entity("ShoeShop.Models.Variant", b =>
                 {
                     b.Property<int>("Id")
@@ -462,6 +513,23 @@ namespace ShoeShop.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ShoeShop.Models.Blog", b =>
+                {
+                    b.HasOne("ShoeShop.Models.Image", "Thumbnail")
+                        .WithMany()
+                        .HasForeignKey("ThumbnailId");
+
+                    b.HasOne("ShoeShop.Models.Topic", "Topic")
+                        .WithMany()
+                        .HasForeignKey("TopicID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Thumbnail");
+
+                    b.Navigation("Topic");
                 });
 
             modelBuilder.Entity("ShoeShop.Models.Image", b =>

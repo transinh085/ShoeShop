@@ -171,20 +171,20 @@ namespace ShoeShop.Areas.Admin.Controllers
                 .Where(v => v.ProductId == id)
                 .Select(variant => new
                 {
-                    Id = variant.Id,
+                    ColorId = variant.ColorId,
                     ColorName = variant.Color.Name,
                     Thumbnail = variant.Thumbnail.Name,
                     Images = variant.Images.Select(image => image.Name).ToList(),
                     Sizes = variant.VariantSizes.Select(size => new
                     {
                         SizeId = size.SizeId,
-                        Quantity = size.Quantity,
+                        Stock = size.Quantity,
                         Active = size.IsActive,
                         SizeName = size.Size.Name
                     }).ToList()
                 })
                 .ToListAsync();
-            return Ok(new { message = variants });
+            return Ok(variants);
         }
 
         public async Task<IActionResult> Test()
@@ -192,7 +192,7 @@ namespace ShoeShop.Areas.Admin.Controllers
             var variants = await _context.Variants
                 .Select(v => v.Color.Name)
                 .ToListAsync();
-            return Ok(new { message = variants });
+            return Ok(variants);
         }
     }
 }
