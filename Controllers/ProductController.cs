@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ShoeShop.Data;
+using ShoeShop.Models;
 
 namespace ShoeShop.Controllers
 {
@@ -20,6 +21,12 @@ namespace ShoeShop.Controllers
 				var products = await _context.Products.Include(product => product.Thumbnail)
 					.OrderByDescending(product => product.CreatedAt)
 					.ToListAsync();
+				var categories = await _context.Categories.ToListAsync();
+				var brands = await _context.Brands.ToListAsync();
+				var sizes = await _context.Sizes.ToListAsync();
+				ViewBag.Categories = categories;
+				ViewBag.Brands = brands;
+				ViewBag.Sizes = sizes;
 				return View(products);
 			}
 			return Problem("Entity set 'AppDbContext.Products'  is null.");
@@ -37,6 +44,7 @@ namespace ShoeShop.Controllers
             if (product == null) return NotFound();
 
             ViewBag.Product = product;
+           
             return View();
 		}
 
