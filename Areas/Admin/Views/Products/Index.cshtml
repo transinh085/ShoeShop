@@ -1,48 +1,51 @@
 ﻿@model IEnumerable<ShoeShop.Models.Product>
 
-@{
+    @{
     ViewData["Title"] = "Products";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    }
+@section Styles {
+    <link rel="stylesheet" href="~/admin/js/plugins/sweetalert2/sweetalert2.min.css">
 }
 
-
-<div class="content">
-    <div class="block block-rounded">
-        <div class="block-header block-header-default">
-            <h3 class="block-title">List Colors</h3>
-            <div class="block-options">
-                <a class="btn btn-hero btn-primary" asp-action="Create">
-                    <i class="fa-regular fa-plus"></i> Add
-                </a>
+    <div class="content">
+        <div class="block block-rounded">
+            <div class="block-header block-header-default">
+                <h3 class="block-title">List Products</h3>
+                <div class="block-options">
+                    <a class="btn btn-hero btn-primary" asp-action="Create">
+                        <i class="fa-regular fa-plus"></i> Add
+                    </a>
+                </div>
             </div>
-        </div>
-        <div class="block-content">
-            <table class="table align-middle">
-                <thead>
-                    <tr>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Id)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Name)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Price)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Category)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Brand)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Status)
-                        </th>
-                        <th class="text-center">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
+            <div class="block-content">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Id)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Name)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Price)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Category)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Brand)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Status)
+                            </th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        @if(item.IsDetele == false)
                     {
                         <tr>
                             <td>
@@ -66,28 +69,56 @@
                             <td>
                                 @if (item.Status)
                                 {
-                                    <span class="badge rounded-pill bg-success">Selling</span>
+                                <span class="badge rounded-pill bg-success">Selling</span>
                                 }
                                 else
                                 {
-                                    <span class="badge rounded-pill bg-warning">draft</span>
+                                <span class="badge rounded-pill bg-warning">draft</span>
                                 }
                             </td>
                             <td class="text-center">
                                 <div class="btn-group">
                                     <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled" data-bs-toggle="tooltip" aria-label="Edit" data-bs-original-title="Edit">
-                                        <i class="fa fa-pencil-alt"></i>
-                                    </a>
+                                        <i class="fa fa-pencil-alt"></i></a>
                                     <button type="button" data-id="@item.Id" class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled btn-delete" data-bs-toggle="tooltip" aria-label="Delete" data-bs-original-title="Delete">
-                                        <i class="fa fa-times"></i>
+                                            <i class="fa fa-times"></i>
                                     </button>
                                 </div>
+                                
                             </td>
                         </tr>
                     }
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
 
+            </div>
         </div>
     </div>
-</div>
+@section Scripts {
+    <script src="~/admin/js/plugins/sweetalert2/sweetalert2.min.js"></script>
+    <script>
+        $(document).on("click", ".btn-delete", async function () {
+            let trid = $(this).data("id");
+            let result = await Swal.fire({
+                title: "Are you sure?",
+                text: "Would you like to delete this product?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, I'm sure",
+                cancelButtonText: "Cannel"
+            });
+
+            if (result.value) {
+                try {
+                    let response = await $.post(`./Products/Delete/${trid}`);
+                    Swal.fire("Deleted!", "Successfully deleted the product.", "success");
+                    $(this).closest('tr').remove();
+                } catch (error) {
+                    console.error("Error:", error);
+                    Swal.fire("Lỗi !", "Deletion of the product was not successful.", "error");
+                }
+            }
+        });
+    </script>
+}
+    

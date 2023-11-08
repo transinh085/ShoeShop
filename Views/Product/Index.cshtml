@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IEnumerable<ShoeShop.Models.Product>
+@{
 	ViewData["Title"] = "Products";
 }
 @section Styles {
@@ -210,48 +211,10 @@
 			<!-- /col -->
 			<div class="col-lg-9">
 				<div class="row small-gutters">
-					@await Component.InvokeAsync("ShoeCards", new Shoe{
-					Name = "hoàng Gia Bảo",
-					ImageUrl = "1.jpg",
-					OldPrice = 62.21,
-					NewPrice = 40,
-					Description = "This is a sample shoe for testing."
-					})
-					@await Component.InvokeAsync("ShoeCards", new Shoe{
-					Name = "hoàng Gia Bảo",
-					ImageUrl = "1.jpg",
-					OldPrice = 62.21,
-					NewPrice = 40,
-					Description = "This is a sample shoe for testing."
-					})
-					@await Component.InvokeAsync("ShoeCards", new Shoe{
-					Name = "hoàng Gia Bảo",
-					ImageUrl = "1.jpg",
-					OldPrice = 62.21,
-					NewPrice = 40,
-					Description = "This is a sample shoe for testing."
-					})
-					@await Component.InvokeAsync("ShoeCards", new Shoe{
-					Name = "hoàng Gia Bảo",
-					ImageUrl = "1.jpg",
-					OldPrice = 62.21,
-					NewPrice = 40,
-					Description = "This is a sample shoe for testing."
-					})
-					@await Component.InvokeAsync("ShoeCards", new Shoe{
-					Name = "hoàng Gia Bảo",
-					ImageUrl = "1.jpg",
-					OldPrice = 62.21,
-					NewPrice = 40,
-					Description = "This is a sample shoe for testing."
-					})
-					@await Component.InvokeAsync("ShoeCards", new Shoe{
-					Name = "hoàng Gia Bảo",
-					ImageUrl = "1.jpg",
-					OldPrice = 62.21,
-					NewPrice = 40,
-					Description = "This is a sample shoe for testing."
-					})
+					@foreach (var item in Model)
+					{
+						@await Component.InvokeAsync("ShoeCards", item)
+					}
 				</div>
 				<!-- /row -->
 				<div class="pagination__wrapper">
