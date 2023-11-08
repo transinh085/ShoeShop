@@ -117,29 +117,11 @@ namespace ShoeShop.Areas.Admin.Controllers
             return View(brand);
         }
 
-        // GET: Admin/Brands/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
         {
-            if (id == null || _context.Brands == null)
-            {
-                return NotFound();
-            }
-
-            var brand = await _context.Brands
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (brand == null)
-            {
-                return NotFound();
-            }
-
-            return View(brand);
-        }
-
-        // POST: Admin/Brands/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
+            Console.WriteLine("test");
             if (_context.Brands == null)
             {
                 return Problem("Entity set 'AppDbContext.Brands'  is null.");
@@ -149,9 +131,9 @@ namespace ShoeShop.Areas.Admin.Controllers
             {
                 _context.Brands.Remove(brand);
             }
-            
+
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Ok(new {message = "Success delete brand!"});
         }
 
         private bool BrandExists(int id)

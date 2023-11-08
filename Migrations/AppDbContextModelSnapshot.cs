@@ -270,7 +270,7 @@ namespace ShoeShop.Migrations
 
                     b.HasIndex("TopicID");
 
-                    b.ToTable("Blog");
+                    b.ToTable("Blogs");
                 });
 
             modelBuilder.Entity("ShoeShop.Models.Brand", b =>
@@ -409,7 +409,7 @@ namespace ShoeShop.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Topic");
+                    b.ToTable("Topics");
                 });
 
             modelBuilder.Entity("ShoeShop.Models.Variant", b =>

@@ -146,7 +146,7 @@ namespace ShoeShop.Areas.Admin.Controllers
             {
                 return Problem("Entity set 'AppDbContext.Topic'  is null.");
             }
-            var topic = await _context.Topic.FindAsync(id);
+            var topic = await _context.Topics.FindAsync(id);
             if (topic != null)
             {
                 _context.Topics.Remove(topic);
