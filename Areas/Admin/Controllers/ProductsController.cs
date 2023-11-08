@@ -28,6 +28,7 @@ namespace ShoeShop.Areas.Admin.Controllers
                 var products = await _context.Products.Include(product => product.Category)
                     .Include(product => product.Brand)
                     .Include(product => product.Thumbnail)
+                    .OrderByDescending(product => product.IsDetele)
                     .OrderByDescending(product => product.CreatedAt)
                     .ToListAsync();
                 return View(products);
@@ -130,7 +131,7 @@ namespace ShoeShop.Areas.Admin.Controllers
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                    return BadRequest(new { message = "Failed to create product."+ex.Message });
+                    return BadRequest(new { message = "Failed to create product." + ex.Message });
                 }
             }
         }
@@ -189,5 +190,19 @@ namespace ShoeShop.Areas.Admin.Controllers
                 .ToListAsync();
             return Ok(variants);
         }
+
+        [HttpPost, ActionName("Delete")]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            var product = await _context.Products.FindAsync(id);
+            if (product != null)
+            {
+                product.IsDetele = true;
+                _context.Update(product);
+                await _context.SaveChangesAsync();
+            }
+            return Ok(new {message = "Delete successfully"});
+        }
+
     }
 }
