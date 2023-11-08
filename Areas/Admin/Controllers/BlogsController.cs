@@ -23,19 +23,19 @@ namespace ShoeShop.Areas.Admin.Controllers
         // GET: Admin/Blogs
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Blog.Include(b => b.Topic);
+            var appDbContext = _context.Blogs.Include(b => b.Topic);
             return View(await appDbContext.ToListAsync());
         }
 
         // GET: Admin/Blogs/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Blog == null)
+            if (id == null || _context.Blogs == null)
             {
                 return NotFound();
             }
 
-            var blog = await _context.Blog
+            var blog = await _context.Blogs
                 .Include(b => b.Topic)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (blog == null)
@@ -49,7 +49,7 @@ namespace ShoeShop.Areas.Admin.Controllers
         // GET: Admin/Blogs/Create
         public IActionResult Create()
         {
-            ViewData["TopicID"] = new SelectList(_context.Topic, "Id", "Id");
+            ViewData["TopicID"] = new SelectList(_context.Topics, "Id", "Id");
             return View();
         }
 
@@ -66,24 +66,24 @@ namespace ShoeShop.Areas.Admin.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TopicID"] = new SelectList(_context.Topic, "Id", "Id", blog.TopicID);
+            ViewData["TopicID"] = new SelectList(_context.Topics, "Id", "Id", blog.TopicID);
             return View(blog);
         }
 
         // GET: Admin/Blogs/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Blog == null)
+            if (id == null || _context.Blogs == null)
             {
                 return NotFound();
             }
 
-            var blog = await _context.Blog.FindAsync(id);
+            var blog = await _context.Blogs.FindAsync(id);
             if (blog == null)
             {
                 return NotFound();
             }
-            ViewData["TopicID"] = new SelectList(_context.Topic, "Id", "Id", blog.TopicID);
+            ViewData["TopicID"] = new SelectList(_context.Topics, "Id", "Id", blog.TopicID);
             return View(blog);
         }
 
@@ -119,19 +119,19 @@ namespace ShoeShop.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TopicID"] = new SelectList(_context.Topic, "Id", "Id", blog.TopicID);
+            ViewData["TopicID"] = new SelectList(_context.Topics, "Id", "Id", blog.TopicID);
             return View(blog);
         }
 
         // GET: Admin/Blogs/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Blog == null)
+            if (id == null || _context.Blogs == null)
             {
                 return NotFound();
             }
 
-            var blog = await _context.Blog
+            var blog = await _context.Blogs
                 .Include(b => b.Topic)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (blog == null)
@@ -147,14 +147,14 @@ namespace ShoeShop.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Blog == null)
+            if (_context.Blogs == null)
             {
                 return Problem("Entity set 'AppDbContext.Blog'  is null.");
             }
-            var blog = await _context.Blog.FindAsync(id);
+            var blog = await _context.Blogs.FindAsync(id);
             if (blog != null)
             {
-                _context.Blog.Remove(blog);
+                _context.Blogs.Remove(blog);
             }
             
             await _context.SaveChangesAsync();
@@ -163,7 +163,7 @@ namespace ShoeShop.Areas.Admin.Controllers
 
         private bool BlogExists(int id)
         {
-          return (_context.Blog?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.Blogs?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

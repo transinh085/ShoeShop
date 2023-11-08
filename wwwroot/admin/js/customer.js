@@ -120,6 +120,7 @@
     var id = null;
     function getCustomerList(response) {
         customers = response;
+        console.log('customer', customers)
         let htmlCus = ``;
         customers.forEach((item, index) => {
             index++
@@ -243,8 +244,8 @@
         // Xử lý phản hồi từ máy chủ, ví dụ: đóng modal và reset form
         console.log(response);
     // Đóng modal (tuỳ vào mã HTML/CSS của modal)
-    $("#modal-customer").modal("hide");
-    getCustomerList();
+        $("#modal-customer").modal("hide");
+        pagination.getPagination();
     Dashmix.helpers('jq-notify', {
         type: 'success', icon: 'fa fa-check me-1', message: 'Successfully added customers' });
 
@@ -318,7 +319,7 @@
     data: userData,
     success: function (response) {
     $("#modal-edit-customer").modal("hide");
-    getCustomerList();
+        pagination.getPagination();
     Dashmix.helpers('jq-notify', {
         type: 'success', icon: 'fa fa-check me-1', message: 'Successfully updated customer'
                             });
@@ -361,7 +362,7 @@
                         });
 
     if (response) {
-        getCustomerList();
+        pagination.getPagination()
                         }
                     } catch (error) {
         console.error("Error:", error);

@@ -23,20 +23,20 @@ namespace ShoeShop.Areas.Admin.Controllers
         // GET: Admin/Topics
         public async Task<IActionResult> Index()
         {
-              return _context.Topic != null ? 
-                          View(await _context.Topic.ToListAsync()) :
+              return _context.Topics != null ? 
+                          View(await _context.Topics.ToListAsync()) :
                           Problem("Entity set 'AppDbContext.Topic'  is null.");
         }
 
         // GET: Admin/Topics/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Topic == null)
+            if (id == null || _context.Topics == null)
             {
                 return NotFound();
             }
 
-            var topic = await _context.Topic
+            var topic = await _context.Topics
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (topic == null)
             {
@@ -71,12 +71,12 @@ namespace ShoeShop.Areas.Admin.Controllers
         // GET: Admin/Topics/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Topic == null)
+            if (id == null || _context.Topics == null)
             {
                 return NotFound();
             }
 
-            var topic = await _context.Topic.FindAsync(id);
+            var topic = await _context.Topics.FindAsync(id);
             if (topic == null)
             {
                 return NotFound();
@@ -122,12 +122,12 @@ namespace ShoeShop.Areas.Admin.Controllers
         // GET: Admin/Topics/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Topic == null)
+            if (id == null || _context.Topics == null)
             {
                 return NotFound();
             }
 
-            var topic = await _context.Topic
+            var topic = await _context.Topics
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (topic == null)
             {
@@ -142,14 +142,14 @@ namespace ShoeShop.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Topic == null)
+            if (_context.Topics == null)
             {
                 return Problem("Entity set 'AppDbContext.Topic'  is null.");
             }
-            var topic = await _context.Topic.FindAsync(id);
+            var topic = await _context.Topics.FindAsync(id);
             if (topic != null)
             {
-                _context.Topic.Remove(topic);
+                _context.Topics.Remove(topic);
             }
             
             await _context.SaveChangesAsync();
@@ -158,7 +158,7 @@ namespace ShoeShop.Areas.Admin.Controllers
 
         private bool TopicExists(int id)
         {
-          return (_context.Topic?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.Topics?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
