@@ -3,7 +3,7 @@ using ShoeShop.Models;
 
 public class ShoeCardsViewComponent : ViewComponent
 {
-	public IViewComponentResult Invoke(Shoe shoe)
+	public IViewComponentResult Invoke(Product shoe)
 	{
 		return View(shoe);
 	}

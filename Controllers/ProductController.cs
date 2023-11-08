@@ -13,10 +13,17 @@ namespace ShoeShop.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
-        }
+			if (_context.Products != null)
+			{
+				var products = await _context.Products.Include(product => product.Thumbnail)
+					.OrderByDescending(product => product.CreatedAt)
+					.ToListAsync();
+				return View(products);
+			}
+			return Problem("Entity set 'AppDbContext.Products'  is null.");
+		}
 
 		public async Task<IActionResult> Detail(int? id)
 		{

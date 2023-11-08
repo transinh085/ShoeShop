@@ -245,19 +245,25 @@
 	});
 	
 	// Top panel on click: add to cart, search header
-	var $topPnl = $('.top_panel');
+	var $topPnlSearch = $('.top_panel_search');
+	var $topPnlCart = $('.top_panel_cart');
 	var $pnlMsk = $('.layer');
 	
 	$('.btn_add_to_cart a').on('click', function(){
-		$topPnl.addClass('show');
+		$topPnlCart.addClass('show');
 		$pnlMsk.addClass('layer-is-visible');
 	});
 	$('a.search_panel').on('click', function(){
-		$topPnl.addClass('show');
+		$topPnlSearch.addClass('show');
 		$pnlMsk.addClass('layer-is-visible');
 	});
-	$('a.btn_close_top_panel').on('click', function(){
-		$topPnl.removeClass('show');
+	$('a.btn_close_top_panel_search').on('click', function(){
+		$topPnlSearch.removeClass('show');
+		$pnlMsk.removeClass('layer-is-visible');
+	});
+
+	$('a.btn_close_top_panel_cart').on('click', function () {
+		$topPnlCart.removeClass('show');
 		$pnlMsk.removeClass('layer-is-visible');
 	});
 	
