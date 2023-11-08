@@ -140,6 +140,7 @@ namespace ShoeShop.Areas.Admin.Controllers
             {
                 return Problem("Entity set 'AppDbContext.Color'  is null.");
             }
+
             var color = await _context.Colors.FindAsync(id);
             if (color != null)
             {

@@ -79,7 +79,7 @@
 				</div>
 				<!-- End container-->
 			</div>
-			<div class="main_header Sticky">
+			<div class="main_header Sticky border-bottom">
 				<div class="container">
 					<div class="row small-gutters">
 						<div class="col-xl-3 col-lg-3 d-lg-flex align-items-center">
@@ -116,9 +116,6 @@
 									</li>
 									<li>
 										<a asp-controller="Blog" asp-action="Index">Blog</a>
-									</li>
-									<li>
-										<a href="/admin">Buy Template</a>
 									</li>
 								</ul>
 							</div>
@@ -160,7 +157,13 @@
 										<div class="dropdown dropdown-access">
 											<a href="#" class="access_link"><span>Account</span></a>
 											<div class="dropdown-menu">
-												<a asp-controller="authentication" asp-action="signin" class="btn_1">Sign In or Sign Up</a>
+												<div class="d-flex align-items-center gap-2">
+													<img alt="Image" src="@currentUser.ProfileImageUrl" class="avatar">
+													<div>
+														<p class="fw-bold mb-0">@currentUser.FullName</p>
+														<p class="mb-0">@currentUser.Email</p>
+													</div>
+												</div>
 												<ul>
 													<li>
 														<a href="trackorder"><i class="ti-truck"></i>Track your Order</a>
@@ -324,9 +327,9 @@
 	<!-- page -->
 
 	<div id="toTop"></div><!-- Back to top button -->
-	<div class="top_panel">
+	<div class="top_panel top_panel_cart">
 		<div class="container header_panel">
-			<a href="#0" class="btn_close_top_panel"><i class="ti-close"></i></a>
+			<a href="#0" class="btn_close_top_panel btn_close_top_panel_cart"><i class="ti-close"></i></a>
 			<label>1 product added to cart</label>
 		</div>
 		<!-- /header_panel -->
@@ -349,52 +352,23 @@
 			</div>
 		</div>
 		<!-- /item -->
-		<div class="container related">
-			<h4>Who bought this product also bought</h4>
-			<div class="row">
-				<div class="col-md-4">
-					<div class="item_panel">
-						<a href="#0">
-							<figure>
-								<img src="~/img/products/shoes/2.jpg" alt="">
-							</figure>
-						</a>
-						<a href="#0">
-							<h5>Armor Okwahn II</h5>
-						</a>
-						<div class="price_panel"><span class="new_price">$90.00</span></div>
-					</div>
-				</div>
-				<div class="col-md-4">
-					<div class="item_panel">
-						<a href="#0">
-							<figure>
-								<img src="~/img/products/shoes/3.jpg" alt="">
-							</figure>
-						</a>
-						<a href="#0">
-							<h5>Armor Air Wildwood ACG</h5>
-						</a>
-						<div class="price_panel"><span class="new_price">$75.00</span><span class="percentage">-20%</span> <span class="old_price">$155.00</span></div>
-					</div>
-				</div>
-				<div class="col-md-4">
-					<div class="item_panel">
-						<a href="#0">
-							<figure>
-								<img src="~/img/products/shoes/4.jpg" alt="">
-							</figure>
-						</a>
-						<a href="#0">
-							<h5>Armor ACG React Terra</h5>
-						</a>
-						<div class="price_panel"><span class="new_price">$110.00</span></div>
-					</div>
-				</div>
+	</div>
+	<div class="top_panel top_panel_search">
+		<div class="container header_panel">
+			<a href="#0" class="btn_close_top_panel btn_close_top_panel_search"><i class="ti-close"></i></a>
+			<small>What are you looking for?</small>
+		</div>
+		<!-- /header_panel -->
+
+		<div class="container">
+			<div class="search-input">
+				<input type="text" placeholder="Search over 10.000 products...">
+				<button type="submit"><i class="ti-search"></i></button>
 			</div>
 		</div>
 		<!-- /related -->
 	</div>
+	<!-- /search_panel -->
 	<!-- COMMON SCRIPTS -->
 	<script src="~/js/common_scripts.min.js"></script>
 	<script src="~/js/main.js"></script>
