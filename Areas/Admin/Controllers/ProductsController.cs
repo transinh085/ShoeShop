@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using ShoeShop.Data;
 using ShoeShop.Models;
 using ShoeShop.ViewModels.Product;
+using System.Drawing;
 using Image = ShoeShop.Models.Image;
 
 namespace ShoeShop.Areas.Admin.Controllers
@@ -142,17 +143,11 @@ namespace ShoeShop.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            ViewBag.Product = await _context.Products
-                .Include(product => product.Variants)
-                    .ThenInclude(variant => variant.Images)
-                .Include(product => product.Variants)
-                    .ThenInclude(variant => variant.Color)
-                .Include(product => product.Variants)
-                    .ThenInclude(variant => variant.VariantSizes)
-                        .ThenInclude(size => size.Size)
-                .FirstOrDefaultAsync(p => p.Id == id);
+            var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
 
+            if (product == null) return NotFound();
 
+            ViewBag.Product = product;
             ViewBag.Brands = await _context.Brands.ToListAsync();
             ViewBag.Categories = await _context.Categories.ToListAsync();
             ViewBag.Colors = await _context.Colors.ToListAsync();

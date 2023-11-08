@@ -22,3 +22,30 @@
 .custom-notify {
     z-index: 9999; /* Điều chỉnh giá trị z-index theo nhu cầu của bạn, để đảm bảo nó cao hơn modal */
 }
+
+.list-service i {
+    font-size: 26px;
+    color: #004dda
+}
+
+.list-service span {
+    font-size: 15px
+}
+
+.img-color{
+    width: 100%;
+    object-fit: contain
+}
+
+.variant-color{
+    cursor: pointer
+}
+
+.variant-color.active {
+    border-bottom: 4px solid
+}
+
+.size-container{
+    display: flex;
+    gap: 10px
+}

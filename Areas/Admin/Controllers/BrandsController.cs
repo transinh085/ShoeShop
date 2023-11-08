@@ -18,31 +18,16 @@ namespace ShoeShop.Areas.Admin.Controllers
             _context = context;
         }
 
-        // GET: Admin/Brands
-        public async Task<IActionResult> Index(string sortOrder)
-        {
-			ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "Name" : "";
-            ViewBag.IdSortParm = sortOrder == "Id" ? "IdDesc" : "Id";
-            var brands = from b in _context.Brands select b;
-			switch (sortOrder)
-			{
-				case "Name":
-					brands = brands.OrderByDescending(s => s.Name);
-					break;
-                case "Id":
-                    brands = brands.OrderByDescending(_ => _.Id);
-                    break;
-				default:
-					brands = brands.OrderBy(s => s.Name);
-					break;
-			}
-			return _context.Brands != null ? 
-                          View(await brands.ToListAsync()) :
-                          Problem("Entity set 'AppDbContext.Brands'  is null.");
-        }
+		// GET: Admin/Brands
+		public async Task<IActionResult> Index()
+		{
+			return _context.Brands != null ?
+						View(await _context.Brands.ToListAsync()) :
+						Problem("Entity set 'AppDbContext.Brands'  is null.");
+		}
 
-        // GET: Admin/Brands/Details/5
-        public async Task<IActionResult> Details(int? id)
+		// GET: Admin/Brands/Details/5
+		public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Brands == null)
             {

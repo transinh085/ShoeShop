@@ -20,7 +20,7 @@ namespace ShoeShop.Data.Seeder
 
                 var faker = new Faker();
 
-                for (int i = 0; i < 20; i++)
+                for (int i = 0; i < 73; i++)
                 {
                     var customerEmail = faker.Internet.Email();
                     var customerUserName = faker.Internet.UserName();

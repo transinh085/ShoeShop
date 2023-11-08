@@ -239,6 +239,10 @@ namespace ShoeShop.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<int>("CreateBy")
                         .HasColumnType("int");
 
