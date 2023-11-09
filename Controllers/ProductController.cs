@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using ShoeShop.Data;
 using ShoeShop.Models;
+using ShoeShop.ViewModels;
+using System.Linq;
 
 namespace ShoeShop.Controllers
 {
@@ -46,6 +48,22 @@ namespace ShoeShop.Controllers
             return View();
 		}
 
-
+		[HttpPost]
+		public async Task<IActionResult> GetCart(CartViewModel cart)
+		{
+			var variantSize = await _context.VariantSizes
+					.Where(v => cart.Carts.Contains(v.Id))
+					.Select(v => new
+					{
+						VariantSizeId = v.Id,
+						SizeName = v.Size.Name,
+						ColorName = v.Variant.Color.Name,
+						thumbnail = v.Variant.Thumbnail.Name,
+						Title = v.Variant.Product.Name,
+						Price = v.Variant.Product.Price
+					})
+					.ToListAsync();
+			return Ok(variantSize);
+		}
 	}
 }

@@ -23,8 +23,32 @@ namespace ShoeShop.Data.Seeder
                         new Color
                         {
                             Name = "Black"
-                        }
-                    });
+                        },
+						new Color
+						{
+							Name = "Gray"
+						},
+						new Color
+						{
+							Name = "Blue"
+						},
+						new Color
+						{
+							Name = "Green"
+						},
+						new Color
+						{
+							Name = "Pink"
+						},
+						new Color
+						{
+							Name = "Orange"
+						},
+						new Color
+						{
+							Name = "Brown"
+						}
+					});
                     context.SaveChanges();
                 }
             }

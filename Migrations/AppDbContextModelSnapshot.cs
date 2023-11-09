@@ -578,7 +578,7 @@ namespace ShoeShop.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ShoeShop.Models.Product", null)
+                    b.HasOne("ShoeShop.Models.Product", "Product")
                         .WithMany("Variants")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -589,6 +589,8 @@ namespace ShoeShop.Migrations
                         .HasForeignKey("ThumbnailId");
 
                     b.Navigation("Color");
+
+                    b.Navigation("Product");
 
                     b.Navigation("Thumbnail");
                 });
@@ -601,13 +603,15 @@ namespace ShoeShop.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ShoeShop.Models.Variant", null)
+                    b.HasOne("ShoeShop.Models.Variant", "Variant")
                         .WithMany("VariantSizes")
                         .HasForeignKey("VariantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Size");
+
+                    b.Navigation("Variant");
                 });
 
             modelBuilder.Entity("ShoeShop.Models.Brand", b =>

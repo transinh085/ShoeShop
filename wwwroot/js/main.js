@@ -355,7 +355,29 @@
         $('.popup_close').on("click", function () {
             $(".popup_wrapper").fadeOut(300);
         })
-    }, 1500);
+	}, 1500);
+
+	const addCart = (product) => {
+		let cart = localStorage.getItem('cart') ? JSON.parse(localStorage.getItem('cart')) : [];
+		cart.push(product);
+		localStorage.setItem('cart', JSON.stringify(cart));
+	}
+
+	const removeCart = () => {
+
+	}
+
+	const getTotalCart = () => {
+
+	}
+
+	const loadCart = () => {
+
+	}
+
+	const renderCart = () => {
+
+	}
 	
 
 })(window.jQuery); 
