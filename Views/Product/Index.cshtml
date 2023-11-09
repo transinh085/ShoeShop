@@ -247,7 +247,6 @@
 				const checkedBrands = getCheckedValues(brandsCheckboxes);
 				const checkedSizes = getCheckedValues(sizesCheckboxes);
 
-				const url = window.location.href.split('?')[0];
 				const queryParams = [];
 
 				if (checkedCategories.length > 0) {
@@ -263,14 +262,35 @@
 					queryParams.push(`sizes=${checkedSizes.join(",")}`);
 				}
 
+				const url = window.location.href.split('?')[0];
 				const finalURL = queryParams.length > 0 ? `${url}?${queryParams.join("&")}` : url;
+
 				history.replaceState(null, null, finalURL);
+
+				// Now, update the checkboxes based on the URL parameters
+				updateCheckboxesFromURLParameters();
 			}
 
 			function getCheckedValues(checkboxes) {
 				return Array.from(checkboxes)
 					.filter(checkbox => checkbox.checked)
 					.map(checkbox => checkbox.value);
+			}
+
+			function updateCheckboxesFromURLParameters() {
+				const urlParams = new URLSearchParams(window.location.search);
+				categoriesCheckboxes.forEach(checkbox => {
+					checkbox.checked = urlParams.get("categories")?.split(",").includes(checkbox.value);
+				});
+				colorsCheckboxes.forEach(checkbox => {
+					checkbox.checked = urlParams.get("colors")?.split(",").includes(checkbox.value);
+				});
+				brandsCheckboxes.forEach(checkbox => {
+					checkbox.checked = urlParams.get("brands")?.split(",").includes(checkbox.value);
+				});
+				sizesCheckboxes.forEach(checkbox => {
+					checkbox.checked = urlParams.get("sizes")?.split(",").includes(checkbox.value);
+				});
 			}
 
 			categoriesCheckboxes.forEach(checkbox => {
@@ -287,7 +307,10 @@
 
 			sizesCheckboxes.forEach(checkbox => {
 				checkbox.addEventListener("change", updateURL);
-			})
+			});
+
+			// Call this function to initialize checkboxes based on URL parameters
+			updateCheckboxesFromURLParameters();
 		});
 	</script>
 }
