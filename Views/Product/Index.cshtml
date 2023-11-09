@@ -9,7 +9,6 @@
 @{
 	var categories = ViewBag.Categories as List<Category>;
 	var brands = ViewBag.Brands as List<Brand>;
-	var sizes = ViewBag.Sizes as List<Size>;
 	var products = ViewBag.Products as List<Product>;
 	var colors = ViewBag.Colors as List<Color>;
 }
@@ -131,27 +130,6 @@
 							</ul>
 						</div>
 					</div>
-						<!-- /filter_type -->
-						<div class="filter_type version_2">
-							<h4><a href="#sizes" data-bs-toggle="collapse" class="opened">Sizes</a></h4>
-							<div class="collapse" id="sizes">
-								<ul>
-									@if (sizes != null)
-									{
-										foreach (var size in sizes)
-										{
-											<li>
-												<label class="container_check">
-													@size.Name <small>02</small>
-													<input type="checkbox" name="sizes" value="@size.Id">
-													<span class="checkmark"></span>
-												</label>
-											</li>
-										}
-									}
-								</ul>
-							</div>
-						</div>
 					<!-- /filter_type -->
 					<div class="filter_type version_2">
 						<h4><a href="#filter_4" data-bs-toggle="collapse" class="closed">Price</a></h4>
@@ -239,13 +217,11 @@
 			const categoriesCheckboxes = document.querySelectorAll("input[name=categories]");
 			const colorsCheckboxes = document.querySelectorAll("input[name=colors]");
 			const brandsCheckboxes = document.querySelectorAll("input[name=brands]");
-			const sizesCheckboxes = document.querySelectorAll("input[name=sizes]");
 
 			function updateURL() {
 				const checkedCategories = getCheckedValues(categoriesCheckboxes);
 				const checkedColors = getCheckedValues(colorsCheckboxes);
 				const checkedBrands = getCheckedValues(brandsCheckboxes);
-				const checkedSizes = getCheckedValues(sizesCheckboxes);
 
 				const queryParams = [];
 
@@ -257,9 +233,6 @@
 				}
 				if (checkedBrands.length > 0) {
 					queryParams.push(`brands=${checkedBrands.join(",")}`);
-				}
-				if (checkedSizes.length > 0) {
-					queryParams.push(`sizes=${checkedSizes.join(",")}`);
 				}
 
 				const url = window.location.href.split('?')[0];
@@ -288,9 +261,6 @@
 				brandsCheckboxes.forEach(checkbox => {
 					checkbox.checked = urlParams.get("brands")?.split(",").includes(checkbox.value);
 				});
-				sizesCheckboxes.forEach(checkbox => {
-					checkbox.checked = urlParams.get("sizes")?.split(",").includes(checkbox.value);
-				});
 			}
 
 			categoriesCheckboxes.forEach(checkbox => {
@@ -305,9 +275,6 @@
 				checkbox.addEventListener("change", updateURL);
 			});
 
-			sizesCheckboxes.forEach(checkbox => {
-				checkbox.addEventListener("change", updateURL);
-			});
 
 			// Call this function to initialize checkboxes based on URL parameters
 			updateCheckboxesFromURLParameters();

@@ -221,7 +221,235 @@ namespace ShoeShop.Data.Seeder
 						}
 					}
 				};
+
+				//Product 3
+				ProductSeedViewModel product3 = new ProductSeedViewModel
+				{
+					Name = "HumanraceSamba",
+					Slug = "humanracesamba",
+					Description = "Giày thể thao nam HumanraceSamba là mẫu giày được xếp vào " +
+										"danh sách những chiếc giày thể thao nam bán chạy và tốt nhất. Nhờ sự kết hợp hoàn hảo giữa " +
+										"sự thoải mái và nhẹ nhàng, bạn sẽ dễ dàng hơn trong các bài tập thể " +
+										"dục hàng ngày hoặc những môn thể thao với nhịp độ cao.",
+					Price = 60,
+					Category = 1,
+					Brand = 1,
+					Status = true,
+					Variants = new List<VariantViewModel>
+					{
+						new VariantViewModel
+						{
+							ColorId = 1,
+							Images = new List<string>
+							{
+								"HumanraceSambaWhite1.webp",
+								"HumanraceSambaWhite2.webp",
+								"HumanraceSambaWhite3.webp",
+								"HumanraceSambaWhite4.webp",
+							},
+							Thumbnail = 2,
+							Sizes = new List<SizeViewModel>
+							{
+								new SizeViewModel
+								{
+									SizeId = 1,
+									Active = true,
+									Stock = 2
+								},
+								new SizeViewModel
+								{
+									SizeId = 2,
+									Active = true,
+									Stock = 3
+								},
+								new SizeViewModel
+								{
+									SizeId = 3,
+									Active = true,
+									Stock = 5
+								},
+							},
+
+						}
+					}
+				};
+
+				//Product 4
+				ProductSeedViewModel product4 = new ProductSeedViewModel
+				{
+					Name = "Questart",
+					Slug = "questart",
+					Description = "Giày thể thao nam Questart là mẫu giày được xếp vào " +
+										"danh sách những chiếc giày thể thao nam bán chạy và tốt nhất. Nhờ sự kết hợp hoàn hảo giữa " +
+										"sự thoải mái và nhẹ nhàng, bạn sẽ dễ dàng hơn trong các bài tập thể " +
+										"dục hàng ngày hoặc những môn thể thao với nhịp độ cao.",
+					Price = 120,
+					Category = 1,
+					Brand = 1,
+					Status = true,
+					Variants = new List<VariantViewModel>
+					{
+						new VariantViewModel
+						{
+							ColorId = 1,
+							Images = new List<string>
+							{
+								"QUESTARWhite3.webp",
+								"QUESTARWhite1.webp",
+								"QUESTARWhite4.webp",
+								"QUESTARWhite2.webp",
+							},
+							Thumbnail = 2,
+							Sizes = new List<SizeViewModel>
+							{
+								new SizeViewModel
+								{
+									SizeId = 1,
+									Active = true,
+									Stock = 2
+								},
+								new SizeViewModel
+								{
+									SizeId = 2,
+									Active = true,
+									Stock = 3
+								},
+								new SizeViewModel
+								{
+									SizeId = 3,
+									Active = true,
+									Stock = 5
+								},
+							},
+						},
+						new VariantViewModel
+						{
+							ColorId = 2,
+							Images = new List<string>
+							{
+								"QUESTARBlack2.webp",
+								"QUESTARBlack3.webp",
+								"QUESTARBlack4.webp",
+								"QUESTARBlack1.webp",
+							},
+							Thumbnail = 2,
+							Sizes = new List<SizeViewModel>
+							{
+								new SizeViewModel
+								{
+									SizeId = 1,
+									Active = true,
+									Stock = 2
+								},
+								new SizeViewModel
+								{
+									SizeId = 2,
+									Active = true,
+									Stock = 3
+								},
+								new SizeViewModel
+								{
+									SizeId = 3,
+									Active = true,
+									Stock = 5
+								},
+							},
+						}
+					}
+				};
+				Create(context, product1);
 				Create(context, product2);
+				Create(context, product3);
+				Create(context, product4);
+
+				ProductSeedViewModel product5;
+				for (int i=0; i<25; i++)
+				{
+					product5 = new ProductSeedViewModel
+					{
+						Name = "Questart" + i,
+						Slug = "questart" + i,
+						Description = "Giày thể thao nam Questart là mẫu giày được xếp vào " +
+										"danh sách những chiếc giày thể thao nam bán chạy và tốt nhất. Nhờ sự kết hợp hoàn hảo giữa " +
+										"sự thoải mái và nhẹ nhàng, bạn sẽ dễ dàng hơn trong các bài tập thể " +
+										"dục hàng ngày hoặc những môn thể thao với nhịp độ cao.",
+						Price = 120,
+						Category = 1,
+						Brand = 1,
+						Status = true,
+						Variants = new List<VariantViewModel>
+					{
+						new VariantViewModel
+						{
+							ColorId = 1,
+							Images = new List<string>
+							{
+								"QUESTARWhite3.webp",
+								"QUESTARWhite1.webp",
+								"QUESTARWhite4.webp",
+								"QUESTARWhite2.webp",
+							},
+							Thumbnail = 2,
+							Sizes = new List<SizeViewModel>
+							{
+								new SizeViewModel
+								{
+									SizeId = 1,
+									Active = true,
+									Stock = 2
+								},
+								new SizeViewModel
+								{
+									SizeId = 2,
+									Active = true,
+									Stock = 3
+								},
+								new SizeViewModel
+								{
+									SizeId = 3,
+									Active = true,
+									Stock = 5
+								},
+							},
+						},
+						new VariantViewModel
+						{
+							ColorId = 2,
+							Images = new List<string>
+							{
+								"QUESTARBlack2.webp",
+								"QUESTARBlack3.webp",
+								"QUESTARBlack4.webp",
+								"QUESTARBlack1.webp",
+							},
+							Thumbnail = 2,
+							Sizes = new List<SizeViewModel>
+							{
+								new SizeViewModel
+								{
+									SizeId = 1,
+									Active = true,
+									Stock = 2
+								},
+								new SizeViewModel
+								{
+									SizeId = 2,
+									Active = true,
+									Stock = 3
+								},
+								new SizeViewModel
+								{
+									SizeId = 3,
+									Active = true,
+									Stock = 5
+								},
+							},
+						}
+					}
+					};
+
+					Create(context, product5);
+				}
 			}
 		}
 

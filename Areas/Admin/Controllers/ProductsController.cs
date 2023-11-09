@@ -28,7 +28,7 @@ namespace ShoeShop.Areas.Admin.Controllers
                 var products = await _context.Products.Include(product => product.Category)
                     .Include(product => product.Brand)
                     .Include(product => product.Thumbnail)
-                    .OrderByDescending(product => product.IsDetele)
+                    .Where(product => product.IsDetele == false)
                     .OrderByDescending(product => product.CreatedAt)
                     .ToListAsync();
                 return View(products);
