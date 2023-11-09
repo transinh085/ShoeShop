@@ -6,6 +6,14 @@
 	<link href="~/css/listing.css" rel="stylesheet">
 }
 
+@{
+	var categories = ViewBag.Categories as List<Category>;
+	var brands = ViewBag.Brands as List<Brand>;
+	var sizes = ViewBag.Sizes as List<Size>;
+	var products = ViewBag.Products as List<Product>;
+	var colors = ViewBag.Colors as List<Color>;
+}
+
 <main>
 	<div class="top_banner">
 		<div class="opacity-mask d-flex align-items-center" data-opacity-mask="rgba(0, 0, 0, 0.3)">
@@ -57,115 +65,93 @@
 		<div class="row">
 			<aside class="col-lg-3" id="sidebar_fixed">
 				<div class="filter_col">
+					<form method="get">
 					<div class="inner_bt"><a href="#" class="open_filters"><i class="ti-close"></i></a></div>
 					<div class="filter_type version_2">
 						<h4><a href="#categories" data-bs-toggle="collapse" class="opened">Categories</a></h4>
 						<div class="collapse show" id="categories">
 							<ul>
-								<li>
-									<label class="container_check">
-										Men <small>12</small>
-										<input type="checkbox">
-										<span class="checkmark"></span>
-									</label>
-								</li>
-								<li>
-									<label class="container_check">
-										Women <small>24</small>
-										<input type="checkbox">
-										<span class="checkmark"></span>
-									</label>
-								</li>
-								<li>
-									<label class="container_check">
-										Running <small>23</small>
-										<input type="checkbox">
-										<span class="checkmark"></span>
-									</label>
-								</li>
-								<li>
-									<label class="container_check">
-										Training <small>11</small>
-										<input type="checkbox">
-										<span class="checkmark"></span>
-									</label>
-								</li>
+								@if(categories != null)
+								{
+									foreach(var category in categories)
+									{
+										<li>
+											<label class="container_check">
+												@category.Name <small>24</small>
+												<input type="checkbox" name="categories" value="@category.Id">
+												<span class="checkmark"></span>
+											</label>
+										</li>
+									}
+								}
 							</ul>
 						</div>
 						<!-- /filter_type -->
 					</div>
 					<!-- /filter_type -->
 					<div class="filter_type version_2">
-						<h4><a href="#filter_2" data-bs-toggle="collapse" class="opened">Color</a></h4>
-						<div class="collapse show" id="filter_2">
+						<h4><a href="#colors" data-bs-toggle="collapse" class="opened">Color</a></h4>
+						<div class="collapse show" id="colors">
 							<ul>
-								<li>
-									<label class="container_check">
-										Blue <small>06</small>
-										<input type="checkbox">
-										<span class="checkmark"></span>
-									</label>
-								</li>
-								<li>
-									<label class="container_check">
-										Red <small>12</small>
-										<input type="checkbox">
-										<span class="checkmark"></span>
-									</label>
-								</li>
-								<li>
-									<label class="container_check">
-										Orange <small>17</small>
-										<input type="checkbox">
-										<span class="checkmark"></span>
-									</label>
-								</li>
-								<li>
-									<label class="container_check">
-										Black <small>43</small>
-										<input type="checkbox">
-										<span class="checkmark"></span>
-									</label>
-								</li>
+								@if (colors != null)
+								{
+									foreach (var color in colors)
+									{
+										<li>
+											<label class="container_check">
+												@color.Name <small>06</small>
+												<input type="checkbox" name="colors" value="@color.Id">
+												<span class="checkmark"></span>
+											</label>
+										</li>
+									}
+								}
 							</ul>
+
 						</div>
 					</div>
 					<!-- /filter_type -->
 					<div class="filter_type version_2">
-						<h4><a href="#filter_3" data-bs-toggle="collapse" class="closed">Brands</a></h4>
-						<div class="collapse" id="filter_3">
+						<h4><a href="#lbrands" data-bs-toggle="collapse" class="opened">Brands</a></h4>
+						<div class="collapse show" id="lbrands">
 							<ul>
-								<li>
-									<label class="container_check">
-										Adidas <small>11</small>
-										<input type="checkbox">
-										<span class="checkmark"></span>
-									</label>
-								</li>
-								<li>
-									<label class="container_check">
-										Nike <small>08</small>
-										<input type="checkbox">
-										<span class="checkmark"></span>
-									</label>
-								</li>
-								<li>
-									<label class="container_check">
-										Vans <small>05</small>
-										<input type="checkbox">
-										<span class="checkmark"></span>
-									</label>
-								</li>
-								<li>
-									<label class="container_check">
-										Puma <small>18</small>
-										<input type="checkbox">
-										<span class="checkmark"></span>
-									</label>
-								</li>
+								@if (brands != null)
+								{
+									foreach (var brand in brands)
+									{
+										<li>
+											<label class="container_check">
+												@brand.Name <small>02</small>
+													<input type="checkbox" name="brands" value="@brand.Id">
+												<span class="checkmark"></span>
+											</label>
+										</li>
+									}
+								}
 							</ul>
 						</div>
 					</div>
+						<!-- /filter_type -->
+						<div class="filter_type version_2">
+							<h4><a href="#sizes" data-bs-toggle="collapse" class="opened">Sizes</a></h4>
+							<div class="collapse" id="sizes">
+								<ul>
+									@if (sizes != null)
+									{
+										foreach (var size in sizes)
+										{
+											<li>
+												<label class="container_check">
+													@size.Name <small>02</small>
+													<input type="checkbox" name="sizes" value="@size.Id">
+													<span class="checkmark"></span>
+												</label>
+											</li>
+										}
+									}
+								</ul>
+							</div>
+						</div>
 					<!-- /filter_type -->
 					<div class="filter_type version_2">
 						<h4><a href="#filter_4" data-bs-toggle="collapse" class="closed">Price</a></h4>
@@ -204,14 +190,15 @@
 					</div>
 					<!-- /filter_type -->
 					<div class="buttons">
-						<a href="#0" class="btn_1">Filter</a> <a href="#0" class="btn_1 gray">Reset</a>
+						<button type="submit" class="btn_1">Filter</button> <a href="#0" class="btn_1 gray">Reset</a>
 					</div>
+					</form>
 				</div>
 			</aside>
 			<!-- /col -->
 			<div class="col-lg-9">
 				<div class="row small-gutters">
-					@foreach (var item in Model)
+					@foreach (var item in ViewBag.Products)
 					{
 						@await Component.InvokeAsync("ShoeCards", item)
 					}
@@ -243,3 +230,67 @@
 	</div>
 	<!-- /container -->
 </main>
+
+@section Scripts {
+	<script src="~/js/sticky_sidebar.min.js"></script>
+	<script src="~/js/specific_listing.js"></script>
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			const categoriesCheckboxes = document.querySelectorAll("input[name=categories]");
+			const colorsCheckboxes = document.querySelectorAll("input[name=colors]");
+			const brandsCheckboxes = document.querySelectorAll("input[name=brands]");
+			const sizesCheckboxes = document.querySelectorAll("input[name=sizes]");
+
+			function updateURL() {
+				const checkedCategories = getCheckedValues(categoriesCheckboxes);
+				const checkedColors = getCheckedValues(colorsCheckboxes);
+				const checkedBrands = getCheckedValues(brandsCheckboxes);
+				const checkedSizes = getCheckedValues(sizesCheckboxes);
+
+				const url = window.location.href.split('?')[0];
+				const queryParams = [];
+
+				if (checkedCategories.length > 0) {
+					queryParams.push(`categories=${checkedCategories.join(",")}`);
+				}
+				if (checkedColors.length > 0) {
+					queryParams.push(`colors=${checkedColors.join(",")}`);
+				}
+				if (checkedBrands.length > 0) {
+					queryParams.push(`brands=${checkedBrands.join(",")}`);
+				}
+				if (checkedSizes.length > 0) {
+					queryParams.push(`sizes=${checkedSizes.join(",")}`);
+				}
+
+				const finalURL = queryParams.length > 0 ? `${url}?${queryParams.join("&")}` : url;
+				history.replaceState(null, null, finalURL);
+			}
+
+			function getCheckedValues(checkboxes) {
+				return Array.from(checkboxes)
+					.filter(checkbox => checkbox.checked)
+					.map(checkbox => checkbox.value);
+			}
+
+			categoriesCheckboxes.forEach(checkbox => {
+				checkbox.addEventListener("change", updateURL);
+			});
+
+			colorsCheckboxes.forEach(checkbox => {
+				checkbox.addEventListener("change", updateURL);
+			});
+
+			brandsCheckboxes.forEach(checkbox => {
+				checkbox.addEventListener("change", updateURL);
+			});
+
+			sizesCheckboxes.forEach(checkbox => {
+				checkbox.addEventListener("change", updateURL);
+			})
+		});
+	</script>
+}
+
+
+

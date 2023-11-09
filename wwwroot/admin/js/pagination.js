@@ -17,6 +17,8 @@
             query: "",
             totalPages: 0,
             result: null,
+            truncate: true,
+            numLinksTwoSide: 1
         };
         this.getPagination();
         this.container.addEventListener("click", this.containerHandler.bind(this));
@@ -118,7 +120,6 @@
             method: "get",
             dataType: "json",
             success: function (response) {
-                console.log('response', response)
                 self.valuePage.currentPage = response.currentPage;
                 self.valuePage.totalPages = response.totalPages;
                 self.valuePage.result = response.result;
@@ -161,16 +162,56 @@
     }
 
     pagination() {
-        const {
-            totalPages,
-            currentPage
-        } = this.valuePage;
+        const { totalPages, currentPage, truncate, numLinksTwoSide: delta } = this.valuePage;
+
+        const range = delta + 4; // use for handle visible number of links left side
+
         let render = "";
+        let renderTwoSide = "";
+        let dot = `<li class="page-item"><a class="page-link" href="javascript:void(0)">...</a></li>`;
+        let countTruncate = 0; // use for ellipsis - truncate left side or right side
+
+        // use for truncate two side
+        const numberTruncateLeft = currentPage - delta;
+        const numberTruncateRight = currentPage + delta;
+
+        let active = "";
         for (let pos = 1; pos <= totalPages; pos++) {
-            if (pos == currentPage) render += this.renderPage(pos, "active");
-            else render += this.renderPage(pos, "");
+            active = pos === currentPage ? "active" : "";
+
+            // truncate
+            if (totalPages >= 2 * range - 1 && truncate) {
+                if (numberTruncateLeft > 3 && numberTruncateRight < totalPages - 3 + 1) {
+                    // truncate 2 side
+                    if (pos >= numberTruncateLeft && pos <= numberTruncateRight) {
+                        renderTwoSide += this.renderPage(pos, active);
+                    }
+                } else {
+                    // truncate left side or right side
+                    if (
+                        (currentPage < range && pos <= range) ||
+                        (currentPage > totalPages - range && pos >= totalPages - range + 1) ||
+                        pos === totalPages ||
+                        pos === 1
+                    ) {
+                        render += this.renderPage(pos, active);
+                    } else {
+                        countTruncate++;
+                        if (countTruncate === 1) render += dot;
+                    }
+                }
+            } else {
+                // not truncate
+                render += this.renderPage(pos, active);
+            }
         }
-        this.pg.innerHTML = render;
+
+        if (renderTwoSide) {
+            renderTwoSide = this.renderPage(1) + dot + renderTwoSide + dot + this.renderPage(totalPages);
+            this.pg.innerHTML = renderTwoSide;
+        } else {
+            this.pg.innerHTML = render;
+        }
 
         this.handleButtonLeft();
         this.handleButtonRight();
