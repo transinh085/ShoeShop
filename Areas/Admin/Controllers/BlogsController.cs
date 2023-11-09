@@ -47,9 +47,11 @@ namespace ShoeShop.Areas.Admin.Controllers
         }
 
         // GET: Admin/Blogs/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             ViewData["TopicID"] = new SelectList(_context.Topics, "Id", "Id");
+            ViewBag.Topics = await _context.Topics.ToListAsync();
+
             return View();
         }
 

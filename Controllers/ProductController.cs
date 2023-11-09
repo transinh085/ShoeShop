@@ -20,10 +20,14 @@ namespace ShoeShop.Controllers
         {
 			if (_context.Products != null)
 			{
-				var products = await _context.Products.Include(product => product.Thumbnail)
+				ViewBag.Categories = await _context.Categories.ToListAsync();
+				ViewBag.Brands = await _context.Brands.ToListAsync();
+				ViewBag.Sizes = await _context.Sizes.ToListAsync();
+				ViewBag.Colors = await _context.Colors.ToListAsync();
+				ViewBag.Products = await _context.Products.Include(product => product.Thumbnail)
 					.OrderByDescending(product => product.CreatedAt)
 					.ToListAsync();
-				return View(products);
+				return View();
 			}
 			return Problem("Entity set 'AppDbContext.Products'  is null.");
 		}
@@ -40,6 +44,7 @@ namespace ShoeShop.Controllers
             if (product == null) return NotFound();
 
             ViewBag.Product = product;
+           
             return View();
 		}
 

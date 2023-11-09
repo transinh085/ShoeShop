@@ -1,8 +1,8 @@
 ﻿class Pagination {
     constructor(container, link, fetchData, inputSearch) {
-        this.container = container || document.querySelector(".pagination-container");
-        this.fetchData = fetchData,
-        this.link = link;
+        this.container =
+            container || document.querySelector(".pagination-container");
+        (this.fetchData = fetchData), (this.link = link);
         this.inputSearch = inputSearch;
         this.loadContainer();
         this.pg = this.container.querySelector(".list-page");
@@ -14,27 +14,59 @@
 
         this.valuePage = {
             currentPage: 1,
-            query: '',
+            query: "",
             totalPages: 0,
             result: null,
-        }
-        this.getPagination()
+            truncate: true,
+            numLinksTwoSide: 1
+        };
+        this.getPagination();
         this.container.addEventListener("click", this.containerHandler.bind(this));
 
         if (this.inputSearch) {
-            
             // Áp dụng debounce cho sự kiện change
             const debouncedChangeHandler = this.debounce((e) => {
-                this.valuePage.query = e.target.value
-                this.getPagination()
+                this.valuePage.currentPage = 1;
+                this.valuePage.query = e.target.value;
+                this.updateURL();
+                this.getPagination();
             }, 500);
             this.inputSearch.addEventListener("input", function (event) {
                 debouncedChangeHandler(event);
             });
         }
+
+        window.addEventListener("popstate", (event) => {
+            const state = event.state;
+            if (state) {
+                this.valuePage.currentPage = state.currentPage;
+                this.valuePage.query = state.query;
+                this.inputSearch.value = this.valuePage.query
+                this.getPagination();
+            }
+        });
+
     }
 
-    useFetchData (data) {
+    updateURL() {
+        const stateObj = {
+            currentPage: this.valuePage.currentPage,
+            query: this.valuePage.query
+        };
+        if (this.valuePage.query != 0) {
+            const newURL = `${window.location.pathname}?page=${this.valuePage.currentPage}&query=${this.valuePage.query}`;
+            history.pushState(stateObj, null, newURL);
+        } else {
+            const stateOb2 = {
+                currentPage: this.valuePage.currentPage,
+            };
+            const newURL2 = `${window.location.pathname}?page=${this.valuePage.currentPage}`;
+            history.pushState(stateOb2, null, newURL2);
+        }
+    }
+
+
+    useFetchData(data) {
         this.fetchData(data);
     }
 
@@ -66,18 +98,29 @@
                             </a>
                         </li>
                     </ul>`;
-    }
+    };
 
     getPagination() {
-        const self = this; // Lưu lại tham chiếu của this
-        let linkSend = this.link + "?page=" + self.valuePage.currentPage + "&query=" + self.valuePage.query;
+        const self = this;
+        // Parse currentPage và query từ URL thay vì sử dụng self.valuePage
+        const params = new URLSearchParams(window.location.search);
+        self.valuePage.currentPage = parseInt(params.get("page")) || 1;
+        self.valuePage.query = params.get("query") || "";
+        
+
+        let linkSend =
+            this.link +
+            "?page=" +
+            self.valuePage.currentPage +
+            "&query=" +
+            self.valuePage.query;
+
         $.ajax({
             url: linkSend,
             method: "get",
             dataType: "json",
             success: function (response) {
                 self.valuePage.currentPage = response.currentPage;
-                self.valuePage.query = !response.query ? '' : response.query;
                 self.valuePage.totalPages = response.totalPages;
                 self.valuePage.result = response.result;
                 self.useFetchData(self.valuePage.result);
@@ -88,7 +131,6 @@
             },
         });
     }
-
 
     debounce(func, delay) {
         let timeoutId;
@@ -108,7 +150,6 @@
         }
     }
 
-
     renderPage(index, active = "") {
         let style = "";
         if (index === 1 || index === this.valuePage.totalPages) {
@@ -120,16 +161,57 @@
       </li>`;
     }
 
-
     pagination() {
-        const { totalPages, currentPage } = this.valuePage;
+        const { totalPages, currentPage, truncate, numLinksTwoSide: delta } = this.valuePage;
+
+        const range = delta + 4; // use for handle visible number of links left side
 
         let render = "";
+        let renderTwoSide = "";
+        let dot = `<li class="page-item"><a class="page-link" href="javascript:void(0)">...</a></li>`;
+        let countTruncate = 0; // use for ellipsis - truncate left side or right side
+
+        // use for truncate two side
+        const numberTruncateLeft = currentPage - delta;
+        const numberTruncateRight = currentPage + delta;
+
+        let active = "";
         for (let pos = 1; pos <= totalPages; pos++) {
-            if (pos == currentPage) render += this.renderPage(pos, "active");
-            else render += this.renderPage(pos, "");
+            active = pos === currentPage ? "active" : "";
+
+            // truncate
+            if (totalPages >= 2 * range - 1 && truncate) {
+                if (numberTruncateLeft > 3 && numberTruncateRight < totalPages - 3 + 1) {
+                    // truncate 2 side
+                    if (pos >= numberTruncateLeft && pos <= numberTruncateRight) {
+                        renderTwoSide += this.renderPage(pos, active);
+                    }
+                } else {
+                    // truncate left side or right side
+                    if (
+                        (currentPage < range && pos <= range) ||
+                        (currentPage > totalPages - range && pos >= totalPages - range + 1) ||
+                        pos === totalPages ||
+                        pos === 1
+                    ) {
+                        render += this.renderPage(pos, active);
+                    } else {
+                        countTruncate++;
+                        if (countTruncate === 1) render += dot;
+                    }
+                }
+            } else {
+                // not truncate
+                render += this.renderPage(pos, active);
+            }
         }
-        this.pg.innerHTML = render;
+
+        if (renderTwoSide) {
+            renderTwoSide = this.renderPage(1) + dot + renderTwoSide + dot + this.renderPage(totalPages);
+            this.pg.innerHTML = renderTwoSide;
+        } else {
+            this.pg.innerHTML = render;
+        }
 
         this.handleButtonLeft();
         this.handleButtonRight();
@@ -146,7 +228,10 @@
     }
 
     handleButtonRight() {
-        if (this.valuePage.currentPage === this.valuePage.totalPages || this.valuePage.totalPages <= 1) {
+        if (
+            this.valuePage.currentPage === this.valuePage.totalPages ||
+            this.valuePage.totalPages <= 1
+        ) {
             this.btnNextPg.classList.add("disabled");
             this.btnLastPg.classList.add("disabled");
         } else {
@@ -171,12 +256,12 @@
             this.btnPrevPg.classList.remove("disabled");
             this.btnFirstPg.classList.remove("disabled");
         } else {
-            let pageId = element.getAttribute("data-page")
-            this.valuePage.currentPage = pageId
+            let pageId = element.getAttribute("data-page");
+            this.valuePage.currentPage = pageId;
         }
         this.pagination();
         this.handleButtonLeft();
         this.handleButtonRight();
+        this.updateURL();
     }
 }
-

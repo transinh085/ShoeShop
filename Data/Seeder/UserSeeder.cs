@@ -50,6 +50,25 @@ namespace ShoeShop.Data.Seeder
                     await userManager.CreateAsync(newAppUser, "Coding@1234?");
                     await userManager.AddToRoleAsync(newAppUser, UserRoles.Admin);
                 }
+
+                var appUser1 = await userManager.FindByEmailAsync("andinh1443@gmail.com");
+                if (appUser == null)
+                {
+                    var newAppUser = new AppUser()
+                    {
+                        FullName = "Đinh Ngọc Ân",
+                        UserName = "andinh1443",
+                        Email = "andinh1443@gmail.com",
+                        EmailConfirmed = true,
+                        PhoneNumber = "0123456789",
+                        ProfileImageUrl = "https://avatars.githubusercontent.com/u/120194990?v=4",
+                        Status = true,
+                        Gender = 0,
+                        BirthDay = DateTime.Now,
+                    };
+                    await userManager.CreateAsync(newAppUser, "Coding@1234?");
+                    await userManager.AddToRoleAsync(newAppUser, UserRoles.Admin);
+                }
             }
         }
     }
