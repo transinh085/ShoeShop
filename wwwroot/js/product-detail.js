@@ -23,8 +23,8 @@
 
 	const renderSize = (index) => {
 		let html = '';
-		variants[index].sizes.forEach(size => {
-			html += `<option value="${size.sizeId}">${size.sizeName}</option>`;
+		variants[index].sizes.forEach((size, index) => {
+			html += `<option value="${index}" ${size.stock == 0 ? 'disabled' : ''}>${size.sizeName}</option>`;
 		})
 		$("#select-size").html(html);
 		$("#select-size").niceSelect('update');
@@ -52,6 +52,32 @@
 		renderSize(index);
 		renderImage(index);
 	});
+
+	$('.btn_add_to_cart a').on('click', function () {
+		const size_index = $("#select-size").val();
+		const color_index = $('.variant-color.active').data("id");
+		const obj = {
+			title: $('h1').text(),
+			thumbnail: variants[color_index].thumbnail,
+			colorName: variants[color_index].colorName,
+			variantSizeId: variants[color_index].sizes[size_index].variantSizeId,
+			sizeName: variants[color_index].sizes[size_index].sizeName,
+			price: $('.product-price').data("price"),
+			quantity: $('#quantity_1').val()
+		};
+		console.info(obj);
+		showCartTopBar(obj);
+	});
+
+	const showCartTopBar = (product) => {
+		let html = `<figure>
+								<img src="/img/products/${product.thumbnail}" alt="" data-was-processed="true">
+					</figure>
+					<h4>${product.quantity} x ${product.title}</h4>
+					<p class="mb-0 text-secondary">Color: ${product.colorName}, Size: ${product.sizeName}</p>
+					<div class="price_panel"><span class="new_price">$${product.price}</span></div>`;
+		$('.pnl-cart').html(html);
+	}
 
 	const initCarousel = () => {
 

@@ -173,6 +173,7 @@ namespace ShoeShop.Areas.Admin.Controllers
                     Images = variant.Images.Select(image => image.Name).ToList(),
                     Sizes = variant.VariantSizes.Select(size => new
                     {
+                        VariantSizeId = size.Id,
                         SizeId = size.SizeId,
                         Stock = size.Quantity,
                         Active = size.IsActive,

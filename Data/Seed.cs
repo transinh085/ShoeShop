@@ -12,6 +12,7 @@ namespace ShoeShop.Data
 			new BrandSeeder(applicationBuilder);
 			new ColorSeeder(applicationBuilder);
 			new SizeSeeder(applicationBuilder);
+			new ProductSeeder(applicationBuilder);
 		}
 	}
 }
