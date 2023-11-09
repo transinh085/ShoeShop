@@ -240,7 +240,6 @@ namespace ShoeShop.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Content")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<int>("CreateBy")
