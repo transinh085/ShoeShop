@@ -378,12 +378,14 @@ const addCart = (product) => {
 	localStorage.setItem('cart', JSON.stringify(cart));
 }
 
-
 const removeCart = (variantSizeId) => {
 	let carts = getCartStorage();
-	let index = carts.findIndex(item => item.variantSizeId == variantSizeId);
-	carts.splice(index, 1)
+	let indexLocal = carts.findIndex(item => item.variantSizeId == variantSizeId);
+	let indexData = cartData.findIndex(item => item.variantSizeId == variantSizeId);
+	carts.splice(indexLocal, 1);
+	cartData.splice(indexData, 1);
 	localStorage.setItem('cart', JSON.stringify(carts));
+	renderCart();
 }
 
 const getTotalPrice = () => {
@@ -420,10 +422,6 @@ const loadCart = () => {
 	});
 }
 
-const updateCartQuantity = () => {
-
-}
-
 const renderCart = () => {
 	let html = '';
 	if (cartData.length > 0) {
@@ -447,10 +445,19 @@ const renderCart = () => {
 	$('.cart_bt strong').text(getTotalProduct());
 }
 
+const handleChangeQuantity = (variantSizeId, quantity) => {
+	let carts = getCartStorage();
+	let p = carts.find(item => item.variantSizeId == variantSizeId);
+	let c = cartData.find(item => item.variantSizeId == variantSizeId);
+	p.quantity = quantity;
+	c.quantity = quantity;
+	localStorage.setItem('cart', JSON.stringify(carts));
+	renderCart();
+}
+
 $(document).on('click', '.delete-item-cart', function () {
 	const variantSizeId = $(this).data('id');
 	removeCart(variantSizeId);
-	loadCart();
 });
 
 const mergeCartData = (productItem) => {
