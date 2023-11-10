@@ -167,5 +167,6 @@ namespace ShoeShop.Areas.Admin.Controllers
         {
           return (_context.Blogs?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+
     }
 }

@@ -13,6 +13,7 @@
     <script src="~/admin/js/plugins/jquery-validation/jquery.validate.min.js"></script>
     <script src="~/admin/js/plugins/jquery-validation/additional-methods.js"></script>
     <script>Dashmix.helpersOnLoad(['jq-select2', 'js-ckeditor']);</script>
+    <script src="~/admin/js/blog/add-blog.js"></script>
 }
 
 <h1>Create</h1>
@@ -21,28 +22,34 @@
 <hr />
 <div class="row" width="100%">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" id="blog-form">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="mb-4">
+            <div class="mb-4" >
                 <label class="form-label" for="upload-image">Thumbnail</label>
-                <div class="upload-image-container">
+                <div class="upload-image-container" style="width:600px; height:400px">
                     <input type="file" id="upload-image" name="upload-image" class="upload-image-input" hidden multiple />
                     <div class="no-image">
                         <p>Select files to upload</p>
                     </div>
-                    <div class="has-image">
+                    <div class="has-image" style="margin: 0 0 0 0">
                     </div>
                 </div>
             </div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
+                <input asp-for="Name" class="form-control" id="blog-name" />
                 <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Slug" class="control-label"></label>
+                <input asp-for="Slug" class="form-control" id="slug-name" />
+                <span asp-validation-for="Slug" class="text-danger"></span>
             </div>
 
             <div class="mb-4">
                 <label class="form-label" for="topic-id">Topic</label>
-                <select class="js-select2 form-select" id="topic-id" name="topic-id" data-placeholder="Choose topic..">
+                <select class="js-select2 form-select" id="topic-id" name="topic-id" style="width: 100%;" data-placeholder="Choose topic..">
                     <option></option>
                     @foreach (var topic in ViewBag.Topics)
                     {

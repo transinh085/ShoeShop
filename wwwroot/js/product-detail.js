@@ -63,9 +63,12 @@
 			variantSizeId: variants[color_index].sizes[size_index].variantSizeId,
 			sizeName: variants[color_index].sizes[size_index].sizeName,
 			price: $('.product-price').data("price"),
-			quantity: $('#quantity_1').val()
+			quantity: parseInt($('#quantity_1').val())
 		};
-		console.info(obj);
+
+		const cartItem = { variantSizeId: obj.variantSizeId, quantity: obj.quantity };
+		addCart(cartItem);
+		loadCart();
 		showCartTopBar(obj);
 	});
 

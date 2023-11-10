@@ -198,7 +198,8 @@
 
 	/* Input incrementer*/
 	$(".numbers-row").append('<div class="inc button_inc">+</div><div class="dec button_inc">-</div>');
-	$(".button_inc").on("click", function () {
+
+	$(document).on('click', '.button_inc', function () {
 		var $button = $(this);
 		var oldValue = $button.parent().find("input").val();
 		if ($button.text() == "+") {
@@ -356,28 +357,111 @@
             $(".popup_wrapper").fadeOut(300);
         })
 	}, 1500);
-
-	const addCart = (product) => {
-		let cart = localStorage.getItem('cart') ? JSON.parse(localStorage.getItem('cart')) : [];
-		cart.push(product);
-		localStorage.setItem('cart', JSON.stringify(cart));
-	}
-
-	const removeCart = () => {
-
-	}
-
-	const getTotalCart = () => {
-
-	}
-
-	const loadCart = () => {
-
-	}
-
-	const renderCart = () => {
-
-	}
-	
-
 })(window.jQuery); 
+
+let cartData = [];
+
+const getCartStorage = () => {
+	return localStorage.getItem('cart') ? JSON.parse(localStorage.getItem('cart')) : [];
+}
+
+const addCart = (product) => {
+	let cart = getCartStorage();
+	const { variantSizeId, quantity } = product;
+	let index = cart.findIndex(item => item.variantSizeId == variantSizeId);
+	console.info(index);
+	if (index == -1) {
+		cart.push(product);
+	} else {
+		cart[index].quantity += quantity;
+	}
+	localStorage.setItem('cart', JSON.stringify(cart));
+}
+
+
+const removeCart = (variantSizeId) => {
+	let carts = getCartStorage();
+	let index = carts.findIndex(item => item.variantSizeId == variantSizeId);
+	carts.splice(index, 1)
+	localStorage.setItem('cart', JSON.stringify(carts));
+}
+
+const getTotalPrice = () => {
+	let totalPrice = cartData.reduce(function (sum, currentItem) {
+		return sum + (currentItem.price * currentItem.quantity);
+	}, 0);
+
+	return totalPrice;
+}
+
+const getTotalProduct = () => { 
+	let totalProduct = getCartStorage().reduce(function (sum, currentItem) {
+		return sum + currentItem.quantity;
+	}, 0);
+
+	return totalProduct;
+}
+
+const loadCart = () => {
+	const arrVariantSizeId = getCartStorage().map(item => item.variantSizeId);
+	console.info(arrVariantSizeId);
+	$.ajax({
+		url: '/Product/GetCart',
+		type: 'POST',
+		contentType: 'application/json',
+		data: JSON.stringify({ carts: arrVariantSizeId }),
+		success: function (response) {
+			cartData = mergeCartData(response);
+			renderCart();
+		},
+		error: function (error) {
+			console.error('Error:', error);
+		}
+	});
+}
+
+const updateCartQuantity = () => {
+
+}
+
+const renderCart = () => {
+	let html = '';
+	if (cartData.length > 0) {
+		cartData.forEach(item => {
+			html += `<li>
+					<a href="/product/detail/${item.productId}">
+						<figure><img src="/img/products/${item.thumbnail}" alt="" width="80" height="80"></figure>
+						<strong>
+							<span>${item.quantity} x ${item.title}</span>
+							<span class="text-secondary">${item.sizeName} / ${item.colorName}</span>
+							$${item.price}
+						</strong>
+					</a>
+					<a href="#0" class="action delete-item-cart" data-id="${item.variantSizeId}"><i class="ti-trash"></i></a></li>`
+		})
+	} else {
+		html = '<div class="d-flex justify-content-center align-items-center gap-3 flex-column"><i class="ti ti-shopping-cart" style="font-size: 50px"></i><p>There are currently no products</p></div>'
+	}
+	$('.dropdown-cart .dropdown-menu ul').html(html);
+	$('#cart-total-price').text(`$${getTotalPrice()}`);
+	$('.cart_bt strong').text(getTotalProduct());
+}
+
+$(document).on('click', '.delete-item-cart', function () {
+	const variantSizeId = $(this).data('id');
+	removeCart(variantSizeId);
+	loadCart();
+});
+
+const mergeCartData = (productItem) => {
+	const result = productItem.map((item) => {
+		const quantity = getCartStorage().find(cartItem => cartItem.variantSizeId == item.variantSizeId).quantity;
+		return {
+			...item,
+			quantity
+		}
+	})
+	return result;
+}
+
+loadCart();
