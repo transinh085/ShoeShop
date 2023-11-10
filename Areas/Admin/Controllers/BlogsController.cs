@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ShoeShop.Data;
 using ShoeShop.Models;
+using ShoeShop.ViewModels.Product;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace ShoeShop.Areas.Admin.Controllers
 {
@@ -14,6 +17,15 @@ namespace ShoeShop.Areas.Admin.Controllers
     public class BlogsController : Controller
     {
         private readonly AppDbContext _context;
+
+
+        //private readonly UserManager<ApplicationUser> _userManager;
+
+        //public YourController(UserManager<ApplicationUser> userManager)
+        //{
+        //    _userManager = userManager;
+        //}
+
 
         public BlogsController(AppDbContext context)
         {
@@ -60,16 +72,51 @@ namespace ShoeShop.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Slug,Name,CreatedAt,CreateBy,TopicID,Content,IsDetele")] Blog blog)
+        public async Task<IActionResult> Create([FromForm] Blog blog)
         {
-            if (ModelState.IsValid)
+            //if (ModelState.IsValid)
+            //{
+            //    _context.Add(blog);
+            //    await _context.SaveChangesAsync();
+            //    return RedirectToAction(nameof(Index));
+            //}
+            //ViewData["TopicID"] = new SelectList(_context.Topics, "Id", "Id", blog.TopicID);
+            //return View(blog);
+
+
+            //var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            //// Hoặc sử dụng UserManager
+            //var user = _userManager.GetUserAsync(User).Result;
+            //var userIdFromManager = user.Id;
+            using (var transaction = await _context.Database.BeginTransactionAsync())
             {
-                _context.Add(blog);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    Blog bl = new Blog()
+                    {
+                        Thumbnail = blog.Thumbnail,
+                        Name = blog.Name,
+                        Slug = blog.Slug,
+                        CreatedAt = DateTime.Now,
+                        CreateBy = 1,
+                        TopicID = Convert.ToInt32(blog.Topic),
+                        Content = blog.Content,
+                        IsDetele = false,
+                    };
+                    Console.WriteLine(bl.CreatedAt.ToString());
+                    _context.Add(bl);
+                    await _context.SaveChangesAsync();
+                    transaction.Commit();
+
+                    return Ok(new { message = "Created blog successfully!" });
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    return BadRequest(new { message = "Failed to create blog." + ex.Message });
+                }
             }
-            ViewData["TopicID"] = new SelectList(_context.Topics, "Id", "Id", blog.TopicID);
-            return View(blog);
+            
         }
 
         // GET: Admin/Blogs/Edit/5

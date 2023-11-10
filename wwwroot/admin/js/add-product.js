@@ -159,63 +159,76 @@ $(".variants-container").on("click", ".btn-down-variant", function (event) {
 
 
 $("#btn-save-product").click(() => {
-    const productData = {
-        Name: $('#product-name').val(),
-        Price: $('#product-price').val(),
-        Description: CKEDITOR.instances['js-ckeditor'].getData(),
-        Status: $('#product-status').prop("checked"),
-        Slug: $('#product-slug').val(),
-        Category: $('#category-id').val(),
-        Brand: $('#brand-id').val(),
-        Variants: variants 
-    };
+    if (variants.length != 0) {
+        const productData = {
+            Name: $('#product-name').val(),
+            Price: $('#product-price').val(),
+            PriceSale: $('#product-price-sale').val(),
+            Description: CKEDITOR.instances['js-ckeditor'].getData(),
+            IsFeatured: $('#is-featured').prop("checked"),
+            Status: $('#product-status').val() == 1,
+            Slug: $('#product-slug').val(),
+            Label: $('#product-label').val(),
+            Category: $('#category-id').val(),
+            Brand: $('#brand-id').val(),
+            Variants: variants
+        };
 
-    console.info(productData);
+        console.info(productData);
 
-    var formData = new FormData();
+        var formData = new FormData();
 
-    // Thêm các thuộc tính của sản phẩm vào FormData
-    formData.append('Name', productData.Name);
-    formData.append('Price', productData.Price);
-    formData.append('Description', productData.Description);
-    formData.append('Status', productData.Status);
-    formData.append('Slug', productData.Slug);
-    formData.append('Category', productData.Category);
-    formData.append('Brand', productData.Brand);
+        // Thêm các thuộc tính của sản phẩm vào FormData
+        formData.append('Name', productData.Name);
+        formData.append('Price', productData.Price);
+        formData.append('PriceSale', productData.PriceSale);
+        formData.append('Description', productData.Description);
+        formData.append('Status', productData.Status);
+        formData.append('IsFeatured', productData.IsFeatured);
+        formData.append('Slug', productData.Slug);
+        formData.append('Label', productData.Label);
+        formData.append('Category', productData.Category);
+        formData.append('Brand', productData.Brand);
 
-    // Thêm các biến thể của sản phẩm
-    productData.Variants.forEach((variant, variantIndex) => {
-        formData.append(`Variants[${variantIndex}].ColorId`, variant.colorId);
-        formData.append(`Variants[${variantIndex}].ColorName`, variant.colorName);
+        // Thêm các biến thể của sản phẩm
+        productData.Variants.forEach((variant, variantIndex) => {
+            formData.append(`Variants[${variantIndex}].ColorId`, variant.colorId);
+            formData.append(`Variants[${variantIndex}].ColorName`, variant.colorName);
 
-        // Thêm các hình ảnh blob cho biến thể hiện tại
-        variant.images.forEach((imageBlob, imageIndex) => {
-            formData.append(`Variants[${variantIndex}].Images`, imageBlob, imageBlob.name);
+            // Thêm các hình ảnh blob cho biến thể hiện tại
+            variant.images.forEach((imageBlob, imageIndex) => {
+                formData.append(`Variants[${variantIndex}].Images`, imageBlob, imageBlob.name);
+            });
+
+            // Thêm các kích thước cho biến thể hiện tại
+            variant.sizes.forEach((size, sizeIndex) => {
+                formData.append(`Variants[${variantIndex}].Sizes[${sizeIndex}].SizeId`, size.sizeId);
+                formData.append(`Variants[${variantIndex}].Sizes[${sizeIndex}].Stock`, size.stock);
+                formData.append(`Variants[${variantIndex}].Sizes[${sizeIndex}].Active`, size.active);
+            });
         });
 
-        // Thêm các kích thước cho biến thể hiện tại
-        variant.sizes.forEach((size, sizeIndex) => {
-            formData.append(`Variants[${variantIndex}].Sizes[${sizeIndex}].SizeId`, size.sizeId);
-            formData.append(`Variants[${variantIndex}].Sizes[${sizeIndex}].Stock`, size.stock);
-            formData.append(`Variants[${variantIndex}].Sizes[${sizeIndex}].Active`, size.active);
+        console.log(formData);
+
+        $.ajax({
+            type: 'POST',
+            url: '/Admin/Products/Create',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                Dashmix.helpers('jq-notify', { type: 'success', icon: 'fa fa-check me-1', message: 'Create product successfully !' });
+                setTimeout(() => {
+                    location.href = "/admin/products";
+                }, 2000);
+            },
+            error: function (error) {
+                console.error(error);
+            }
         });
-    });
-
-    console.log(formData);
-
-    $.ajax({
-        type: 'POST',
-        url: '/Admin/Products/Create',
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function (response) {
-            console.log(response);
-        },
-        error: function (error) {
-            console.error(error);
-        }
-    });
+    } else {
+        Dashmix.helpers('jq-notify', { type: 'danger', icon: 'fa fa-times me-1', message: 'Variants empty !' });
+    }
 })
 
 const showModalVariant = (variant) => {
@@ -243,10 +256,6 @@ const getObjVariant = () => {
     const colorName = $("#color-id option:selected").text();
     const sizes = sizeEl.val().map(sizeId => {
         const sizeName = $(`#size-id option[value='${sizeId}']`).text();
-
-        console.info(`.input-stock[data-size='${sizeId}'][data-color='${colorId}']`);
-        console.info($(`.input-stock[data-size='${sizeId}'][data-color='${colorId}']`).val());
-
         const stock = $(`.input-stock[data-size='${sizeId}'][data-color='${colorId}']`).val() ?? '';
         return { sizeId, sizeName, stock, active: true };
     });
@@ -254,10 +263,6 @@ const getObjVariant = () => {
     const thumbnail = $(".preview-image-item img.active").data("id");
     const variant = { colorId, colorName, sizes, images, thumbnail };
     return variant;
-}
-
-const getSizes = () => {
-
 }
 
 const showVariantSize = () => {
@@ -342,7 +347,8 @@ Dashmix.onLoad((() => class {
                     required: !0
                 },
                 "product-price": {
-                    required: !0
+                    required: !0,
+                    number: !0
                 },
                 "product-slug": {
                     required: !0

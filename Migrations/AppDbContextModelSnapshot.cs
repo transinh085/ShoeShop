@@ -356,10 +356,19 @@ namespace ShoeShop.Migrations
                     b.Property<bool>("IsDetele")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<bool>("IsFeatured")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("Label")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
 
                     b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("PriceSale")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Slug")

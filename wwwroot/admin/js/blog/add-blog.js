@@ -54,3 +54,32 @@ const setThumbnail = (event) => {
     document.querySelector(".preview-image-item img.active")?.classList.remove('active');
     clName.classList.add('active');
 }
+
+
+$("#btn-save-blog").click(() => {
+    const blogData = {
+        Name: $('#blog-name').val(),
+        Slug: $('#blog-slug').val(),
+        CreateBy: "Admin",
+        CreateAt: new Date().getTime,
+        Topic: $('#topic-id').val(),
+        Content: CKEDITOR.instances['js-ckeditor'].getData(),
+        IsDelete: false
+    };
+
+    console.info(blogData);
+
+    $.ajax({
+        type: 'POST',
+        url: '/Admin/Blogs/Create',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            console.log(response);
+        },
+        error: function (error) {
+            console.error(error);
+        }
+    });
+})

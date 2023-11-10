@@ -20,7 +20,7 @@
 
 <h4>Blog</h4>
 <hr />
-<div class="row" width="100%">
+<div class="row" style="align-items:center;">
     <div class="col-md-4">
         <form asp-action="Create" id="blog-form">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -31,7 +31,7 @@
                     <div class="no-image">
                         <p>Select files to upload</p>
                     </div>
-                    <div class="has-image" style="margin: 0 0 0 0">
+                    <div class="has-image" style="margin: 0">
                     </div>
                 </div>
             </div>
@@ -43,7 +43,7 @@
 
             <div class="form-group">
                 <label asp-for="Slug" class="control-label"></label>
-                <input asp-for="Slug" class="form-control" id="slug-name" />
+                <input asp-for="Slug" class="form-control" id="blog-slug" />
                 <span asp-validation-for="Slug" class="text-danger"></span>
             </div>
 
@@ -65,7 +65,7 @@
             </div>
 
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Create" id="btn-save-blog" class="btn btn-primary" />
             </div>
         </form>
     </div>

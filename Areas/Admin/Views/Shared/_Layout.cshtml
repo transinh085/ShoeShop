@@ -42,7 +42,7 @@
             <div class="bg-header-dark">
                 <div class="content-header bg-white-5">
                     <!-- Logo -->
-                    <a class="fw-semibold text-white tracking-wide" asp-area="" asp-controller="Home" action="Index">
+                    <a class="fw-semibold text-white tracking-wide" href="/">
                         <span class="smini-visible">
                             S<span class="opacity-75">s</span>
                         </span>
@@ -92,51 +92,76 @@
                         <li class="nav-main-heading">Heading</li>
                         <li class="nav-main-item">
                             <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
-                                <i class="nav-main-link-icon fa fa-puzzle-piece"></i>
-                                <span class="nav-main-link-name">Dropdown</span>
+                                <i class="nav-main-link-icon fa fa-socks"></i>
+                                <span class="nav-main-link-name">Products</span>
                             </a>
                             <ul class="nav-main-submenu">
                                 <li class="nav-main-item">
-                                    <a class="nav-main-link" href="javascript:void(0)">
-                                        <span class="nav-main-link-name">Link #1</span>
+                                    <a class="nav-main-link" asp-controller="Products" asp-action="Index">
+                                        <span class="nav-main-link-name">All product</span>
                                     </a>
                                 </li>
                                 <li class="nav-main-item">
-                                    <a class="nav-main-link" href="javascript:void(0)">
-                                        <span class="nav-main-link-name">Link #2</span>
+                                    <a class="nav-main-link" asp-controller="Categories" asp-action="Index">
+                                        <span class="nav-main-link-name">Categories</span>
+                                    </a>
+                                </li>
+                                <li class="nav-main-item">
+                                    <a class="nav-main-link" asp-controller="Brands" asp-action="Index">
+                                        <span class="nav-main-link-name">Brands</span>
+                                    </a>
+                                </li>
+                                <li class="nav-main-item">
+                                    <a class="nav-main-link" asp-controller="Colors" asp-action="Index">
+                                        <span class="nav-main-link-name">Colors</span>
+                                    </a>
+                                </li>
+                                <li class="nav-main-item">
+                                    <a class="nav-main-link" asp-controller="Sizes" asp-action="Index">
+                                        <span class="nav-main-link-name">Sizes</span>
                                     </a>
                                 </li>
                             </ul>
                         </li>
-                        <li class="nav-main-heading">Properties</li>
                         <li class="nav-main-item">
-                            <a class="nav-main-link" asp-controller="Products" asp-action="Index">
-                                <i class="nav-main-link-icon fa fa-clone"></i>
-                                <span class="nav-main-link-name">Products</span>
+                            <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
+                                <i class="nav-main-link-icon fa fa-blog"></i>
+                                <span class="nav-main-link-name">Blog</span>
                             </a>
+                            <ul class="nav-main-submenu">
+                                <li class="nav-main-item">
+                                    <a class="nav-main-link" asp-controller="Blogs" asp-action="Index">
+                                        <span class="nav-main-link-name">All post</span>
+                                    </a>
+                                </li>
+                                <li class="nav-main-item">
+                                    <a class="nav-main-link" asp-controller="Blogs" asp-action="Create">
+                                        <span class="nav-main-link-name">Create post</span>
+                                    </a>
+                                </li>
+                                <li class="nav-main-item">
+                                    <a class="nav-main-link" asp-controller="Topics" asp-action="Index">
+                                        <span class="nav-main-link-name">Categories</span>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                         <li class="nav-main-item">
-                            <a class="nav-main-link" asp-controller="Categories" asp-action="Index">
-                                <i class="nav-main-link-icon fa fa-clone"></i>
-                                <span class="nav-main-link-name">Categories</span>
-                            </a>
-                        </li>
-                        <li class="nav-main-item">
-                            <a class="nav-main-link" asp-controller="Brands" asp-action="Index">
-                                <i class="nav-main-link-icon fa fa-clone"></i>
-                                <span class="nav-main-link-name">Brands</span>
-                            </a>
-                        </li>
-                        <li class="nav-main-item">
-                            <a class="nav-main-link" asp-controller="Colors" asp-action="Index">
-                                <i class="nav-main-link-icon fa fa-bolt"></i>
-                                <span class="nav-main-link-name">Colors</span>
+                            <a class="nav-main-link" asp-controller="Customers" asp-action="Index">
+                                <i class="nav-main-link-icon fa fa-shopping-bag"></i>
+                                <span class="nav-main-link-name">Order</span>
                             </a>
                         </li>
                         <li class="nav-main-item">
                             <a class="nav-main-link" asp-controller="Customers" asp-action="Index">
-                                <i class="nav-main-link-icon fa-regular fa-user"></i>
+                                <i class="nav-main-link-icon fa fa-user"></i>
                                 <span class="nav-main-link-name">Customser</span>
+                            </a>
+                        </li>
+                        <li class="nav-main-item">
+                            <a class="nav-main-link" asp-controller="Customers" asp-action="Index">
+                                <i class="nav-main-link-icon fa fa-envelope"></i>
+                                <span class="nav-main-link-name">Contact</span>
                             </a>
                         </li>
                     </ul>
