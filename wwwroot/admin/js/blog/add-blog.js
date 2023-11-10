@@ -28,11 +28,7 @@ const showImage = () => {
     files.forEach(function (file, index) {
         images = `<div class="preview-image-item" onClick=(setThumbnail(event))>
                      <img src="${URL.createObjectURL(file)}" alt="image" data-id="${index}" style="margin:0 0; width:600px; height:400px"/>
-                        <span class="btn-delete-image" onClick="handleDelete(event,${index}, this.parentElement)" style="top:0; right:0;">
-                            <i class="fa fa-fw fa-times">
-                            </i>
-                        </span>
-                 </div>`;
+                        <span class="btn-delete-image" onClick="handleDelete(event,${index}, this.parentElement)"><i class="fa fa-fw fa-times"></i></span></div>`;
     });
     hasImage.innerHTML = images;
 };
@@ -62,31 +58,16 @@ const setThumbnail = (event) => {
 
 $("#btn-save-blog").click(() => {
     const blogData = {
-        Slug: $('#blog-slug').val(),
         Name: $('#blog-name').val(),
-        ThumbnailId: 0,
+        Slug: $('#blog-slug').val(),
+        CreateBy: "Admin",
         CreateAt: new Date().getTime,
-        CreateBy: ,
         Topic: $('#topic-id').val(),
         Content: CKEDITOR.instances['js-ckeditor'].getData(),
         IsDelete: false
     };
 
     console.info(blogData);
-    var formData = new FormData();
-
-    formData.append('Slug', blogData.Slug);
-    formData.append('Name', blogData.Name);
-    formData.append('Thumbnail', blogData.Thumbnail);
-    formData.append('CreateAt', blogData.CreateAt);
-    formData.append('CreateBy', blogData.CreateBy);
-    formData.append('Topic', blogData.Topic);
-    formData.append('Content', blogData.Content);
-    formData.append('IsDelete', blogData.IsDelete);
-
-    console.log(formData);
-    
-    //alert(blogData.Topic + blogData.TopicID);
 
     $.ajax({
         type: 'POST',

@@ -92,20 +92,19 @@ namespace ShoeShop.Areas.Admin.Controllers
             {
                 try
                 {
-                    
                     Blog bl = new Blog()
-                    {   
+                    {
+                        Thumbnail = blog.Thumbnail,
                         Name = blog.Name,
                         Slug = blog.Slug,
-                        Thumbnail = blog.Thumbnail,
                         CreatedAt = DateTime.Now,
                         CreateBy = 1,
                         TopicID = Convert.ToInt32(blog.Topic),
                         Content = blog.Content,
                         IsDetele = false,
                     };
+                    Console.WriteLine(bl.CreatedAt.ToString());
                     _context.Add(bl);
-
                     await _context.SaveChangesAsync();
                     transaction.Commit();
 

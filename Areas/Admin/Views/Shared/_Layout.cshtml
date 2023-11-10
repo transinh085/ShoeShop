@@ -36,240 +36,198 @@
 <body>
 
     <div id="page-container" class="sidebar-o enable-page-overlay side-scroll page-header-fixed main-content-narrow">
-
+        <!-- Sidebar -->
         <nav id="sidebar" aria-label="Main Navigation">
+            <!-- Side Header -->
             <div class="bg-header-dark">
                 <div class="content-header bg-white-5">
-                    <a class="fw-semibold text-white tracking-wide" href="index.html">
+                    <!-- Logo -->
+                    <a class="fw-semibold text-white tracking-wide" asp-area="" asp-controller="Home" action="Index">
                         <span class="smini-visible">
-                            D<span class="opacity-75">x</span>
+                            S<span class="opacity-75">s</span>
                         </span>
                         <span class="smini-hidden">
-                            Dash<span class="opacity-75">mix</span>
-                            <span class="fw-normal">WP Post</span>
+                            Shoe<span class="opacity-75">Store</span>
                         </span>
                     </a>
+                    <!-- END Logo -->
+                    <!-- Options -->
                     <div>
+                        <!-- Toggle Sidebar Style -->
+                        <!-- Layout API, functionality initialized in Template._uiApiLayout() -->
+                        <!-- Class Toggle, functionality initialized in Helpers.dmToggleClass() -->
+                        <button type="button" class="btn btn-sm btn-alt-secondary" data-toggle="class-toggle" data-target="#sidebar-style-toggler" data-class="fa-toggle-off fa-toggle-on" onclick="Dashmix.layout('sidebar_style_toggle');Dashmix.layout('header_style_toggle');">
+                            <i class="fa fa-toggle-off" id="sidebar-style-toggler"></i>
+                        </button>
+                        <!-- END Toggle Sidebar Style -->
+                        <!-- Dark Mode -->
+                        <!-- Layout API, functionality initialized in Template._uiApiLayout() -->
+                        <button type="button" class="btn btn-sm btn-alt-secondary" data-toggle="class-toggle" data-target="#dark-mode-toggler" data-class="far fa" onclick="Dashmix.layout('dark_mode_toggle');">
+                            <i class="far fa-moon" id="dark-mode-toggler"></i>
+                        </button>
+                        <!-- END Dark Mode -->
+                        <!-- Close Sidebar, Visible only on mobile screens -->
+                        <!-- Layout API, functionality initialized in Template._uiApiLayout() -->
                         <button type="button" class="btn btn-sm btn-alt-secondary d-lg-none" data-toggle="layout" data-action="sidebar_close">
                             <i class="fa fa-times-circle"></i>
                         </button>
+                        <!-- END Close Sidebar -->
                     </div>
+                    <!-- END Options -->
                 </div>
             </div>
-            <div class="js-sidebar-scroll simplebar-scrollable-y" data-simplebar="init">
-                <div class="simplebar-wrapper" style="margin: 0px;">
-                    <div class="simplebar-height-auto-observer-wrapper"><div class="simplebar-height-auto-observer"></div></div><div class="simplebar-mask">
-                        <div class="simplebar-offset" style="right: 0px; bottom: 0px;">
-                            <div class="simplebar-content-wrapper" tabindex="0" role="region" aria-label="scrollable content" style="height: 100%; overflow: hidden scroll;">
-                                <div class="simplebar-content" style="padding: 0px;">
-                                    <div class="content-side">
-                                        <ul class="nav-main">
-                                            <li class="nav-main-item">
-                                                <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
-                                                    <i class="nav-main-link-icon fa fa-tachometer-alt"></i>
-                                                    <span class="nav-main-link-name">Dashboard</span>
-                                                </a>
-                                                <ul class="nav-main-submenu">
-                                                    <li class="nav-main-item">
-                                                        <a class="nav-main-link" href="">
-                                                            <span class="nav-main-link-name">Manage</span>
-                                                        </a>
-                                                    </li>
-                                                    <li class="nav-main-item">
-                                                        <a class="nav-main-link" href="">
-                                                            <span class="nav-main-link-name">Updates</span>
-                                                            <span class="nav-main-link-badge badge rounded-pill bg-success">3</span>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                            <li class="nav-main-heading"></li>
-                                            <li class="nav-main-item open">
-                                                <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="true" asp-controller="Product" asp-action="Index">
-                                                    <i class="fa-solid fa-socks" style="color: #1060ea;"> </i>
-                                                    <span class="nav-main-link-name">Products</span>
-                                                </a>
-                                                <ul class="nav-main-submenu">
-                                                    <li class="nav-main-item">
-                                                        <a class="nav-main-link" asp-controller="Products" asp-action="Index">
-                                                            <span class="nav-main-link-name">Product</span>
-                                                        </a>
-                                                    </li>
-                                                    <li class="nav-main-item">
-                                                        <a class="nav-main-link active" asp-controller="Colors" asp-action="Index" >
-                                                            <span class="nav-main-link-name">Colors</span>
-                                                        </a>
-                                                    </li>
-                                                    <li class="nav-main-item">
-                                                        <a class="nav-main-link" asp-controller="Categories" asp-action="Index">
-                                                            <span class="nav-main-link-name">Categories</span>
-                                                        </a>
-                                                    </li>
-                                                    <li class="nav-main-item">
-                                                        <a class="nav-main-link" asp-controller="Brands" asp-action="Index">
-                                                            <span class="nav-main-link-name">Brand</span>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                            <li class="nav-main-item">
-                                                <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" asp-controller="Blogs" asp-action="Index">
-                                                    <i class="fa-solid fa-blog" style="color: #1060ea;"></i>
-                                                    <span class="nav-main-link-name">Blogs</span>
-                                                </a>
-                                                <ul class="nav-main-submenu">
-                                                    <li class="nav-main-item">
-                                                        <a class="nav-main-link" asp-controller="Blogs" asp-action="Index">
-                                                            <span class="nav-main-link-name">Blogs</span>
-                                                        </a>
-                                                    </li>
-                                                    <li class="nav-main-item">
-                                                        <a class="nav-main-link" asp-controller="Topics" asp-action="Index">
-                                                            <span class="nav-main-link-name">Topics</span>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                            <li class="nav-main-item">
-                                                <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" asp-controller="Customers" asp-action="Index">
-                                                    <i class="nav-main-link-icon fa fa-file"></i>
-                                                    <span class="nav-main-link-name">Customers</span>
-                                                </a>
-                                            </li>
-                                            
-                                            <li class="nav-main-item">
-                                                <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
-                                                    <i class="fa-solid fa-user" style="color: #1060ea;"></i>
-                                                    <span class="nav-main-link-name">Users</span>
-                                                </a>
-                                                <ul class="nav-main-submenu">
-                                                    <li class="nav-main-item">
-                                                        <a class="nav-main-link" href="">
-                                                            <span class="nav-main-link-name">All Users</span>
-                                                        </a>
-                                                    </li>
-                                                    <li class="nav-main-item">
-                                                        <a class="nav-main-link" href="">
-                                                            <span class="nav-main-link-name">Add New</span>
-                                                        </a>
-                                                    </li>
-                                                    <li class="nav-main-item">
-                                                        <a class="nav-main-link" href="">
-                                                            <span class="nav-main-link-name">Your Profile</span>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                            
-                                            <li class="nav-main-heading"></li>
-                                            <li class="nav-main-item">
-                                                <a class="nav-main-link" href="javascript:void(0)" data-toggle="layout" data-action="sidebar_mini_toggle">
-                                                    <i class="nav-main-link-icon fa fa-arrows-alt-h"></i>
-                                                    <span class="nav-main-link-name">Toggle Sidebar</span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div><div class="simplebar-placeholder" style="width: 622px; height: 693px;"></div>
-                </div><div class="simplebar-track simplebar-horizontal" style="visibility: hidden;"><div class="simplebar-scrollbar" style="width: 0px; transform: translate3d(0px, 0px, 0px); display: none;"></div></div><div class="simplebar-track simplebar-vertical" style="visibility: visible;"><div class="simplebar-scrollbar" style="height: 477px; display: block; transform: translate3d(0px, 0px, 0px);"></div></div>
+            <!-- END Side Header -->
+            <!-- Sidebar Scrolling -->
+            <div class="js-sidebar-scroll">
+                <!-- Side Navigation -->
+                <div class="content-side">
+                    <ul class="nav-main">
+                        <li class="nav-main-item">
+                            <a class="nav-main-link active" asp-controller="Home" asp-action="Index">
+                                <i class="nav-main-link-icon fa fa-rocket"></i>
+                                <span class="nav-main-link-name">Dashboard</span>
+                                <span class="nav-main-link-badge badge rounded-pill bg-primary">3</span>
+                            </a>
+                        </li>
+                        <li class="nav-main-heading">Heading</li>
+                        <li class="nav-main-item">
+                            <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
+                                <i class="nav-main-link-icon fa fa-puzzle-piece"></i>
+                                <span class="nav-main-link-name">Dropdown</span>
+                            </a>
+                            <ul class="nav-main-submenu">
+                                <li class="nav-main-item">
+                                    <a class="nav-main-link" href="javascript:void(0)">
+                                        <span class="nav-main-link-name">Link #1</span>
+                                    </a>
+                                </li>
+                                <li class="nav-main-item">
+                                    <a class="nav-main-link" href="javascript:void(0)">
+                                        <span class="nav-main-link-name">Link #2</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-main-heading">Properties</li>
+                        <li class="nav-main-item">
+                            <a class="nav-main-link" asp-controller="Products" asp-action="Index">
+                                <i class="nav-main-link-icon fa fa-clone"></i>
+                                <span class="nav-main-link-name">Products</span>
+                            </a>
+                        </li>
+                        <li class="nav-main-item">
+                            <a class="nav-main-link" asp-controller="Categories" asp-action="Index">
+                                <i class="nav-main-link-icon fa fa-clone"></i>
+                                <span class="nav-main-link-name">Categories</span>
+                            </a>
+                        </li>
+                        <li class="nav-main-item">
+                            <a class="nav-main-link" asp-controller="Brands" asp-action="Index">
+                                <i class="nav-main-link-icon fa fa-clone"></i>
+                                <span class="nav-main-link-name">Brands</span>
+                            </a>
+                        </li>
+                        <li class="nav-main-item">
+                            <a class="nav-main-link" asp-controller="Colors" asp-action="Index">
+                                <i class="nav-main-link-icon fa fa-bolt"></i>
+                                <span class="nav-main-link-name">Colors</span>
+                            </a>
+                        </li>
+                        <li class="nav-main-item">
+                            <a class="nav-main-link" asp-controller="Customers" asp-action="Index">
+                                <i class="nav-main-link-icon fa-regular fa-user"></i>
+                                <span class="nav-main-link-name">Customser</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- END Side Navigation -->
             </div>
+            <!-- END Sidebar Scrolling -->
         </nav>
-
-
-        
-
-
-
+        <!-- END Sidebar -->
+        <!-- Header -->
         <header id="page-header">
+            <!-- Header Content -->
             <div class="content-header">
+                <!-- Left Section -->
                 <div>
-                    <button type="button" class="btn btn-alt-secondary d-lg-none" data-toggle="layout" data-action="sidebar_toggle">
+                    <!-- Toggle Sidebar -->
+                    <!-- Layout API, functionality initialized in Template._uiApiLayout()-->
+                    <button type="button" class="btn btn-alt-secondary me-1" data-toggle="layout" data-action="sidebar_toggle">
                         <i class="fa fa-fw fa-bars"></i>
                     </button>
-                    <div class="dropdown d-inline-block">
-                        <button type="button" class="btn btn-alt-secondary" id="page-header-website-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fa fa-fw fa-home"></i>
-                            <span class="d-none d-sm-inline ms-1">Website</span>
-                        </button>
-                        <div class="dropdown-menu p-0" aria-labelledby="page-header-website-dropdown">
-                            <div class="p-2">
-                                <a class="dropdown-item mb-0" href="index.html">
-                                    <i class="fa fa-fw fa-globe me-1"></i> Visit Site
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <a class="btn btn-alt-secondary d-none d-sm-inline-block" href="javascript:void(0)">
-                        <i class="fa fa-fw fa-comment"></i>
-                        <span class="badge bg-black-50">3</span>
-                    </a>
-                    <div class="dropdown d-inline-block">
-                        <button type="button" class="btn btn-alt-secondary" id="page-header-new-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fa fa-fw fa-plus"></i>
-                            <span class="d-none d-sm-inline ms-1">New</span>
-                        </button>
-                        <div class="dropdown-menu p-0" aria-labelledby="page-header-new-dropdown">
-                            <div class="p-2">
-                                <a class="dropdown-item" asp-controller="Products" asp-action="Create">
-                                    <i class="fa-solid fa-socks" style="color: #1060ea;"></i> Products
-                                </a>
-                                <a class="dropdown-item" asp-controller="Blogs" asp-action="Create>
-                                    <i class="fa-duotone fa-blog" style="--fa-primary-color: #0d5be3; --fa-secondary-color: #0d5be3; --fa-secondary-opacity: 0.6;"></i> Blogs
-                                </a>
-                                <a class="dropdown-item" asp-controller="Customers" asp-action="Create>
-                                    <i class="fa fa-fw fa-file me-1"></i> Customers
-                                </a>
-                                <a class="dropdown-item" href="javascript:void(0)">
-                                    <i class="fa fa-fw fa-user me-1"></i> User
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- END Toggle Sidebar -->
+                    <!-- Open Search Section -->
+                    <!-- Layout API, functionality initialized in Template._uiApiLayout() -->
+                    <button type="button" class="btn btn-alt-secondary" data-toggle="layout" data-action="header_search_on">
+                        <i class="fa fa-fw opacity-50 fa-search"></i> <span class="ms-1 d-none d-sm-inline-block">Search</span>
+                    </button>
+                    <!-- END Open Search Section -->
                 </div>
+                <!-- END Left Section -->
+                <!-- Right Section -->
                 <div>
+                    <!-- User Dropdown -->
                     <div class="dropdown d-inline-block">
                         <button type="button" class="btn btn-alt-secondary" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="d-none d-lg-inline me-2">Howdy, John Doe</span>
-                            <i class="fa fa-angle-down opacity-50"></i>
+                            <i class="fa fa-fw fa-user d-sm-none"></i>
+                            <span class="d-none d-sm-inline-block">Admin</span>
+                            <i class="fa fa-fw fa-angle-down opacity-50 ms-1 d-none d-sm-inline-block"></i>
                         </button>
-                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0 overflow-hidden" aria-labelledby="page-header-user-dropdown">
-                            <div class="row g-0">
-                                <div class="col-6 d-flex align-items-center justify-content-center bg-body-light p-2">
-                                    <img class="img-avatar img-avatar96 img-avatar-thumb" src="assets/media/avatars/avatar10.jpg" alt="">
-                                </div>
-                                <div class="col-6 p-2 bg-body-extra-light">
-                                    <a class="dropdown-item" href="be_pages_generic_profile.html">
-                                        John Doe
-                                        <div class="fs-sm text-muted">johndoe</div>
-                                    </a>
-                                    <a class="dropdown-item" href="javascript:void(0)">
-                                        Edit My Profile
-                                    </a>
-                                    <div role="separator" class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="op_auth_signin.html">
-                                        Log Out
-                                    </a>
-                                </div>
+                        <div class="dropdown-menu dropdown-menu-end p-0" aria-labelledby="page-header-user-dropdown">
+                            <div class="bg-primary-dark rounded-top fw-semibold text-white text-center p-3">
+                                User Options
+                            </div>
+                            <div class="p-2">
+                                <a class="dropdown-item" href="javascript:void(0)">
+                                    <i class="far fa-fw fa-user me-1"></i> Profile
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center justify-content-between" href="javascript:void(0)">
+                                    <span><i class="far fa-fw fa-envelope me-1"></i> Inbox</span>
+                                    <span class="badge bg-primary rounded-pill">3</span>
+                                </a>
+                                <a class="dropdown-item" href="javascript:void(0)">
+                                    <i class="far fa-fw fa-file-alt me-1"></i> Invoices
+                                </a>
+                                <div role="separator" class="dropdown-divider"></div>
+
+                                <!-- Toggle Side Overlay -->
+                                <!-- Layout API, functionality initialized in Template._uiApiLayout() -->
+                                <a class="dropdown-item" href="javascript:void(0)" data-toggle="layout" data-action="side_overlay_toggle">
+                                    <i class="far fa-fw fa-building me-1"></i> Settings
+                                </a>
+                                <!-- END Side Overlay -->
+
+                                <div role="separator" class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="javascript:void(0)">
+                                    <i class="far fa-fw fa-arrow-alt-circle-left me-1"></i> Sign Out
+                                </a>
                             </div>
                         </div>
                     </div>
+                    <!-- END User Dropdown -->
                 </div>
+                <!-- END Right Section -->
             </div>
-            <div id="page-header-search" class="overlay-header bg-sidebar-dark">
+            <!-- END Header Content -->
+            <!-- Header Search -->
+            <div id="page-header-search" class="overlay-header bg-primary">
                 <div class="content-header">
-                    <form class="w-100" action="be_pages_generic_search.html" method="POST">
+                    <form class="w-100" method="POST">
                         <div class="input-group">
-                            <button type="button" class="btn btn-danger" data-toggle="layout" data-action="header_search_off">
+                            <!-- Layout API, functionality initialized in Template._uiApiLayout() -->
+                            <button type="button" class="btn btn-primary" data-toggle="layout" data-action="header_search_off">
                                 <i class="fa fa-fw fa-times-circle"></i>
                             </button>
-                            <input type="text" class="form-control border-0" placeholder="Search WP Post.." id="page-header-search-input" name="page-header-search-input">
+                            <input type="text" class="form-control border-0" placeholder="Search or hit ESC.." id="page-header-search-input" name="page-header-search-input">
                         </div>
                     </form>
                 </div>
             </div>
+            <!-- END Header Search -->
+            <!-- Header Loader -->
+            <!-- Please check out the Loaders page under Components category to see examples of showing/hiding it -->
             <div id="page-header-loader" class="overlay-header bg-primary-darker">
                 <div class="content-header">
                     <div class="w-100 text-center">
@@ -277,10 +235,9 @@
                     </div>
                 </div>
             </div>
+            <!-- END Header Loader -->
         </header>
-
-
-
+        <!-- END Header -->
         <!-- Main Container -->
         <main id="main-container">
             @RenderBody()
