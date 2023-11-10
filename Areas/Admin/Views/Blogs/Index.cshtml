@@ -13,36 +13,34 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
+         @*    <th>
                 @Html.DisplayNameFor(model => model.Slug)
+            </th>*@
+            <th> 
+                Tiêu đề
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                Ngày tạo
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CreatedAt)
+                Người đăng
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CreateBy)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Topic)
+                Chủ đề
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Content)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsDetele)
-            </th>
+
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>
+@*             <td>
                 @Html.DisplayFor(modelItem => item.Slug)
-            </td>
+            </td> *@
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>

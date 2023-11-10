@@ -1,0 +1,104 @@
+let files = [];
+let uploadContainer = document.querySelector(".upload-image-container");
+let uploadImgInput = document.querySelector(".upload-image-input");
+let hasImage = document.querySelector(".has-image");
+let noImage = document.querySelector(".no-image");
+
+uploadContainer.addEventListener("click", () => {
+    uploadImgInput.click();
+});
+
+uploadImgInput.addEventListener("change", (e) => {
+    let fileInput = uploadImgInput.files;
+    for (let i = 0; i < fileInput.length; i++) {
+        if (files.every((item) => item.name != fileInput[i].name)) {
+            files.push(fileInput[i]);
+        }
+    }
+
+    uploadImgInput.value = '';
+
+    showImage();
+});
+
+const showImage = () => {
+    checkUI();
+    let images = "";
+    console.info(files);
+    files.forEach(function (file, index) {
+        images = `<div class="preview-image-item" onClick=(setThumbnail(event))>
+                     <img src="${URL.createObjectURL(file)}" alt="image" data-id="${index}" style="margin:0 0; width:600px; height:400px"/>
+                        <span class="btn-delete-image" onClick="handleDelete(event,${index}, this.parentElement)" style="top:0; right:0;">
+                            <i class="fa fa-fw fa-times">
+                            </i>
+                        </span>
+                 </div>`;
+    });
+    hasImage.innerHTML = images;
+};
+
+
+const checkUI = () => {
+    if (files.length > 0) {
+        noImage.style.display = "none";
+    } else {
+        noImage.style.display = "block";
+    }
+};
+const handleDelete = (event, index, parentElement) => {
+    event.stopPropagation();
+    files.splice(index, 1);
+    checkUI();
+    parentElement.parentNode.removeChild(parentElement);
+};
+
+const setThumbnail = (event) => {
+    event.stopPropagation();
+    let clName = event.target;
+    document.querySelector(".preview-image-item img.active")?.classList.remove('active');
+    clName.classList.add('active');
+}
+
+
+$("#btn-save-blog").click(() => {
+    const blogData = {
+        Slug: $('#blog-slug').val(),
+        Name: $('#blog-name').val(),
+        ThumbnailId: 0,
+        CreateAt: new Date().getTime,
+        CreateBy: ,
+        Topic: $('#topic-id').val(),
+        Content: CKEDITOR.instances['js-ckeditor'].getData(),
+        IsDelete: false
+    };
+
+    console.info(blogData);
+    var formData = new FormData();
+
+    formData.append('Slug', blogData.Slug);
+    formData.append('Name', blogData.Name);
+    formData.append('Thumbnail', blogData.Thumbnail);
+    formData.append('CreateAt', blogData.CreateAt);
+    formData.append('CreateBy', blogData.CreateBy);
+    formData.append('Topic', blogData.Topic);
+    formData.append('Content', blogData.Content);
+    formData.append('IsDelete', blogData.IsDelete);
+
+    console.log(formData);
+    
+    //alert(blogData.Topic + blogData.TopicID);
+
+    $.ajax({
+        type: 'POST',
+        url: '/Admin/Blogs/Create',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            console.log(response);
+        },
+        error: function (error) {
+            console.error(error);
+        }
+    });
+})

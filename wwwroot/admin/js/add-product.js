@@ -30,7 +30,10 @@ const showImage = () => {
   files.forEach(function (file, index) {
       images += `<div class="preview-image-item" onClick=(setThumbnail(event))>
                      <img src="${URL.createObjectURL(file)}" alt="image" data-id="${index}"/>
-                        <span class="btn-delete-image" onClick="handleDelete(event,${index}, this.parentElement)"><i class="fa fa-fw fa-times"></i></span></div>`;
+                        <span class="btn-delete-image" onClick="handleDelete(event,${index}, this.parentElement)>
+                            <i class="fa fa-fw fa-times"></i>
+                        </span>
+                  </div>`;
   });
   hasImage.innerHTML = images;
 };
