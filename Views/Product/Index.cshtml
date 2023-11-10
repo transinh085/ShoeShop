@@ -7,10 +7,12 @@
 }
 
 @{
-	var categories = ViewBag.Categories as List<Category>;
-	var brands = ViewBag.Brands as List<Brand>;
+	var categories = ViewBag.Categories;
+	var brands = ViewBag.Brands;
 	var products = ViewBag.Products as List<Product>;
-	var colors = ViewBag.Colors as List<Color>;
+	var colors = ViewBag.Colors;
+	var sizes = ViewBag.Sizes;
+	var priceRanges = ViewBag.PriceRanges;
 }
 
 <main>
@@ -37,9 +39,7 @@
 				<li>
 					<div class="sort_select">
 						<select name="sort" id="sort">
-							<option value="popularity" selected="selected">Sort by popularity</option>
-							<option value="rating">Sort by average rating</option>
-							<option value="date">Sort by newness</option>
+							<option value="date" selected="selected">Sort by newness</option>
 							<option value="price">Sort by price: low to high</option>
 							<option value="price-desc">Sort by price: high to</option>
 						</select>
@@ -76,8 +76,8 @@
 									{
 										<li>
 											<label class="container_check">
-												@category.Name <small>24</small>
-												<input type="checkbox" name="categories" value="@category.Id">
+													@category.Category.Name <small>@category.ProductCount</small>
+													<input type="checkbox" name="categories" value="@category.Category.Id">
 												<span class="checkmark"></span>
 											</label>
 										</li>
@@ -89,7 +89,7 @@
 					</div>
 					<!-- /filter_type -->
 					<div class="filter_type version_2">
-						<h4><a href="#colors" data-bs-toggle="collapse" class="opened">Color</a></h4>
+						<h4><a href="#colors" data-bs-toggle="collapse" class="opened">Colors</a></h4>
 						<div class="collapse show" id="colors">
 							<ul>
 								@if (colors != null)
@@ -98,8 +98,8 @@
 									{
 										<li>
 											<label class="container_check">
-												@color.Name <small>06</small>
-												<input type="checkbox" name="colors" value="@color.Id">
+													@color.Color.Name <small>@color.ProductCount</small>
+													<input type="checkbox" name="colors" value="@color.Color.Id">
 												<span class="checkmark"></span>
 											</label>
 										</li>
@@ -111,8 +111,8 @@
 					</div>
 					<!-- /filter_type -->
 					<div class="filter_type version_2">
-						<h4><a href="#lbrands" data-bs-toggle="collapse" class="opened">Brands</a></h4>
-						<div class="collapse show" id="lbrands">
+							<h4><a href="#lbrands" data-bs-toggle="collapse" class="closed">Brands</a></h4>
+							<div class="collapse" id="lbrands">
 							<ul>
 								@if (brands != null)
 								{
@@ -120,8 +120,29 @@
 									{
 										<li>
 											<label class="container_check">
-												@brand.Name <small>02</small>
-													<input type="checkbox" name="brands" value="@brand.Id">
+													@brand.Brand.Name <small>@brand.ProductCount</small>
+													<input type="checkbox" name="brands" value="@brand.Brand.Id">
+												<span class="checkmark"></span>
+											</label>
+										</li>
+									}
+								}
+							</ul>
+						</div>
+					</div>
+					<!-- /filter_type -->
+					<div class="filter_type version_2">
+							<h4><a href="#sizes" data-bs-toggle="collapse" class="closed">Sizes</a></h4>
+							<div class="collapse" id="sizes">
+							<ul>
+								@if (sizes != null)
+								{
+									foreach (var size in sizes)
+									{
+										<li>
+											<label class="container_check">
+												@size.Size.Name <small>@size.ProductCount</small>
+												<input type="checkbox" name="sizes" value="@size.Size.Id">
 												<span class="checkmark"></span>
 											</label>
 										</li>
@@ -135,34 +156,19 @@
 						<h4><a href="#filter_4" data-bs-toggle="collapse" class="closed">Price</a></h4>
 						<div class="collapse" id="filter_4">
 							<ul>
-								<li>
-									<label class="container_check">
-										$0 — $50<small>11</small>
-										<input type="checkbox">
-										<span class="checkmark"></span>
-									</label>
-								</li>
-								<li>
-									<label class="container_check">
-										$50 — $100<small>08</small>
-										<input type="checkbox">
-										<span class="checkmark"></span>
-									</label>
-								</li>
-								<li>
-									<label class="container_check">
-										$100 — $150<small>05</small>
-										<input type="checkbox">
-										<span class="checkmark"></span>
-									</label>
-								</li>
-								<li>
-									<label class="container_check">
-										$150 — $200<small>18</small>
-										<input type="checkbox">
-										<span class="checkmark"></span>
-									</label>
-								</li>
+								@if (priceRanges != null)
+								{
+									foreach (var priceRange in priceRanges)
+									{
+										<li>
+											<label class="container_check">
+												@priceRange.Name<small>@priceRange.ProductCount</small>
+												<input type="checkbox" value="@priceRange.Value" name="prices">
+												<span class="checkmark"></span>
+											</label>
+										</li>
+									}
+								}
 							</ul>
 						</div>
 					</div>
@@ -217,11 +223,15 @@
 			const categoriesCheckboxes = document.querySelectorAll("input[name=categories]");
 			const colorsCheckboxes = document.querySelectorAll("input[name=colors]");
 			const brandsCheckboxes = document.querySelectorAll("input[name=brands]");
+			const sizesCheckboxes = document.querySelectorAll("input[name=sizes]");
+			const pricesCheckboxes = document.querySelectorAll("input[name=prices]");
 
 			function updateURL() {
 				const checkedCategories = getCheckedValues(categoriesCheckboxes);
 				const checkedColors = getCheckedValues(colorsCheckboxes);
 				const checkedBrands = getCheckedValues(brandsCheckboxes);
+				const checkedSizes = getCheckedValues(sizesCheckboxes);
+				const checkedPrices = getCheckedValues(pricesCheckboxes);
 
 				const queryParams = [];
 
@@ -233,6 +243,12 @@
 				}
 				if (checkedBrands.length > 0) {
 					queryParams.push(`brands=${checkedBrands.join(",")}`);
+				}
+				if (checkedSizes.length > 0) {
+					queryParams.push(`sizes=${checkedSizes.join(",")}`);
+				}
+				if (checkedPrices.length > 0) {
+					queryParams.push(`prices=${checkedPrices.join(",")}`);
 				}
 
 				const url = window.location.href.split('?')[0];
@@ -261,6 +277,12 @@
 				brandsCheckboxes.forEach(checkbox => {
 					checkbox.checked = urlParams.get("brands")?.split(",").includes(checkbox.value);
 				});
+				sizesCheckboxes.forEach(checkbox => {
+					checkbox.checked = urlParams.get("sizes")?.split(",").includes(checkbox.value);
+				});
+				pricesCheckboxes.forEach(checkbox => {
+					checkbox.checked = urlParams.get("prices")?.split(",").includes(checkbox.value);
+				});
 			}
 
 			categoriesCheckboxes.forEach(checkbox => {
@@ -272,6 +294,14 @@
 			});
 
 			brandsCheckboxes.forEach(checkbox => {
+				checkbox.addEventListener("change", updateURL);
+			});
+
+			sizesCheckboxes.forEach(checkbox => {
+				checkbox.addEventListener("change", updateURL);
+			});
+
+			pricesCheckboxes.forEach(checkbox => {
 				checkbox.addEventListener("change", updateURL);
 			});
 

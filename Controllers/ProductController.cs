@@ -8,6 +8,8 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using Bogus.DataSets;
+using System.Runtime.InteropServices;
+using System.Drawing.Drawing2D;
 
 namespace ShoeShop.Controllers
 {
@@ -40,7 +42,51 @@ namespace ShoeShop.Controllers
 				   })
 				   .ToListAsync();
 				ViewBag.Brands = brandsWithCount;
-				ViewBag.Colors = await _context.Colors.ToListAsync();
+				var colorsWithCount = await _context.Colors
+					.Select(color => new
+					{
+						Color = color,
+						ProductCount = _context.Products.Count(product =>
+							product.Variants.Any(variant => variant.ColorId == color.Id) // Giả định rằng có một thuộc tính ColorId trong biến variant
+						)
+					})
+					.ToListAsync();
+				ViewBag.Colors = colorsWithCount;
+				var sizesWithCount = await _context.Sizes
+					.Select(size => new
+					{
+						Size = size,
+						ProductCount = _context.Products.Count(product =>
+							product.Variants.Any(variant =>
+								variant.VariantSizes.Any(varSize => varSize.SizeId == size.Id)
+							)
+						)
+					})
+					.ToListAsync();
+				ViewBag.Sizes = sizesWithCount;
+				var priceRanges = new[]
+				{
+					new PriceRangeInfo { Min = 0, Max = 50, Name = "$0 - $50", Value = "0:50" },
+					new PriceRangeInfo { Min = 50, Max = 100, Name = "$50 - $100", Value = "50:100" },
+					new PriceRangeInfo { Min = 100, Max = 200, Name = "$100 - $200", Value = "100:200" },
+					new PriceRangeInfo { Min = 200, Max = 1000, Name = "$200 - $1000", Value = "200:1000" }
+				};
+				var productsWithPrices = new List<PriceRangeInfo>();
+				foreach (var range in priceRanges)
+				{
+					var productCount = await _context.Products
+						.CountAsync(product => product.Price >= range.Min && product.Price <= range.Max);
+
+					productsWithPrices.Add(new PriceRangeInfo
+					{
+						Min = range.Min,
+						Max = range.Max,
+						Name = range.Name,
+						Value = range.Value,
+						ProductCount = productCount
+					});
+				}
+				ViewBag.PriceRanges = productsWithPrices;
 				ViewBag.Products = await _context.Products.Include(product => product.Thumbnail)
 					.OrderByDescending(product => product.CreatedAt)
 					.ToListAsync();
@@ -179,6 +225,17 @@ namespace ShoeShop.Controllers
 				Content = json,
 				ContentType = "application/json",
 			};
+
 		}
 	}
 }
+
+public class PriceRangeInfo
+{
+	public int Min { get; set; }
+	public int Max { get; set; }
+	public string Name { get; set; }
+	public string Value { get; set; }
+	public int ProductCount { get; set; }
+}
+
