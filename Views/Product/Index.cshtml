@@ -178,7 +178,9 @@
 				<div class="row small-gutters">
 					@foreach (var item in ViewBag.Products)
 					{
-						@await Component.InvokeAsync("ShoeCards", item)
+						<div class="col-6 col-md-4">
+							@await Component.InvokeAsync("ShoeCards", item)
+						</div>
 					}
 				</div>
 				<!-- /row -->

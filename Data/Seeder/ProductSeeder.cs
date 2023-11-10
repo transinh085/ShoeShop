@@ -26,7 +26,9 @@ namespace ShoeShop.Data.Seeder
 										"sự thoải mái và nhẹ nhàng, bạn sẽ dễ dàng hơn trong các bài tập thể " +
 										"dục hàng ngày hoặc những môn thể thao với nhịp độ cao.",
 					Price = 50,
-					Category = 1,
+					PriceSale = 30,
+                    Label = 1,
+                    Category = 1,
 					Brand = 1,
 					Status = true,
 					Variants = new List<VariantViewModel>
@@ -111,7 +113,9 @@ namespace ShoeShop.Data.Seeder
 					Slug = "hsm003900",
 					Description = "Cùng nhau chào đón một thiết kế siêu mới và siêu hiện đại tới từ nhà Biti’s. Giày Thể Thao Nam Biti’s Hunter Street HSM003900 chính là một trong những lựa chọn hàng đầu của những con dân nghiện giày hiện nay. Cùng nhau tìm hiểu ngay dưới đây nhé!",
 					Price = 80,
-					Category = 2,
+                    PriceSale = 50,
+                    Label = 2,
+                    Category = 2,
 					Brand = 2,
 					Status = true,
 					Variants = new List<VariantViewModel>
@@ -232,7 +236,9 @@ namespace ShoeShop.Data.Seeder
 										"sự thoải mái và nhẹ nhàng, bạn sẽ dễ dàng hơn trong các bài tập thể " +
 										"dục hàng ngày hoặc những môn thể thao với nhịp độ cao.",
 					Price = 60,
-					Category = 1,
+                    PriceSale = 50,
+                    Label = 1,
+                    Category = 1,
 					Brand = 1,
 					Status = true,
 					Variants = new List<VariantViewModel>
@@ -284,7 +290,9 @@ namespace ShoeShop.Data.Seeder
 										"sự thoải mái và nhẹ nhàng, bạn sẽ dễ dàng hơn trong các bài tập thể " +
 										"dục hàng ngày hoặc những môn thể thao với nhịp độ cao.",
 					Price = 120,
-					Category = 1,
+                    PriceSale = 90,
+                    Label = 1,
+                    Category = 1,
 					Brand = 1,
 					Status = true,
 					Variants = new List<VariantViewModel>
@@ -459,6 +467,8 @@ namespace ShoeShop.Data.Seeder
 			{
 				Name = productViewModel.Name,
 				Price = productViewModel.Price,
+				PriceSale = productViewModel.PriceSale,
+				Label = productViewModel.Label,
 				Description = productViewModel.Description,
 				Status = productViewModel.Status,
 				Slug = productViewModel.Slug,
@@ -518,10 +528,12 @@ namespace ShoeShop.Data.Seeder
 	{
 		public string? Name { get; set; }
 		public decimal Price { get; set; }
+		public decimal PriceSale { get; set; }
 		public string? Description { get; set; }
-		public bool Status { get; set; }
+		public bool Status { get; set; } = true;
 		public string? Slug { get; set; }
 		public int Category { get; set; }
+		public int Label { get; set; } = 0;
 		public int Brand { get; set; }
 		public List<VariantViewModel> Variants { get; set; }
 

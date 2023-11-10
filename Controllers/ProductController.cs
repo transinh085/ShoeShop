@@ -37,18 +37,19 @@ namespace ShoeShop.Controllers
 
 		public async Task<IActionResult> Detail(int? id)
 		{
-            if (id == null || _context.Products == null)
-            {
-                return NotFound();
-            }
+            if (id == null || _context.Products == null) return NotFound();
 
             var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
 
             if (product == null) return NotFound();
 
             ViewBag.Product = product;
-           
-            return View();
+			ViewBag.Related = await _context.Products
+				.Include(product => product.Thumbnail)
+				.Where(p => p.CategoryId == product.CategoryId)
+				.OrderByDescending(product => product.CreatedAt)
+				.Take(8).ToListAsync();
+			return View();
 		}
 
 		[HttpPost]

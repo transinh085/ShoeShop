@@ -61,8 +61,11 @@ namespace ShoeShop.Areas.Admin.Controllers
                     {
                         Name = productViewModel.Name,
                         Price = productViewModel.Price,
+                        PriceSale = productViewModel.PriceSale,
                         Description = productViewModel.Description,
                         Status = productViewModel.Status,
+                        Label = productViewModel.Label,
+                        IsFeatured = productViewModel.IsFeatured,
                         Slug = productViewModel.Slug,
                         CategoryId = Convert.ToInt32(productViewModel.Category),
                         BrandId = Convert.ToInt32(productViewModel.Brand),
