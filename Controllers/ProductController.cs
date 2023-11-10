@@ -24,8 +24,22 @@ namespace ShoeShop.Controllers
         {
 			if (_context.Products != null)
 			{
-				ViewBag.Categories = await _context.Categories.ToListAsync();
-				ViewBag.Brands = await _context.Brands.ToListAsync();
+				var categoriesWithCount = await _context.Categories
+				   .Select(category => new
+				   {
+					   Category = category,
+					   ProductCount = _context.Products.Count(product => product.CategoryId == category.Id)
+				   })
+				   .ToListAsync();
+				ViewBag.Categories = categoriesWithCount;
+				var brandsWithCount = await _context.Brands
+				   .Select(brand => new
+				   {
+					   Brand = brand,
+					   ProductCount = _context.Products.Count(product => product.BrandId == brand.Id)
+				   })
+				   .ToListAsync();
+				ViewBag.Brands = brandsWithCount;
 				ViewBag.Colors = await _context.Colors.ToListAsync();
 				ViewBag.Products = await _context.Products.Include(product => product.Thumbnail)
 					.OrderByDescending(product => product.CreatedAt)
@@ -69,6 +83,8 @@ namespace ShoeShop.Controllers
 			return Ok(variantSize);
 		}
 
+
+		//Api lấy ra danh sách sản phẩm
 		[HttpGet, ActionName("allProducts")]
 		public IActionResult GetProductList(
 			int page = 1,
@@ -76,11 +92,14 @@ namespace ShoeShop.Controllers
 			string query = "",
 			string categories = "",
 			string brands = "",
-			string colors = ""
+			string colors = "",
+			string sizes = ""
 		)
 		{
 			var products = _context.Products
 					.Include(product => product.Thumbnail)
+					.Include(product => product.Variants)
+						.ThenInclude(varient => varient.VariantSizes)
 					.OrderByDescending(product => product.CreatedAt)
 					.ToList();
 			if (!string.IsNullOrEmpty(query))
@@ -99,8 +118,30 @@ namespace ShoeShop.Controllers
 			if(!string.IsNullOrEmpty(brands))
 			{
 				string[] bar = brands.Split(",");
-				products = products.Where(u => brands.Contains(u.BrandId.ToString())).ToList();
+				products = products.Where(u => bar.Contains(u.BrandId.ToString())).ToList();
 			}
+			if (!string.IsNullOrEmpty(colors))
+			{
+				string[] col = colors.Split(",");
+				products = products.Where(u =>
+				{
+					return u.Variants.Any(item => col.Contains(item.ColorId.ToString()));
+				}).ToList();
+			}
+
+			if (!string.IsNullOrEmpty(sizes))
+			{
+				string[] siz = sizes.Split(",");
+				products = products.Where(u =>
+				{
+					return u.Variants.Any(variantSize =>
+					{
+						return variantSize.VariantSizes.Any(item => siz.Contains(item.SizeId.ToString()));
+					});
+				}).ToList();
+			}
+
+
 			if (page < 1)
 			{
 				page = 1;
@@ -119,7 +160,8 @@ namespace ShoeShop.Controllers
 			var options = new JsonSerializerOptions
 			{
 				WriteIndented = true,
-				MaxDepth = 10
+				MaxDepth = 100,
+				ReferenceHandler = ReferenceHandler.Preserve
 			};
 
 			var result = new
