@@ -125,12 +125,14 @@
 							<ul class="top_tools">
 								<li>
 									<div class="dropdown dropdown-cart">
-										<a href="/cart" class="cart_bt"><strong>0</strong></a>
+										<a href="~/cart" class="cart_bt"><strong>0</strong></a>
 										<div class="dropdown-menu">
-											
+											<ul>
+												There are currently no products
+											</ul>
 											<div class="total_drop">
-												<div class="clearfix"><strong>Total</strong><span>$0.00</span></div>
-												<a href="cart" class="btn_1 outline">View Cart</a><a href="checkout.html" class="btn_1">Checkout</a>
+												<div class="clearfix"><strong>Total</strong><span id="cart-total-price">$0.00</span></div>
+												<a href="~/cart" class="btn_1 outline">View Cart</a><a href="checkout.html" class="btn_1">Checkout</a>
 											</div>
 										</div>
 									</div>
@@ -326,7 +328,7 @@
 						</div>
 					</div>
 					<div class="col-md-5 btn_panel">
-						<a href="cart.html" class="btn_1 outline">View cart</a> <a href="checkout.html" class="btn_1">Checkout</a>
+						<a href="~/cart" class="btn_1 outline">View cart</a> <a href="~/checkout" class="btn_1">Checkout</a>
 					</div>
 				</div>
 			</div>

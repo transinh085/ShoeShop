@@ -52,13 +52,14 @@ namespace ShoeShop.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> GetCart(CartViewModel cart)
+		public async Task<IActionResult> GetCart([FromBody]CartViewModel cart)
 		{
 			var variantSize = await _context.VariantSizes
 					.Where(v => cart.Carts.Contains(v.Id))
 					.Select(v => new
 					{
 						VariantSizeId = v.Id,
+						ProductId = v.Variant.ProductId,
 						SizeName = v.Size.Name,
 						ColorName = v.Variant.Color.Name,
 						thumbnail = v.Variant.Thumbnail.Name,
