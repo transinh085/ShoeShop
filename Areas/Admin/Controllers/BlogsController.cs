@@ -10,6 +10,7 @@ using ShoeShop.Models;
 using ShoeShop.ViewModels.Product;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
+using ShoeShop.ViewModels;
 
 namespace ShoeShop.Areas.Admin.Controllers
 {
@@ -19,12 +20,7 @@ namespace ShoeShop.Areas.Admin.Controllers
         private readonly AppDbContext _context;
 
 
-        //private readonly UserManager<ApplicationUser> _userManager;
 
-        //public YourController(UserManager<ApplicationUser> userManager)
-        //{
-        //    _userManager = userManager;
-        //}
 
 
         public BlogsController(AppDbContext context)
@@ -70,9 +66,10 @@ namespace ShoeShop.Areas.Admin.Controllers
         // POST: Admin/Blogs/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([FromForm] Blog blog)
+        public async Task<IActionResult> Create([FromForm] BlogViewModel blogModel)
         {
             //if (ModelState.IsValid)
             //{
@@ -84,27 +81,24 @@ namespace ShoeShop.Areas.Admin.Controllers
             //return View(blog);
 
 
-            //var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            //// Hoặc sử dụng UserManager
-            //var user = _userManager.GetUserAsync(User).Result;
-            //var userIdFromManager = user.Id;
+
+
             using (var transaction = await _context.Database.BeginTransactionAsync())
             {
                 try
                 {
-                    Blog bl = new Blog()
+                    Blog blog = new Blog()
                     {
-                        Thumbnail = blog.Thumbnail,
-                        Name = blog.Name,
-                        Slug = blog.Slug,
+                        //Thumbnail = blogModel.Thumbnail,
+                        Name = blogModel.Name,
+                        Slug = blogModel.Slug,
                         CreatedAt = DateTime.Now,
-                        CreateBy = 1,
-                        TopicID = Convert.ToInt32(blog.Topic),
-                        Content = blog.Content,
+                        //CreateBy = user.Id,
+                        TopicID = Convert.ToInt32(blogModel.Topic),
+                        Content = blogModel.Content,
                         IsDetele = false,
                     };
-                    Console.WriteLine(bl.CreatedAt.ToString());
-                    _context.Add(bl);
+                    _context.Add(blog);
                     await _context.SaveChangesAsync();
                     transaction.Commit();
 
