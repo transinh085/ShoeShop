@@ -17,9 +17,8 @@
 					</td>
 					<td>
 						<div class="numbers-row">
-							<input type="text" value="${item.quantity}" id="quantity_1" class="qty2" name="quantity_1">
+							<input type="text" data-id="${item.variantSizeId}" value="${item.quantity}" id="quantity_1" class="qty2" name="quantity_1">
 							<div class="inc button_inc">+</div><div class="dec button_inc">-</div>
-						<div class="inc button_inc">+</div><div class="dec button_inc">-</div></div>
 					</td>
 					<td>
 						<strong>$${item.price * item.quantity}</strong>
@@ -37,11 +36,34 @@
 	//$('.cart_bt strong').text(getTotalProduct());
 }
 
-$(document).on('click', '.delete-cart-tbl', function () {
-	const variantSizeId = $(this).data('id');
-	removeCart(variantSizeId);
-	loadCart();
+$(document).on('click', '.button_inc', function () {
+	var iEl = $(this).parent().find("input");
+	const variantSizeId = $(iEl).data('id');
+	handleChangeQuantity(variantSizeId, parseInt(iEl.val()));
 	renderCartTable();
+});
+
+
+$(document).on('click', '.delete-cart-tbl', async function () {
+	let result = await Swal.fire({
+		title: "Are you sure?",
+		text: "Would you like to delete this product?",
+		icon: "warning",
+		showCancelButton: true,
+		confirmButtonText: "Yes, I'm sure",
+		cancelButtonText: "Cannel"
+	});
+
+	if (result.value) {
+		try {
+			const variantSizeId = $(this).data('id');
+			removeCart(variantSizeId);
+			renderCartTable();
+		} catch (error) {
+			console.error("Error:", error);
+			Swal.fire("Lỗi !", "Deletion of the product was not successful.", "error");
+		}
+	}
 });
 
 $(document).on("ajaxComplete", function () {
