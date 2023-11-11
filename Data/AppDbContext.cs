@@ -17,5 +17,6 @@ namespace ShoeShop.Data
 		public DbSet<VariantSize> VariantSizes { get; set; }
 		public DbSet<Topic> Topics { get; set; }
 		public DbSet<Blog> Blogs { get; set; }
+		public DbSet<ShippingMethod>? ShippingMethods { get; set; }
     }
 }
