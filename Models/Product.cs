@@ -6,8 +6,8 @@
         public string? Slug { get; set; }
         public string? Name { get; set; }
         public string? Description { get; set; }
-        public decimal Price { get; set; } 
-        public decimal PriceSale { get; set; } 
+        public decimal Price { get; set; }
+        public decimal PriceSale { get; set; }
         public Image? Thumbnail { get; set; }
         public bool IsDetele { get; set; } = false;
         public bool Status { get; set; } 

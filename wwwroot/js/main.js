@@ -390,7 +390,7 @@ const removeCart = (variantSizeId) => {
 
 const getTotalPrice = () => {
 	let totalPrice = cartData.reduce(function (sum, currentItem) {
-		return sum + (currentItem.price * currentItem.quantity);
+		return sum + ((currentItem.priceSale != 0 ? currentItem.priceSale : currentItem.price)  * currentItem.quantity);
 	}, 0);
 
 	return totalPrice;
@@ -432,7 +432,10 @@ const renderCart = () => {
 						<strong>
 							<span>${item.quantity} x ${item.title}</span>
 							<span class="text-secondary">${item.sizeName} / ${item.colorName}</span>
-							$${item.price}
+							<span class="d-flex gap-2 fw-bold">
+								$${item.priceSale != 0 ? item.priceSale : item.price} 
+								${item.priceSale != 0 ? `<span class="text-decoration-line-through">$${item.price}</span>` : ''}
+							</span>
 						</strong>
 					</a>
 					<a href="#0" class="action delete-item-cart" data-id="${item.variantSizeId}"><i class="ti-trash"></i></a></li>`

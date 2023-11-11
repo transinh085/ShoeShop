@@ -123,9 +123,10 @@ namespace ShoeShop.Controllers
 						ProductId = v.Variant.ProductId,
 						SizeName = v.Size.Name,
 						ColorName = v.Variant.Color.Name,
-						thumbnail = v.Variant.Thumbnail.Name,
+						Thumbnail = v.Variant.Thumbnail.Name,
 						Title = v.Variant.Product.Name,
-						Price = v.Variant.Product.Price
+						Price = v.Variant.Product.Price,
+						PriceSale = v.Variant.Product.PriceSale,
 					})
 					.ToListAsync();
 			return Ok(variantSize);
