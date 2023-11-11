@@ -137,7 +137,7 @@ namespace ShoeShop.Controllers
 		[HttpGet, ActionName("allProducts")]
 		public IActionResult GetProductList(
 			int page = 1,
-			int pageSize = 10,
+			int pageSize = 9,
 			string query = "",
 			string categories = "",
 			string brands = "",
@@ -147,107 +147,81 @@ namespace ShoeShop.Controllers
 			string sort = "date"
 		)
 		{
-			var products = _context.Products
-					.Include(product => product.Thumbnail)
-					.OrderByDescending(product => product.CreatedAt)
-					.ToList();
+			var queryableProducts = _context.Products
+				.Include(product => product.Thumbnail)
+				.Include(product => product.Variants).ThenInclude(variant => variant.VariantSizes)
+				.AsQueryable();
+
+			// Filter by query
 			if (!string.IsNullOrEmpty(query))
 			{
-				products = products.Where(u =>
+				queryableProducts = queryableProducts.Where(u =>
 					u.Slug.Contains(query, StringComparison.OrdinalIgnoreCase) ||
-					u.Name.Contains(query, StringComparison.OrdinalIgnoreCase)
-					)
-					.ToList();
+					u.Name.Contains(query, StringComparison.OrdinalIgnoreCase) ||
+					u.Description.Contains(query, StringComparison.OrdinalIgnoreCase)
+				);
 			}
+
+			// Filter by categories
 			if (!string.IsNullOrEmpty(categories))
 			{
 				string[] cate = categories.Split(',');
-				products = products.Where(u => cate.Contains(u.CategoryId.ToString())).ToList();
+				queryableProducts = queryableProducts.Where(u => cate.Contains(u.CategoryId.ToString()));
 			}
-			if(!string.IsNullOrEmpty(brands))
+
+			// Filter by brands
+			if (!string.IsNullOrEmpty(brands))
 			{
 				string[] bar = brands.Split(",");
-				products = products.Where(u => bar.Contains(u.BrandId.ToString())).ToList();
+				queryableProducts = queryableProducts.Where(u => bar.Contains(u.BrandId.ToString()));
 			}
+
+			// Filter by colors
 			if (!string.IsNullOrEmpty(colors))
 			{
 				string[] col = colors.Split(",");
-				products = _context.Products
-					.Include(product => product.Variants).ToList().Where(u =>
-				{
-					return u.Variants.Any(item => col.Contains(item.ColorId.ToString()));
-				}).ToList();
+				queryableProducts = queryableProducts.Where(u => u.Variants.Any(item => col.Contains(item.ColorId.ToString())));
 			}
 
+			// Filter by sizes
 			if (!string.IsNullOrEmpty(sizes))
 			{
 				string[] siz = sizes.Split(",");
-				products = _context.Products
-					.Include(product => product.Variants)
-						.ThenInclude(varient => varient.VariantSizes).ToList().Where(u =>
-				{
-					return u.Variants.Any(variantSize =>
-					{
-						return variantSize.VariantSizes.Any(item => siz.Contains(item.SizeId.ToString()));
-					});
-				}).ToList();
+				queryableProducts = queryableProducts.Where(u =>
+					u.Variants.Any(variantSize =>
+						variantSize.VariantSizes.Any(item => siz.Contains(item.SizeId.ToString()))
+					)
+				);
 			}
 
+			// Filter by prices
 			if (!string.IsNullOrEmpty(prices))
 			{
-				string[] priceRanges = prices.Split(',');
+				var priceRangeList = ParsePriceRanges(prices);
 
-				// Tạo một danh sách chứa các đối tượng PriceRange
-				List<(decimal Min, decimal Max)> priceRangeList = new List<(decimal Min, decimal Max)>();
+				// Materialize the query before the price range filter
+				var materializedProducts = queryableProducts.ToList();
 
-				foreach (var range in priceRanges)
-				{
-					string[] parts = range.Split(':');
-					if (parts.Length == 2 && decimal.TryParse(parts[0], out decimal min) && decimal.TryParse(parts[1], out decimal max))
-					{
-						priceRangeList.Add((min, max));
-					}
-				}
-
-				// Lọc sản phẩm theo khoảng giá
-				products = products.Where(product =>
-				{
-					foreach (var (min, max) in priceRangeList)
-					{
-						if (product.Price >= min && product.Price <= max)
-						{
-							return true;
-						}
-					}
-					return false;
-				}).ToList();
+				queryableProducts = materializedProducts.Where(product =>
+					priceRangeList.Any(range => product.Price >= range.Min && product.Price <= range.Max)
+				).AsQueryable();
 			}
+
 
 			// Order by
-			if (sort == "date")
+			queryableProducts = sort switch
 			{
-				products = products.OrderByDescending(product => product.CreatedAt).ToList();
-			}
-			else if (sort == "price")
-			{
-				products = products.OrderBy(product => product.Price).ToList();
-			}
-			else if (sort == "price-desc")
-			{
-				products = products.OrderByDescending(product => product.Price).ToList();
-			}
+				"date" => queryableProducts.OrderByDescending(product => product.CreatedAt),
+				"price" => queryableProducts.OrderBy(product => product.Price),
+				"price-desc" => queryableProducts.OrderByDescending(product => product.Price),
+				_ => queryableProducts.OrderByDescending(product => product.CreatedAt)
+			};
 
-			if (page < 1)
-			{
-				page = 1;
-			}
+			// Paginate results
+			var totalItems = queryableProducts.Count();
+			var totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
 
-			// Tính tổng số trang dựa trên số lượng sản phẩm và kích thước trang
-			int totalItems = products.Count;
-			int totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
-
-			// Lấy danh sách sản phẩm của trang hiện tại
-			var currentPageProduct = products
+			var currentPageProducts = queryableProducts
 				.Skip((page - 1) * pageSize)
 				.Take(pageSize)
 				.ToList();
@@ -256,7 +230,7 @@ namespace ShoeShop.Controllers
 			{
 				WriteIndented = true,
 				MaxDepth = 100,
-				ReferenceHandler = null,
+				ReferenceHandler = ReferenceHandler.IgnoreCycles,
 			};
 
 			var result = new
@@ -264,11 +238,29 @@ namespace ShoeShop.Controllers
 				CurrentPage = page,
 				TotalPages = totalPages,
 				TotalItems = totalItems,
-				result = currentPageProduct
+				Result = currentPageProducts
 			};
 
-			return Ok(result);
+			return Ok(JsonSerializer.Serialize(result, options));
 		}
+
+		private List<(decimal Min, decimal Max)> ParsePriceRanges(string prices)
+		{
+			var priceRanges = prices.Split(',');
+			var rangeList = new List<(decimal Min, decimal Max)>();
+
+			foreach (var range in priceRanges)
+			{
+				var parts = range.Split(':');
+				if (parts.Length == 2 && decimal.TryParse(parts[0], out decimal min) && decimal.TryParse(parts[1], out decimal max))
+				{
+					rangeList.Add((min, max));
+				}
+			}
+
+			return rangeList;
+		}
+
 	}
 }
 
