@@ -1,4 +1,6 @@
-﻿@model IEnumerable<ShoeShop.Models.Product>
+﻿@{
+}
+@model IEnumerable<ShoeShop.Models.Product>
 @{
 	ViewData["Title"] = "Products";
 }
@@ -69,14 +71,14 @@
 						<h4><a href="#categories" data-bs-toggle="collapse" class="opened">Categories</a></h4>
 						<div class="collapse show" id="categories">
 							<ul>
-								@if(categories != null)
+								@if (categories != null)
 								{
-									foreach(var category in categories)
+									foreach (var category in categories)
 									{
 										<li>
 											<label class="container_check">
-													@category.Category.Name <small>@category.ProductCount</small>
-													<input type="checkbox" name="categories" value="@category.Category.Id">
+												@category.Category.Name <small>@category.ProductCount</small>
+												<input type="checkbox" name="categories" value="@category.Category.Id">
 												<span class="checkmark"></span>
 											</label>
 										</li>
@@ -97,8 +99,8 @@
 									{
 										<li>
 											<label class="container_check">
-													@color.Color.Name <small>@color.ProductCount</small>
-													<input type="checkbox" name="colors" value="@color.Color.Id">
+												@color.Color.Name <small>@color.ProductCount</small>
+												<input type="checkbox" name="colors" value="@color.Color.Id">
 												<span class="checkmark"></span>
 											</label>
 										</li>
@@ -110,8 +112,8 @@
 					</div>
 					<!-- /filter_type -->
 					<div class="filter_type version_2">
-							<h4><a href="#lbrands" data-bs-toggle="collapse" class="closed">Brands</a></h4>
-							<div class="collapse" id="lbrands">
+						<h4><a href="#lbrands" data-bs-toggle="collapse" class="closed">Brands</a></h4>
+						<div class="collapse" id="lbrands">
 							<ul>
 								@if (brands != null)
 								{
@@ -119,8 +121,8 @@
 									{
 										<li>
 											<label class="container_check">
-													@brand.Brand.Name <small>@brand.ProductCount</small>
-													<input type="checkbox" name="brands" value="@brand.Brand.Id">
+												@brand.Brand.Name <small>@brand.ProductCount</small>
+												<input type="checkbox" name="brands" value="@brand.Brand.Id">
 												<span class="checkmark"></span>
 											</label>
 										</li>
@@ -131,8 +133,8 @@
 					</div>
 					<!-- /filter_type -->
 					<div class="filter_type version_2">
-							<h4><a href="#sizes" data-bs-toggle="collapse" class="closed">Sizes</a></h4>
-							<div class="collapse" id="sizes">
+						<h4><a href="#sizes" data-bs-toggle="collapse" class="closed">Sizes</a></h4>
+						<div class="collapse" id="sizes">
 							<ul>
 								@if (sizes != null)
 								{
@@ -173,37 +175,18 @@
 					</div>
 					<!-- /filter_type -->
 					<div class="buttons">
-							<button type="submit" class="btn_1">Reset</button>
+						<button id="reset" class="btn_1">Reset</button>
 					</div>
 				</div>
 			</aside>
 			<!-- /col -->
 			<div class="col-lg-9">
-				<div class="row small-gutters">
-					@foreach (var item in ViewBag.Products)
-					{
-						<div class="col-6 col-md-4">
-							@await Component.InvokeAsync("ShoeCards", item)
-						</div>
-					}
+				<div class="row small-gutters" id="products">
 				</div>
 				<!-- /row -->
 				<div class="pagination__wrapper">
 					<ul class="pagination">
-						<li><a href="#0" class="prev" title="previous page">&#10094;</a></li>
-						<li>
-							<a href="#0" class="active">1</a>
-						</li>
-						<li>
-							<a href="#0">2</a>
-						</li>
-						<li>
-							<a href="#0">3</a>
-						</li>
-						<li>
-							<a href="#0">4</a>
-						</li>
-						<li><a href="#0" class="next" title="next page">&#10095;</a></li>
+						
 					</ul>
 				</div>
 			</div>
@@ -219,6 +202,8 @@
 	<script src="~/js/sticky_sidebar.min.js"></script>
 	<script src="~/js/specific_listing.js"></script>
 	<script>
+		var currentPage = null;
+		var totalPage = null;
 		document.addEventListener("DOMContentLoaded", function () {
 			const categoriesCheckboxes = document.querySelectorAll("input[name=categories]");
 			const colorsCheckboxes = document.querySelectorAll("input[name=colors]");
@@ -226,42 +211,176 @@
 			const sizesCheckboxes = document.querySelectorAll("input[name=sizes]");
 			const pricesCheckboxes = document.querySelectorAll("input[name=prices]");
 			const sortSelect = document.getElementById("sort");
+			const inputSearch = document.getElementById("search-input");
+
+			// Add a flag to prevent infinite loop
+			let updatingURL = false;
 
 			function updateURL() {
-				const checkedCategories = getCheckedValues(categoriesCheckboxes);
-				const checkedColors = getCheckedValues(colorsCheckboxes);
-				const checkedBrands = getCheckedValues(brandsCheckboxes);
-				const checkedSizes = getCheckedValues(sizesCheckboxes);
-				const checkedPrices = getCheckedValues(pricesCheckboxes);
+				if (!updatingURL) {
+					updatingURL = true;
+					const checkedCategories = getCheckedValues(categoriesCheckboxes);
+					const checkedColors = getCheckedValues(colorsCheckboxes);
+					const checkedBrands = getCheckedValues(brandsCheckboxes);
+					const checkedSizes = getCheckedValues(sizesCheckboxes);
+					const checkedPrices = getCheckedValues(pricesCheckboxes);
 
-				const queryParams = [];
+					const queryParams = [];
 
-				if (checkedCategories.length > 0) {
-					queryParams.push(`categories=${checkedCategories.join(",")}`);
+					if (checkedCategories.length > 0) {
+						queryParams.push(`categories=${checkedCategories.join(",")}`);
+					}
+					if (checkedColors.length > 0) {
+						queryParams.push(`colors=${checkedColors.join(",")}`);
+					}
+					if (checkedBrands.length > 0) {
+						queryParams.push(`brands=${checkedBrands.join(",")}`);
+					}
+					if (checkedSizes.length > 0) {
+						queryParams.push(`sizes=${checkedSizes.join(",")}`);
+					}
+					if (checkedPrices.length > 0) {
+						queryParams.push(`prices=${checkedPrices.join(",")}`);
+					}
+
+					queryParams.push(`sort=${sortSelect.value}`);
+					if (inputSearch.value.length > 0) {
+						queryParams.push(`query=${inputSearch.value}`);
+					}
+
+					const urlParams = new URLSearchParams(window.location.search);
+					const pageParam = urlParams.get("page");
+					if (pageParam) {
+						queryParams.push(`page=1`);
+					}
+
+					const url = window.location.href.split('?')[0];
+					const finalURL = queryParams.length > 0 ? `${url}?${queryParams.join("&")}` : url;
+
+					history.replaceState(null, null, finalURL);
+
+					// Now, update the checkboxes based on the URL parameters
+					updateFromURLParameters();
+					updatingURL = false; // Reset the flag
+					scrollSearch()
+					fetchData()
 				}
-				if (checkedColors.length > 0) {
-					queryParams.push(`colors=${checkedColors.join(",")}`);
+			}
+
+			function getQueryParamString() {
+				var url = new URL(window.location.href);
+				return url.search || '';
+			}
+
+			function fetchData() {
+				const queryParams = getQueryParamString();
+				const urlFetch = "/Product/allProducts" + (queryParams.length > 0 ? queryParams : '');
+				$.ajax({
+					url: urlFetch,
+					method: "get",
+					dataType: "json",
+					success: function (response) {
+						currentPage = response.CurrentPage;
+						totalPage = response.TotalPages;
+						let html = ``;
+						response?.Result.forEach(product => {
+							html += `<div class="col-6 col-md-4">
+									<div class="grid_item">
+										<figure>
+											<a href="/Product/Detail/${product.Id}">
+											<img class="img-fluid lazy loaded" src="img/products/${product.Thumbnail.Name}" alt="${product.name}" data-was-processed="true">
+											</a>
+										</figure>
+											<a href="/Product/Detail/${product.Id}">
+											<h3>${product.Name}</h3>
+										</a>
+										<div class="price_box">
+												<span class="new_price">${product.Price}$</span>
+										</div>
+										<ul>
+											<li><a href="#0" class="tooltip-1" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="Add to favorites"><i class="ti-heart"></i><span>Add to favorites</span></a></li>
+											<li><a href="#0" class="tooltip-1" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="Add to compare"><i class="ti-control-shuffle"></i><span>Add to compare</span></a></li>
+											<li><a href="#0" class="tooltip-1" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="Add to cart"><i class="ti-shopping-cart"></i><span>Add to cart</span></a></li>
+										</ul>
+									</div>
+								</div>`
+						})
+						document.getElementById("products").innerHTML = html
+
+						console.log('response?.Result.length', response?.Result.length)
+						if (response?.Result.length != 0) {
+							let pagiantonNote = ``;
+							for (let i = 1; i <= response?.TotalPages; i++) {
+								pagiantonNote += `<li>
+										<a href="#0" data-id="${i}" class="${i == response?.CurrentPage ? "active" : ""}">${i}</a>
+									</li>`;
+							}
+
+							let paginationHtml = `<li>
+											<a href="#0" class="prev-page" title="previous page">&#10094;</a>
+										</li>
+											${pagiantonNote}
+										<li>
+											<a href="#0" class="next-page" title="next page">&#10095;</a>
+										</li>`;
+							document.querySelector(".pagination").innerHTML = paginationHtml
+						} else if (response?.Result.length === 0) {
+							document.querySelector(".pagination").innerHTML = "<h1>Not found products</h1>"
+						}
+					},
+					error: function (err) {
+						console.error(err.responseText);
+					},
+				});
+			}
+
+			$(document).on('click', '.pagination a', function (e) {
+				e.preventDefault();
+				if (this.classList.contains("prev-page")) {
+					if (currentPage == 1) return 
+					else {
+						currentPage--;
+						updateUrlParameter('page', currentPage || '1');
+						scrollSearch()
+						// Gọi lại hàm fetchData với trang mới
+						fetchData();
+					}
+				} else if (this.classList.contains("next-page")) {
+					if (currentPage == totalPage) return
+					else {
+						currentPage++;
+						updateUrlParameter('page', currentPage || '1');
+						scrollSearch()
+						// Gọi lại hàm fetchData với trang mới
+						fetchData();
+					}
+				} else {
+					// Lấy giá trị của id từ thuộc tính data-id
+					const pageId = $(this).data('id');
+
+					// Cập nhật tham số 'page' trong URL bằng giá trị id hoặc thêm nếu chưa có
+					updateUrlParameter('page', pageId || '1');
+					scrollSearch()
+					// Gọi lại hàm fetchData với trang mới
+					fetchData();
 				}
-				if (checkedBrands.length > 0) {
-					queryParams.push(`brands=${checkedBrands.join(",")}`);
-				}
-				if (checkedSizes.length > 0) {
-					queryParams.push(`sizes=${checkedSizes.join(",")}`);
-				}
-				if (checkedPrices.length > 0) {
-					queryParams.push(`prices=${checkedPrices.join(",")}`);
+			});
+
+			function updateUrlParameter(key, value) {
+				let url = window.location.href;
+				let newUrl;
+
+				// Kiểm tra xem tham số 'page' đã tồn tại trong URL chưa
+				if (url.includes(`${key}=`)) {
+					// Thay thế giá trị của tham số 'page'
+					newUrl = url.replace(new RegExp(`(${key}=\\d+)`), `${key}=${value}`);
+				} else {
+					// Thêm tham số 'page' vào URL
+					const separator = url.includes('?') ? '&' : '?';
+					newUrl = `${url}${separator}${key}=${value}`;
 				}
 
-				if (sortSelect.value != 'date')
-				queryParams.push(`sort=${sortSelect.value}`);
-
-				const url = window.location.href.split('?')[0];
-				const finalURL = queryParams.length > 0 ? `${url}?${queryParams.join("&")}` : url;
-
-				history.replaceState(null, null, finalURL);
-
-				// Now, update the checkboxes based on the URL parameters
-				updateCheckboxesFromURLParameters();
+				history.replaceState(null, null, newUrl);
 			}
 
 			function getCheckedValues(checkboxes) {
@@ -270,7 +389,7 @@
 					.map(checkbox => checkbox.value);
 			}
 
-			function updateCheckboxesFromURLParameters() {
+			function updateFromURLParameters() {
 				const urlParams = new URLSearchParams(window.location.search);
 				categoriesCheckboxes.forEach(checkbox => {
 					checkbox.checked = urlParams.get("categories")?.split(",").includes(checkbox.value);
@@ -287,6 +406,21 @@
 				pricesCheckboxes.forEach(checkbox => {
 					checkbox.checked = urlParams.get("prices")?.split(",").includes(checkbox.value);
 				});
+
+				const sortParam = urlParams.get("sort");
+
+				// Set the selected value of the sort select based on the 'sort' parameter
+				if (sortParam && sortSelect.querySelector(`option[value="${sortParam}"]`)) {
+					sortSelect.value = sortParam;
+				} else {
+					// If the value is not in the select options, set default to "date"
+					sortSelect.value = "date";
+				}
+
+				const inputSearchParam = urlParams.get("query");
+				if (inputSearchParam) inputSearch.value = inputSearchParam;
+
+				fetchData();
 			}
 
 			categoriesCheckboxes.forEach(checkbox => {
@@ -309,47 +443,29 @@
 				checkbox.addEventListener("change", updateURL);
 			});
 
-
-			
-
 			// Add event listener for the 'change' event on the sort select element
-			sortSelect.addEventListener("change", updateSortURL);
+			sortSelect.addEventListener("change", updateURL);
 
-			function updateSortURL() {
-				// Get the selected value from the sort select element
-				const selectedSort = sortSelect.value;
+			inputSearch.addEventListener("change", updateURL);
 
-				// Get the existing URL parameters
-				const urlParams = new URLSearchParams(window.location.search);
 
-				// Update the 'sort' parameter in the URL
-				urlParams.set("sort", selectedSort);
+			// Call these functions to initialize the checkboxes and sort select based on URL parameters
+			updateFromURLParameters();
 
-				// Update the URL with the modified parameters
-				const url = window.location.href.split('?')[0];
-				const finalURL = `${url}?${decodeURIComponent(urlParams.toString())}`;
+			$("#reset").on("click", () => {
+				const urlWithoutSearch = window.location.href.split('?')[0];
+				history.replaceState(null, null, urlWithoutSearch);
+				fetchData();
+				updateFromURLParameters();
+				scrollSearch()
+			})
 
-				history.replaceState(null, null, finalURL);
+			function scrollSearch(){
+				const stickHereElement = document.getElementById('page');
+				if (stickHereElement) {
+					stickHereElement.scrollIntoView({ behavior: 'smooth' });
+				}
 			}
-
-			// Call this function to initialize the sort select based on URL parameters
-			updateSortSelectFromURLParameters();
 		});
-
-		function updateSortSelectFromURLParameters() {
-			const urlParams = new URLSearchParams(window.location.search);
-			const sortSelect = document.getElementById("sort");
-
-			// Get the 'sort' parameter from the URL
-			const sortParam = urlParams.get("sort");
-
-			// Set the selected value of the sort select based on the 'sort' parameter
-			if (sortParam) {
-				sortSelect.value = sortParam;
-			}
-		}
 	</script>
 }
-
-
-
