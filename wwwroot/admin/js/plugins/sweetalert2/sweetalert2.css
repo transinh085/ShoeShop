@@ -164,7 +164,7 @@
 .swal2-container {
   display: grid;
   position: fixed;
-  z-index: 1060;
+  z-index: 99999;
   top: 0;
   right: 0;
   bottom: 0;
