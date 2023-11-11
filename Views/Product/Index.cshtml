@@ -64,7 +64,6 @@
 		<div class="row">
 			<aside class="col-lg-3" id="sidebar_fixed">
 				<div class="filter_col">
-					<form method="get">
 					<div class="inner_bt"><a href="#" class="open_filters"><i class="ti-close"></i></a></div>
 					<div class="filter_type version_2">
 						<h4><a href="#categories" data-bs-toggle="collapse" class="opened">Categories</a></h4>
@@ -174,9 +173,8 @@
 					</div>
 					<!-- /filter_type -->
 					<div class="buttons">
-						<button type="submit" class="btn_1">Filter</button> <a href="#0" class="btn_1 gray">Reset</a>
+							<button type="submit" class="btn_1">Reset</button>
 					</div>
-					</form>
 				</div>
 			</aside>
 			<!-- /col -->
@@ -227,6 +225,7 @@
 			const brandsCheckboxes = document.querySelectorAll("input[name=brands]");
 			const sizesCheckboxes = document.querySelectorAll("input[name=sizes]");
 			const pricesCheckboxes = document.querySelectorAll("input[name=prices]");
+			const sortSelect = document.getElementById("sort");
 
 			function updateURL() {
 				const checkedCategories = getCheckedValues(categoriesCheckboxes);
@@ -252,6 +251,9 @@
 				if (checkedPrices.length > 0) {
 					queryParams.push(`prices=${checkedPrices.join(",")}`);
 				}
+
+				if (sortSelect.value != 'date')
+				queryParams.push(`sort=${sortSelect.value}`);
 
 				const url = window.location.href.split('?')[0];
 				const finalURL = queryParams.length > 0 ? `${url}?${queryParams.join("&")}` : url;
@@ -308,9 +310,44 @@
 			});
 
 
-			// Call this function to initialize checkboxes based on URL parameters
-			updateCheckboxesFromURLParameters();
+			
+
+			// Add event listener for the 'change' event on the sort select element
+			sortSelect.addEventListener("change", updateSortURL);
+
+			function updateSortURL() {
+				// Get the selected value from the sort select element
+				const selectedSort = sortSelect.value;
+
+				// Get the existing URL parameters
+				const urlParams = new URLSearchParams(window.location.search);
+
+				// Update the 'sort' parameter in the URL
+				urlParams.set("sort", selectedSort);
+
+				// Update the URL with the modified parameters
+				const url = window.location.href.split('?')[0];
+				const finalURL = `${url}?${decodeURIComponent(urlParams.toString())}`;
+
+				history.replaceState(null, null, finalURL);
+			}
+
+			// Call this function to initialize the sort select based on URL parameters
+			updateSortSelectFromURLParameters();
 		});
+
+		function updateSortSelectFromURLParameters() {
+			const urlParams = new URLSearchParams(window.location.search);
+			const sortSelect = document.getElementById("sort");
+
+			// Get the 'sort' parameter from the URL
+			const sortParam = urlParams.get("sort");
+
+			// Set the selected value of the sort select based on the 'sort' parameter
+			if (sortParam) {
+				sortSelect.value = sortParam;
+			}
+		}
 	</script>
 }
 

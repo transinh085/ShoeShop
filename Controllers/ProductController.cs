@@ -141,13 +141,13 @@ namespace ShoeShop.Controllers
 			string categories = "",
 			string brands = "",
 			string colors = "",
-			string sizes = ""
+			string sizes = "",
+			string prices = "",
+			string sort = "date"
 		)
 		{
 			var products = _context.Products
 					.Include(product => product.Thumbnail)
-					.Include(product => product.Variants)
-						.ThenInclude(varient => varient.VariantSizes)
 					.OrderByDescending(product => product.CreatedAt)
 					.ToList();
 			if (!string.IsNullOrEmpty(query))
@@ -171,7 +171,8 @@ namespace ShoeShop.Controllers
 			if (!string.IsNullOrEmpty(colors))
 			{
 				string[] col = colors.Split(",");
-				products = products.Where(u =>
+				products = _context.Products
+					.Include(product => product.Variants).ToList().Where(u =>
 				{
 					return u.Variants.Any(item => col.Contains(item.ColorId.ToString()));
 				}).ToList();
@@ -180,7 +181,9 @@ namespace ShoeShop.Controllers
 			if (!string.IsNullOrEmpty(sizes))
 			{
 				string[] siz = sizes.Split(",");
-				products = products.Where(u =>
+				products = _context.Products
+					.Include(product => product.Variants)
+						.ThenInclude(varient => varient.VariantSizes).ToList().Where(u =>
 				{
 					return u.Variants.Any(variantSize =>
 					{
@@ -189,6 +192,49 @@ namespace ShoeShop.Controllers
 				}).ToList();
 			}
 
+			if (!string.IsNullOrEmpty(prices))
+			{
+				string[] priceRanges = prices.Split(',');
+
+				// Tạo một danh sách chứa các đối tượng PriceRange
+				List<(decimal Min, decimal Max)> priceRangeList = new List<(decimal Min, decimal Max)>();
+
+				foreach (var range in priceRanges)
+				{
+					string[] parts = range.Split(':');
+					if (parts.Length == 2 && decimal.TryParse(parts[0], out decimal min) && decimal.TryParse(parts[1], out decimal max))
+					{
+						priceRangeList.Add((min, max));
+					}
+				}
+
+				// Lọc sản phẩm theo khoảng giá
+				products = products.Where(product =>
+				{
+					foreach (var (min, max) in priceRangeList)
+					{
+						if (product.Price >= min && product.Price <= max)
+						{
+							return true;
+						}
+					}
+					return false;
+				}).ToList();
+			}
+
+			// Order by
+			if (sort == "date")
+			{
+				products = products.OrderByDescending(product => product.CreatedAt).ToList();
+			}
+			else if (sort == "price")
+			{
+				products = products.OrderBy(product => product.Price).ToList();
+			}
+			else if (sort == "price-desc")
+			{
+				products = products.OrderByDescending(product => product.Price).ToList();
+			}
 
 			if (page < 1)
 			{
@@ -209,24 +255,18 @@ namespace ShoeShop.Controllers
 			{
 				WriteIndented = true,
 				MaxDepth = 100,
-				ReferenceHandler = ReferenceHandler.Preserve
+				ReferenceHandler = null,
 			};
 
 			var result = new
 			{
 				CurrentPage = page,
 				TotalPages = totalPages,
+				TotalItems = totalItems,
 				result = currentPageProduct
 			};
 
-			string json = JsonSerializer.Serialize(result, options);
-
-			return new ContentResult
-			{
-				Content = json,
-				ContentType = "application/json",
-			};
-
+			return Ok(result);
 		}
 	}
 }
