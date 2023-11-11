@@ -325,7 +325,7 @@
 										</li>`;
 							document.querySelector(".pagination").innerHTML = paginationHtml
 						} else if (response?.Result.length === 0) {
-							document.querySelector(".pagination").innerHTML = "<h1>Not found products</h1>"
+							document.querySelector(".pagination").innerHTML = `<h2>Not found products</h2><img class="img-fluid lazy loaded" src="img/notfoundProduct.png" alt="Not found product" data-was-processed="true">`
 						}
 					},
 					error: function (err) {
