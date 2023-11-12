@@ -11,17 +11,14 @@ using ShoeShop.ViewModels.Product;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using ShoeShop.ViewModels;
-
+using ShoeShop.Data.Seeder;
 namespace ShoeShop.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class BlogsController : Controller
     {
         private readonly AppDbContext _context;
-
-
-
-
+        private readonly UserManager<AppUser> _userManager;
 
         public BlogsController(AppDbContext context)
         {
@@ -66,51 +63,67 @@ namespace ShoeShop.Areas.Admin.Controllers
         // POST: Admin/Blogs/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([FromForm] BlogViewModel blogModel)
+        public async Task<IActionResult> Create([Bind("Name,Slug,Thumbnail,TopicID,Content")] BlogViewModel post)
         {
-            //if (ModelState.IsValid)
+            //if(await _context.Blogs.AddAsync(p => p.Slug == post.Slug))
             //{
-            //    _context.Add(blog);
-            //    await _context.SaveChangesAsync();
-            //    return RedirectToAction(nameof(Index));
+            //    ModelState.AddModelError("Slug", "Nhập Slug khác");
+            //    return View(blog);
             //}
-            //ViewData["TopicID"] = new SelectList(_context.Topics, "Id", "Id", blog.TopicID);
-            //return View(blog);
 
-
-
-
-            using (var transaction = await _context.Database.BeginTransactionAsync())
+            if (ModelState.IsValid)
             {
-                try
-                {
-                    Blog blog = new Blog()
-                    {
-                        //Thumbnail = blogModel.Thumbnail,
-                        Name = blogModel.Name,
-                        Slug = blogModel.Slug,
-                        CreatedAt = DateTime.Now,
-                        //CreateBy = user.Id,
-                        TopicID = Convert.ToInt32(blogModel.Topic),
-                        Content = blogModel.Content,
-                        IsDetele = false,
-                    };
-                    _context.Add(blog);
-                    await _context.SaveChangesAsync();
-                    transaction.Commit();
+                var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                post.CreateBy = Convert.ToInt32(user);
+                post.CreatedAt = DateTime.Now;
+               
 
-                    return Ok(new { message = "Created blog successfully!" });
-                }
-                catch (Exception ex)
-                {
-                    transaction.Rollback();
-                    return BadRequest(new { message = "Failed to create blog." + ex.Message });
-                }
+                _context.Add(post);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
-            
+            ViewData["TopicID"] = new SelectList(_context.Topics, "Id", "Id", post.TopicID);
+
+
+
+
+
+            return View(post);
+
+
+
+
+            //using (var transaction = await _context.Database.BeginTransactionAsync())
+            //{
+            //    try
+            //    {
+            //        Blog blog = new Blog()
+            //        {
+            //            //Thumbnail = blogModel.Thumbnail,
+            //            Name = blogModel.Name,
+            //            Slug = blogModel.Slug,
+            //            CreatedAt = DateTime.Now,
+            //            //CreateBy = user.Id,
+            //            TopicID = Convert.ToInt32(blogModel.Topic),
+            //            Content = blogModel.Content,
+            //            IsDetele = false,
+            //        };
+            //        _context.Add(blog);
+            //        await _context.SaveChangesAsync();
+            //        transaction.Commit();
+
+            //        return Ok(new { message = "Created blog successfully!" });
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        transaction.Rollback();
+            //        return BadRequest(new { message = "Failed to create blog." + ex.Message });
+            //    }
+            //}
+
         }
 
         // GET: Admin/Blogs/Edit/5

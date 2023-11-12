@@ -1,12 +1,12 @@
-﻿namespace ShoeShop.ViewModels
+﻿
+using ShoeShop.Models;
+
+namespace ShoeShop.ViewModels
 {
-    public class BlogViewModel
+    public class BlogViewModel : Blog
     {
-        public string Name { get; set; }
-        public string Slug { get; set; }
-        public int Thumbnail { get; set; }
-        public string? Topic { get; set; }
-        public string? Content { get; set; }
-        public Boolean IsDeleted { get; set; }
+        IFormFile Image { get; set; }
+        int Thumbnail {  get; set; }
+        int TopicId { get; set; }
     }
 }
