@@ -19,5 +19,7 @@ namespace ShoeShop.Data
 		public DbSet<Blog> Blogs { get; set; }
 		public DbSet<ShippingMethod>? ShippingMethods { get; set; }
 		public DbSet<Address>? Addresses { get; set; }
+		public DbSet<Order>? Orders { get; set; }
+		public DbSet<OrderDetail>? OrderDetails { get; set; }
     }
 }

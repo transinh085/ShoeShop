@@ -1,13 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ShoeShop.Models;
-using System.Net;
-using PayPal.Core;
 using PayPal.v1.Payments;
 using ShoeShop.Services;
 using ShoeShop.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using ShoeShop.Data;
 using PayPal.v1.Invoices;
+using System.Security.Claims;
 
 namespace ShoeShop.Controllers
 {
@@ -23,43 +22,122 @@ namespace ShoeShop.Controllers
         }
 
 		[HttpPost]
-		public async Task<IActionResult> CreatePaymentUrl([FromBody]PaymentViewModel paymentInfo)
+        public async Task<IActionResult> CreatePaymentUrl([FromBody] PaymentViewModel paymentInfo)
         {
-			var cartVariantSizeIds = paymentInfo.Cart.Select(ci => ci.VariantSizeId).ToList();
-			var variantSize = await _context.VariantSizes
-					.Where(v => cartVariantSizeIds.Contains(v.Id))
-					.Select(v => new PaymentItem
-					{
-						ProductId = v.Variant.Product.Id,
-						Title = v.Variant.Product.Name + " - Size " + v.Size.Name + " - Color " + v.Variant.Color.Name,
-						VariantSizeId = v.Id,
-						Price = v.Variant.Product.PriceSale != 0 ? v.Variant.Product.PriceSale : v.Variant.Product.Price,
-					})
-					.ToListAsync();
-
-			foreach (var item in variantSize)
+            var cartVariantSizeIds = paymentInfo.Cart.Select(ci => ci.VariantSizeId).ToList();
+            var variantSize = await _context.VariantSizes
+                .Where(v => cartVariantSizeIds.Contains(v.Id))
+                .Select(v => new OrderDetail
+                {
+                    VariantSizeId = v.Id,
+                    Price = v.Variant.Product.PriceSale != 0 ? v.Variant.Product.PriceSale : v.Variant.Product.Price,
+                })
+                .ToListAsync();
+            foreach (var item in variantSize)
             {
                 item.Quantity = paymentInfo.Cart.First(ci => ci.VariantSizeId == item.VariantSizeId).Quantity;
-			}
+            }
 
-			PaymentInformation model = new PaymentInformation
-			{
-				Items = variantSize,
-				Amount = variantSize.Sum(v => v.Quantity * v.Price),
-				ShippingCost = _context.ShippingMethods.First(p => p.Id  == paymentInfo.ShippingMethodId).Cost,
-				Description = paymentInfo.OrderDescription
-			};
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (paymentInfo.AddressId == -1)
+            {
+                paymentInfo.NewAddress.AppUserId = userId;
+                _context.Add(paymentInfo.NewAddress);
+                await _context.SaveChangesAsync();
+                paymentInfo.AddressId = paymentInfo.NewAddress.Id;
+            }
 
-			var url = await _payPalService.CreatePaymentUrl(model, HttpContext);
+            var shippingMethod = await _context.ShippingMethods.FindAsync(paymentInfo.ShippingMethodId);
 
-			return Json(url);
-		}
+            var order = new Models.Order
+            {
+                AppUserId = userId,
+                ShippingMethodId = paymentInfo.ShippingMethodId,
+                PaymentMethod = paymentInfo.PaymentMethodId,
+                SubTotal = variantSize.Sum(v => v.Quantity * v.Price),
+                ShippingFee = shippingMethod.Cost,
+                Description = paymentInfo.OrderDescription,
+                OrderStatus = 0,
+                Details = variantSize,
+                AddressId = paymentInfo.AddressId,
+            };
 
-        public IActionResult PaymentCallback()
+            _context.Add(order);
+            await _context.SaveChangesAsync();
+
+            if (paymentInfo.PaymentMethodId == 0)
+            {
+                TempData["OrderId"] = order.Id;
+                return Json($"https://localhost:44346/Payment/PayPalReturn?payment_method=COD&success=1&order_id={order.Id}");
+            }
+            else
+            {
+                var url = await _payPalService.CreatePaymentUrl(order, HttpContext);
+                return Json(url);
+            }
+        }
+
+        [Route("checkout/success")]
+        public IActionResult PaymentSuccess()
         {
-            var response = _payPalService.PaymentExecute(Request.Query);
+            if (TempData["OrderId"] is int orderId)
+            {
+                var order = _context.Orders
+                    .Where(o => o.Id == orderId)
+                    .Select(o => new
+                    {
+                        o.Id,
+                        o.PaymentMethod,
+                        ShippingMethod = o.ShippingMethod.Name,
+                        o.SubTotal,
+                        o.ShippingFee,
+                        o.Description,
+                        o.PaymentStatus,
+                        o.OrderStatus,
+                        o.Address,
+                        Details = o.Details.Select(p => new
+                        {
+                            VariantSizeId = p.VariantSizeId,
+                            ProductId = p.VariantSize.Variant.Product.Id,
+                            Name = p.VariantSize.Variant.Product.Name,
+                            Thumbnail = p.VariantSize.Variant.Product.Thumbnail.Name,
+                            Size = p.VariantSize.Size.Name,
+                            Color = p.VariantSize.Variant.Color.Name,
+                            p.Price,
+                            p.Quantity,
+                        }).ToList()
+                    }).FirstOrDefault();
+                if (order != null)
+                {
+                    ViewBag.Order = order;
+                    return View();
+                }
+            }
+            return RedirectToAction("Index", "Home");
+        }
 
-            return Json(response);
+        [HttpGet]
+        public async Task<IActionResult> PayPalReturn(string payment_method, int success, int order_id)
+        {
+            if (success == 1)
+            {
+                if(payment_method == "PayPal")
+                {
+                    var order = _context.Orders.FirstOrDefault(o => o.Id == order_id);
+
+                    if (order != null)
+                    {
+                        order.PaymentStatus = true;
+                        await _context.SaveChangesAsync();
+                    }
+                }
+                TempData["OrderId"] = order_id;
+                return RedirectToAction("PaymentSuccess");
+            }
+            else
+            {
+                return RedirectToAction("FailureAction");
+            }
         }
     }
 }

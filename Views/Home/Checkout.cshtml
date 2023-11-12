@@ -3,251 +3,213 @@
 @inject SignInManager<AppUser> SignInManager
 
 @{
-    Layout = null;
+    ViewData["Title"] = "Checkout";
+    Layout = "~/Views/Shared/_CheckoutLayout.cshtml";
     var currentUser = ViewBag.currentUser;
     var addresses = ViewBag.Addresses;
 }
 
-<!doctype html>
-    <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width,initial-scale=1.0">
+@section Styles {
+    <link rel="stylesheet" href="~/admin/js/plugins/select2/css/select2.min.css">
+    <link href="~/css/checkout.css" rel="stylesheet">
+}
 
-        <title>Checkout</title>
+@section Scripts {
+    <script src="~/admin/js/plugins/select2/js/select2.full.min.js"></script>
+    <script src="~/js/checkout.js"></script>
+    <script>Dashmix.helpersOnLoad(['jq-select2']);</script>
+}
 
-        <meta name="description" content="Dashmix - Bootstrap 5 Admin Template &amp; UI Framework created by pixelcave and published on Themeforest">
-        <meta name="author" content="pixelcave">
-        <meta name="robots" content="noindex, nofollow">
+<!-- Checkout -->
+<form onsubmit="return false;">
+    <div class="row">
+        <!-- Order Info -->
+        <div class="col-xl-7">
+            <!-- Shipping Address -->
+            <div class="block block-rounded">
+                <div class="block-content">
+                    <div class="pb-3">
+                        <a href="/">
+                            <img src="~/img/logo_black.svg" />
+                        </a>
+                    </div>
+                    <h5 class="mt-2">Shipping Infomation</h5>
+                    @if (!SignInManager.IsSignedIn(User))
+                    {
+                        <p>
+                            Already have an account? <a href="/authentication/signin?returnUrl=%2Fcheckout">Login</a>
+                        </p>
+                    }
+                    else
+                    {
 
-        <!-- Open Graph Meta -->
-        <meta property="og:title" content="Dashmix - Bootstrap 5 Admin Template &amp; UI Framework">
-        <meta property="og:site_name" content="Dashmix">
-        <meta property="og:description" content="Dashmix - Bootstrap 5 Admin Template &amp; UI Framework created by pixelcave and published on Themeforest">
-        <meta property="og:type" content="website">
-        <meta property="og:url" content="">
-        <meta property="og:image" content="">
-
-        <!-- Icons -->
-        <!-- The following icons can be replaced with your own, they are used by desktop and mobile browsers -->
-        <link rel="shortcut icon" href="~/admin/media/favicons/favicon.png">
-        <link rel="icon" type="image/png" sizes="192x192" href="~/admin/media/favicons/favicon-192x192.png">
-        <link rel="apple-touch-icon" sizes="180x180" href="~/admin/media/favicons/apple-touch-icon-180x180.png">
-        <!-- END Icons -->
-        <!-- Stylesheets -->
-        <!-- Dashmix framework -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="~/admin/js/plugins/select2/css/select2.min.css">
-        <link rel="stylesheet" id="css-main" href="~/admin/css/dashmix.css">
-        <link href="~/css/checkout.css" rel="stylesheet">
-
-    </head>
-
-    <body>
-        <div id="page-container">
-
-            <!-- Main Container -->
-            <main id="main-container">
-                <!-- Page Content -->
-                <div class="content content-boxed content-full overflow-hidden">
-                    <!-- Checkout -->
-                    <form action="op_checkout.html" method="POST" onsubmit="return false;">
-                        <div class="row">
-                            <!-- Order Info -->
-                            <div class="col-xl-7">
-                                <!-- Shipping Address -->
-                                <div class="block block-rounded">
-                                    <div class="block-content">
-                                        <div class="pb-3">
-                                            <a href="/">
-                                                <img src="~/img/logo_black.svg" />
-                                            </a>
-                                        </div>
-                                        <h5 class="mt-2">Shipping Infomation</h5>
-                                        @if (!SignInManager.IsSignedIn(User)) {
-                                            <p>
-                                                Already have an account? <a href="/authentication/signin?returnUrl=%2Fcheckout">Login</a>
-                                            </p>
-                                        } else {
-                                            
-                                            <div class="mb-4">
-                                                <label class="form-label" for="choose-address @(addresses.Count == 0 ? "d-none" : "")">Choose Address</label>
-                                                <select class="js-select2 form-select" id="choose-address" name="choose-address" style="width: 100%;" data-placeholder="Choose address..">
-                                                    <option></option>
-                                                    <option value="-1" selected>Add new address</option>
-                                                    @foreach (var address in addresses)
-                                                    {
-                                                        <option value="@address.Id" selected="@(address.IsDefault == true)">@address.SpecificAddress</option>
-                                                    }
-                                                </select>
-                                            </div>
-                                            <div class="address-item add-new-address d-none" data-id="-1">
-                                                <div class="mb-4">
-                                                    <div class="form-floating">
-                                                        <input type="text" class="form-control" id="checkout-fullname" name="checkout-fullname"
-                                                               placeholder="Enter your fullname">
-                                                        <label class="form-label" for="checkout-fullname">Fullname</label>
-                                                    </div>
-                                                </div>
-                                                <div class="row mb-4">
-                                                    <div class="col-6">
-                                                        <div class="form-floating">
-                                                            <input type="text" class="form-control" id="checkout-email" name="checkout-email"
-                                                                   placeholder="Enter your email">
-                                                            <label class="form-label" for="checkout-email">Email</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-6">
-                                                        <div class="form-floating">
-                                                            <input type="text" class="form-control" id="checkout-phone" name="checkout-phone"
-                                                                   placeholder="Enter your phone">
-                                                            <label class="form-label" for="checkout-phone">Phone</label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="mb-4">
-                                                    <div class="form-floating">
-                                                        <input type="text" class="form-control" id="checkout-address" name="checkout-address"
-                                                               placeholder="Enter your address">
-                                                        <label class="form-label" for="checkout-address">Address </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            @foreach (var address in addresses)
-                                            {
-                                                <div class="address-item alert alert-success d-none" data-id="@address.Id">
-                                                    <p class="fw-bold mb-0">@address.FullName</p>
-                                                    <p class="mb-0">Address: @address.SpecificAddress</p>
-                                                    <p class="mb-0">Phone: @address.Phone</p>
-                                                    <p class="mb-0">Email: @address.Email</p>
-                                                </div>
-                                            }
-                                        }
-                                    </div>
-                                </div>
-                                    <!-- Order description -->
-                                <div class="block block-rounded">
-                                    <div class="block-header block-header-default">
-                                        <h3 class="block-title">
-                                        2. Order description
-                                        </h3>
-                                    </div>
-                                    <div class="block-content block-content-full space-y-3">
-                                            <textarea class="form-control" id="checkout-desc" name="checkout-desc" rows="4" placeholder="Enter note.."></textarea>
-                                    </div>
-                                </div>
-                                <!-- Shipping Method -->
-                                <div class="block block-rounded">
-                                    <div class="block-header block-header-default">
-                                        <h3 class="block-title">
-                                            3. Shipping Method
-                                        </h3>
-                                    </div>
-                                    <div class="block-content block-content-full space-y-3">
-                                        @{
-                                            var shippingMethods = ViewBag.ShippingMethod;
-                                            var count = shippingMethods.Count;
-                                        }
-
-                                        @for (int i = 0; i < count; i++)
-                                        {
-                                            var item = shippingMethods[i];
-
-                                            <div class="form-check form-block">
-                                                <input type="radio" class="form-check-input" id="checkout-delivery-@item.Id" value="@item.Cost" data-id="@item.Id" name="checkout-delivery" @(i == 0 ? "checked" : "")>
-                                                <label class="form-check-label" for="checkout-delivery-@item.Id">
-                                                    <span class="d-block fw-normal p-1">
-                                                        <span class="d-block fw-semibold mb-1">@item.Name</span>
-                                                        <span class="d-block fs-sm fw-medium text-muted">
-                                                            <span class="fw-semibold">@(item.Cost != 0 ? $"+{@item.Cost}$" : "FREE")</span> (@item.Description)
-                                                        </span>
-                                                    </span>
-                                                </label>
-                                            </div>
-                                        }
-                                    </div>
-                                </div>
-                                <!-- END Shipping Address -->
-                                <div class="block block-rounded">
-                                <div class="block-header block-header-default">
-                                    <h3 class="block-title">
-                                        4. Payment Method
-                                    </h3>
-                                </div>
-                                <div class="block-content block-content-full space-y-3">
-                                    <div class="form-check form-block">
-                                        <input type="radio" class="form-check-input" id="checkout-payment-1" name="checkout-payment" value="0" checked>
-                                        <label class="form-check-label" for="checkout-payment-1">
-                                            <span class="d-flex fw-normal p-1 align-items-center gap-3">
-                                                <i class="fa fa-shipping-fast fs-6"></i>
-                                                <span class="d-block fw-semibold mb-1">Cash on delivery</span>
-                                            </span>
-                                        </label>
-                                    </div>
-                                    <div class="form-check form-block">
-                                        <input type="radio" class="form-check-input" id="checkout-payment-2" name="checkout-payment" value="1">
-                                        <label class="form-check-label" for="checkout-payment-2">
-                                            <span class="d-flex fw-normal p-1 align-items-center gap-3">
-                                                <i class="fab fa-cc-paypal fs-6"></i>
-                                                <span class="d-block fw-semibold mb-1">Payment with Paypal</span>
-                                            </span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                           
-                            </div>
-                            <!-- END Order Info -->
-                            <!-- Order Summary -->
-                            <div class="col-xl-5 order-xl-last">
-                                <div class="block block-rounded">
-                                    <div class="block-header block-header-default">
-                                        <h3 class="block-title">
-                                            Order Summary
-                                        </h3>
-                                    </div>
-                                    <div class="block-content block-content-full">
-                                        <table class="table table-vcenter">
-                                            <tbody id="tbl-product">
-                                                
-                                            </tbody>
-                                            <tbody>
-                                                <tr>
-                                                    <td class="ps-0 fw-medium">Subtotal</td>
-                                                    <td class="pe-0 fw-medium text-end" id="sub-total">$--</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="ps-0 fw-medium">Shipping fee</td>
-                                                <td class="pe-0 fw-medium text-end" id="shipping-fee">$--</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="ps-0 fw-medium">Total</td>
-                                                <td class="pe-0 fw-bold text-end" id="total">$--</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            <!-- END Shipping Method -->
-                            <button type="submit" id="btn-complete" class="btn btn-primary w-100 py-3 push" disabled="@(!SignInManager.IsSignedIn(User))">
-                                    <i class="fa fa-check opacity-50 me-1"></i>
-                                    Complete Order
-                                </button>
-                            </div>
-                            <!-- END Order Summary -->
+                        <div class="mb-4">
+                            <label class="form-label" for="choose-address @(addresses.Count == 0 ? "d-none" : "")">Choose Address</label>
+                            <select class="js-select2 form-select" id="choose-address" name="choose-address" style="width: 100%;" data-placeholder="Choose address..">
+                                <option></option>
+                                <option value="-1" selected>Add new address</option>
+                                @foreach (var address in addresses)
+                                {
+                                    <option value="@address.Id" selected="@(address.IsDefault == true)">@address.SpecificAddress</option>
+                                }
+                            </select>
                         </div>
-                    </form>
-                    <!-- END Checkout -->
+                        <div class="address-item add-new-address d-none" data-id="-1">
+                            <div class="mb-4">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="checkout-fullname" name="checkout-fullname"
+                                           placeholder="Enter your fullname">
+                                    <label class="form-label" for="checkout-fullname">Fullname</label>
+                                </div>
+                            </div>
+                            <div class="row mb-4">
+                                <div class="col-6">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" id="checkout-email" name="checkout-email"
+                                               placeholder="Enter your email">
+                                        <label class="form-label" for="checkout-email">Email</label>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" id="checkout-phone" name="checkout-phone"
+                                               placeholder="Enter your phone">
+                                        <label class="form-label" for="checkout-phone">Phone</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="checkout-address" name="checkout-address"
+                                           placeholder="Enter your address">
+                                    <label class="form-label" for="checkout-address">Address </label>
+                                </div>
+                            </div>
+                        </div>
+                        @foreach (var address in addresses)
+                        {
+                            <div class="address-item alert alert-success d-none" data-id="@address.Id">
+                                <p class="fw-bold mb-0">@address.FullName</p>
+                                <p class="mb-0">Address: @address.SpecificAddress</p>
+                                <p class="mb-0">Phone: @address.Phone</p>
+                                <p class="mb-0">Email: @address.Email</p>
+                            </div>
+                        }
+                    }
                 </div>
-                <!-- END Page Content -->
-            </main>
-            <!-- END Main Container -->
+            </div>
+            <!-- Order description -->
+            <div class="block block-rounded">
+                <div class="block-header block-header-default">
+                    <h3 class="block-title">
+                        2. Order description
+                    </h3>
+                </div>
+                <div class="block-content block-content-full space-y-3">
+                    <textarea class="form-control" id="checkout-desc" name="checkout-desc" rows="4" placeholder="Enter note.."></textarea>
+                </div>
+            </div>
+            <!-- Shipping Method -->
+            <div class="block block-rounded">
+                <div class="block-header block-header-default">
+                    <h3 class="block-title">
+                        3. Shipping Method
+                    </h3>
+                </div>
+                <div class="block-content block-content-full space-y-3">
+                    @{
+                        var shippingMethods = ViewBag.ShippingMethod;
+                        var count = shippingMethods.Count;
+                    }
+
+                    @for (int i = 0; i < count; i++)
+                    {
+                        var item = shippingMethods[i];
+
+                        <div class="form-check form-block">
+                            <input type="radio" class="form-check-input" id="checkout-delivery-@item.Id" value="@item.Cost" data-id="@item.Id" name="checkout-delivery" @(i == 0 ? "checked" : "")>
+                            <label class="form-check-label" for="checkout-delivery-@item.Id">
+                                <span class="d-block fw-normal p-1">
+                                    <span class="d-block fw-semibold mb-1">@item.Name</span>
+                                    <span class="d-block fs-sm fw-medium text-muted">
+                                        <span class="fw-semibold">@(item.Cost != 0 ? $"+{@item.Cost}$" : "FREE")</span> (@item.Description)
+                                    </span>
+                                </span>
+                            </label>
+                        </div>
+                    }
+                </div>
+            </div>
+            <!-- END Shipping Address -->
+            <div class="block block-rounded">
+                <div class="block-header block-header-default">
+                    <h3 class="block-title">
+                        4. Payment Method
+                    </h3>
+                </div>
+                <div class="block-content block-content-full space-y-3">
+                    <div class="form-check form-block">
+                        <input type="radio" class="form-check-input" id="checkout-payment-1" name="checkout-payment" value="0" checked>
+                        <label class="form-check-label" for="checkout-payment-1">
+                            <span class="d-flex fw-normal p-1 align-items-center gap-3">
+                                <i class="fa fa-shipping-fast fs-6"></i>
+                                <span class="d-block fw-semibold mb-1">Cash on delivery</span>
+                            </span>
+                        </label>
+                    </div>
+                    <div class="form-check form-block">
+                        <input type="radio" class="form-check-input" id="checkout-payment-2" name="checkout-payment" value="1">
+                        <label class="form-check-label" for="checkout-payment-2">
+                            <span class="d-flex fw-normal p-1 align-items-center gap-3">
+                                <i class="fab fa-cc-paypal fs-6"></i>
+                                <span class="d-block fw-semibold mb-1">Payment with Paypal</span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
         </div>
-        <!-- END Page Container -->
-        <script src="~/admin/js/dashmix.app.min.js"></script>
-        <script src="~/admin/js/lib/jquery.min.js"></script>
-        <script src="~/admin/js/plugins/select2/js/select2.full.min.js"></script>
-        <script src="~/js/checkout.js"></script>
-        <script>Dashmix.helpersOnLoad(['jq-select2']);</script>
-    </body>
-</html>
+        <!-- END Order Info -->
+        <!-- Order Summary -->
+        <div class="col-xl-5 order-xl-last">
+            <div class="block block-rounded">
+                <div class="block-header block-header-default">
+                    <h3 class="block-title">
+                        Order Summary
+                    </h3>
+                </div>
+                <div class="block-content block-content-full">
+                    <table class="table table-vcenter">
+                        <tbody id="tbl-product">
+                        </tbody>
+                        <tbody>
+                            <tr>
+                                <td class="ps-0 fw-medium">Subtotal</td>
+                                <td class="pe-0 fw-medium text-end" id="sub-total">$--</td>
+                            </tr>
+                            <tr>
+                                <td class="ps-0 fw-medium">Shipping fee</td>
+                                <td class="pe-0 fw-medium text-end" id="shipping-fee">$--</td>
+                            </tr>
+                            <tr>
+                                <td class="ps-0 fw-medium">Total</td>
+                                <td class="pe-0 fw-bold text-end" id="total">$--</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- END Shipping Method -->
+            <button type="submit" id="btn-complete" class="btn btn-primary w-100 py-3 push" disabled="@(!SignInManager.IsSignedIn(User))">
+                <i class="fa fa-check opacity-50 me-1"></i>
+                Complete Order
+            </button>
+        </div>
+        <!-- END Order Summary -->
+    </div>
+</form>
+<!-- END Checkout -->
+
+                    
+                

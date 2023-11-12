@@ -108,9 +108,8 @@ $("#btn-complete").on('click', function (e) {
 			console.log('Request is pending...');
 		},
 		success: function (response) {
-			if (paymentMethod == 1) {
-				location.href = response;
-			}
+			location.href = response;
+			localStorage.setItem('cart', JSON.stringify([]));
 		},
 		error: function (error) {
 			console.error('Error:', error);

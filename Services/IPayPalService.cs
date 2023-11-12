@@ -4,7 +4,7 @@ namespace ShoeShop.Services
 {
 	public interface IPayPalService
 	{
-		Task<string> CreatePaymentUrl(PaymentInformation model, HttpContext context);
+		Task<string> CreatePaymentUrl(Order model, HttpContext context);
 		PaymentResponse PaymentExecute(IQueryCollection collections);
 	}
 }

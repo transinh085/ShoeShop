@@ -8,8 +8,8 @@ namespace ShoeShop.ViewModels
 		public int ShippingMethodId { get; set; }
 		public int PaymentMethodId { get; set; }
 		public int AddressId { get; set; }
-		public Address Address { get; set; }
-		public string? OrderDescription { get; set; }
+		public Address NewAddress { get; set; }
+		public string OrderDescription { get; set; }
 	}
 
 	public class CartItem

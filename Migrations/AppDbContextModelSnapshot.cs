@@ -382,6 +382,81 @@ namespace ShoeShop.Migrations
                     b.ToTable("Images");
                 });
 
+            modelBuilder.Entity("ShoeShop.Models.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("AddressId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("OrderStatus")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PaymentMethod")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("PaymentStatus")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<decimal>("ShippingFee")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("ShippingMethodId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("SubTotal")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AddressId");
+
+                    b.HasIndex("AppUserId");
+
+                    b.HasIndex("ShippingMethodId");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("ShoeShop.Models.OrderDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("VariantSizeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("VariantSizeId");
+
+                    b.ToTable("OrderDetails");
+                });
+
             modelBuilder.Entity("ShoeShop.Models.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -639,6 +714,48 @@ namespace ShoeShop.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ShoeShop.Models.Order", b =>
+                {
+                    b.HasOne("ShoeShop.Models.Address", "Address")
+                        .WithMany()
+                        .HasForeignKey("AddressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ShoeShop.Models.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId");
+
+                    b.HasOne("ShoeShop.Models.ShippingMethod", "ShippingMethod")
+                        .WithMany()
+                        .HasForeignKey("ShippingMethodId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Address");
+
+                    b.Navigation("AppUser");
+
+                    b.Navigation("ShippingMethod");
+                });
+
+            modelBuilder.Entity("ShoeShop.Models.OrderDetail", b =>
+                {
+                    b.HasOne("ShoeShop.Models.Order", null)
+                        .WithMany("Details")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ShoeShop.Models.VariantSize", "VariantSize")
+                        .WithMany()
+                        .HasForeignKey("VariantSizeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("VariantSize");
+                });
+
             modelBuilder.Entity("ShoeShop.Models.Product", b =>
                 {
                     b.HasOne("ShoeShop.Models.Brand", "Brand")
@@ -721,6 +838,11 @@ namespace ShoeShop.Migrations
             modelBuilder.Entity("ShoeShop.Models.Category", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("ShoeShop.Models.Order", b =>
+                {
+                    b.Navigation("Details");
                 });
 
             modelBuilder.Entity("ShoeShop.Models.Product", b =>

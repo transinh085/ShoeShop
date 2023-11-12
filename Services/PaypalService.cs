@@ -1,5 +1,6 @@
 ﻿using PayPal.Core;
 using PayPal.v1.Payments;
+using ShoeShop.Data;
 using ShoeShop.Models;
 using System.Net;
 
@@ -8,33 +9,47 @@ namespace ShoeShop.Services
     public class PaypalService : IPayPalService
 	{
         private readonly IConfiguration _configuration;
+        private readonly AppDbContext _context;
 
-        public PaypalService(IConfiguration configuration)
+        public PaypalService(AppDbContext context, IConfiguration configuration)
         {
+            _context = context;
             _configuration = configuration;
         }
 
-        public List<Item> convertList(List<PaymentItem> items)
+        public List<Item> ConvertList(List<OrderDetail> items)
         {
-            return items.Select(v => new Item
+            return items.Select(v =>
             {
-				Name = v.Title,
-				Currency = "USD",
-				Price = v.Price.ToString(),
-				Quantity = v.Quantity.ToString(),
-				Sku = "sku",
-				Tax = "0",
-				Url = $"https://localhost:7107/Product/Detail/{v.ProductId}",
-			}).ToList();
+                var p = _context.VariantSizes
+                    .Where(p => p.Id == v.VariantSizeId)
+                    .Select(p => new {
+                        Id = p.Variant.Product.Id,
+                        Name = p.Variant.Product.Name,
+                        Size = p.Size.Name,
+                        Color = p.Variant.Color.Name,
+                     }).FirstOrDefault();
 
-		}
+                return new Item
+                {
+                    Name = $"{p.Name} - Size {p.Size} - Color {p.Color}",
+                    Currency = "USD",
+                    Price = v.Price.ToString(),
+                    Quantity = v.Quantity.ToString(),
+                    Sku = "sku",
+                    Tax = "0",
+                    Url = $"https://localhost:7107/Product/Detail/{p.Id}",
+                };
 
-		public async Task<string> CreatePaymentUrl(PaymentInformation model, HttpContext context)
+            }).ToList();
+        }
+
+        public async Task<string> CreatePaymentUrl(Models.Order model, HttpContext context)
         {
             var envSandbox =
                 new SandboxEnvironment(_configuration["Paypal:ClientId"], _configuration["Paypal:SecretKey"]);
             var client = new PayPalHttpClient(envSandbox);
-            var paypalOrderId = DateTime.Now.Ticks;
+            var paypalOrderId = model.Id;
             var urlCallBack = _configuration["PaymentCallBack:ReturnUrl"];
             var payment = new Payment()
             {
@@ -45,18 +60,18 @@ namespace ShoeShop.Services
                     {
                         Amount = new Amount()
                         {
-                            Total = (model.Amount + model.ShippingCost).ToString(),
+                            Total = (model.SubTotal + model.ShippingFee).ToString(),
                             Currency = "USD",
                             Details = new AmountDetails
                             {
                                 Tax = "0",
-                                Shipping = model.ShippingCost.ToString(),
-                                Subtotal = model.Amount.ToString(),
+                                Shipping = model.ShippingFee.ToString(),
+                                Subtotal = model.SubTotal.ToString(),
                             }
                         },
                         ItemList = new ItemList()
                         {
-                            Items = convertList(model.Items)
+                            Items = ConvertList(model.Details)
 						},
                         Description = $"Invoice #{model.Description}",
                         InvoiceNumber = paypalOrderId.ToString()
