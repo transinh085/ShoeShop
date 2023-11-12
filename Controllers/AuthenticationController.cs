@@ -31,7 +31,7 @@ namespace ShoeShop.Controllers
         }
 
 		[HttpPost]
-		public async Task<IActionResult> Signin(SigninViewModel loginViewModel)
+		public async Task<IActionResult> Signin(SigninViewModel loginViewModel, string? returnUrl)
 		{
 			if (_signInManager.IsSignedIn(User)) return RedirectToAction("Index", "Home");
 			if (!ModelState.IsValid) return View(loginViewModel);
@@ -48,6 +48,7 @@ namespace ShoeShop.Controllers
 					var result = await _signInManager.PasswordSignInAsync(user, loginViewModel.Password, loginViewModel.RememberMe, true);
 					if (result.Succeeded)
 					{
+						if (!string.IsNullOrEmpty(returnUrl)) return Redirect(returnUrl);
 						return RedirectToAction("Index", "Home");
 					}
 				}

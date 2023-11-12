@@ -16,6 +16,24 @@ namespace ShoeShop.Data.Seeder
                 var adminUser = await userManager.FindByEmailAsync("transinh085@gmail.com");
                 if (adminUser == null)
                 {
+                    var address = new List<Address>
+                    {
+                        new Address
+                        {
+                            FullName = "Nguyen Van A",
+                            Phone = "0387913347",
+                            Email = "transinh085@gmail.com",
+                            SpecificAddress = "205 Tran Hung Dao B, Phuong 10, Quan 5",
+                            IsDefault = true
+                        },
+                        new Address
+                        {
+                            FullName = "Nguyen Van B",
+                            Phone = "0369765342",
+                            Email = "transinh342@gmail.com",
+                            SpecificAddress = "An Duc, Hoai An, Binh Dinh"
+                        }
+                    };
                     var newAdminUser = new AppUser()
                     {
                         FullName = "Trần Nhật Sinh",
@@ -27,9 +45,12 @@ namespace ShoeShop.Data.Seeder
                         Status = true,
                         Gender = 0,
                         BirthDay = DateTime.Now,
+                        Addresses = address,
                     };
                     await userManager.CreateAsync(newAdminUser, "Coding@1234?");
                     await userManager.AddToRoleAsync(newAdminUser, UserRoles.Admin);
+
+                    
                 }
 
                 var appUser = await userManager.FindByEmailAsync("hgbao2k3@gmail.com");

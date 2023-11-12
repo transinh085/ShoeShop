@@ -147,6 +147,44 @@ namespace ShoeShop.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("ShoeShop.Models.Address", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("SpecificAddress")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.ToTable("Addresses");
+                });
+
             modelBuilder.Entity("ShoeShop.Models.AppUser", b =>
                 {
                     b.Property<string>("Id")
@@ -372,6 +410,7 @@ namespace ShoeShop.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<decimal>("Price")
@@ -435,6 +474,7 @@ namespace ShoeShop.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
@@ -564,6 +604,15 @@ namespace ShoeShop.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ShoeShop.Models.Address", b =>
+                {
+                    b.HasOne("ShoeShop.Models.AppUser", "AppUser")
+                        .WithMany("Addresses")
+                        .HasForeignKey("AppUserId");
+
+                    b.Navigation("AppUser");
+                });
+
             modelBuilder.Entity("ShoeShop.Models.Blog", b =>
                 {
                     b.HasOne("ShoeShop.Models.Image", "Thumbnail")
@@ -657,6 +706,11 @@ namespace ShoeShop.Migrations
                     b.Navigation("Size");
 
                     b.Navigation("Variant");
+                });
+
+            modelBuilder.Entity("ShoeShop.Models.AppUser", b =>
+                {
+                    b.Navigation("Addresses");
                 });
 
             modelBuilder.Entity("ShoeShop.Models.Brand", b =>

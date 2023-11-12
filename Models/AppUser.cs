@@ -16,5 +16,7 @@ namespace ShoeShop.Models
         public bool? Status { get; set; }
 
         public bool? IsDeleted { get; set; } = false;
+
+        public List<Address>? Addresses { get; set; }
     }
 }
