@@ -20,20 +20,13 @@
 
 <h4>Blog</h4>
 <hr />
-<div class="row" style="align-items:center;">
+<div class="row" >
     <div class="col-md-4">
         <form asp-action="Create" id="blog-form">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div asp-validation-summary="All" class="text-danger"></div>
             <div class="mb-4" >
-                <label class="form-label" for="upload-image">Thumbnail</label>
-                <div class="upload-image-container" style="width:600px; height:400px">
-                    <input type="file" id="upload-image" name="upload-image" class="upload-image-input" hidden multiple />
-                    <div class="no-image">
-                        <p>Select files to upload</p>
-                    </div>
-                    <div class="has-image" style="margin: 0">
-                    </div>
-                </div>
+                <label class="form-label" for="thumbnail">Thumbnail</label>
+                <input type="file" id="thumbnail" name="thumbnail" multiple />
             </div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
@@ -48,20 +41,19 @@
             </div>
 
             <div class="mb-4">
-                <label class="form-label" for="topic-id">Topic</label>
-                <select class="js-select2 form-select" id="topic-id" name="topic-id" style="width: 100%;" data-placeholder="Choose topic..">
+                <label class="form-label" asp-for="TopicID">Topic</label>
+                <select class="js-select2 form-select" id="topic-id" asp-for="TopicID" style="width: 100%;" data-placeholder="Choose topic..">
                     <option></option>
-                    @foreach (var topic in ViewBag.Topics)
-                    {
+                        @foreach (var topic in ViewBag.Topics)
+                        {
                         <option value="@topic.Id">@topic.Name</option>
-                    }
+                        }
                 </select>
             </div>
-            <div class="form-group">
-                <div class="mb-4">
-                    <label class="form-label">Content</label>
-                    <textarea id="js-ckeditor" name="blog-content" width="100px"></textarea>
-                </div>
+
+            <div class="mb-4">
+                <label class="form-label" >Content</label>
+                <textarea id="js-ckeditor" name="content" asp-for="Content"></textarea>
             </div>
 
             <div class="form-group">
