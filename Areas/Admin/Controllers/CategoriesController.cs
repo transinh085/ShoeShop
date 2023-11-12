@@ -19,7 +19,7 @@ namespace ShoeShop.Areas.Admin.Controllers
         public async Task<IActionResult> Index()
         {
               return _context.Categories != null ? 
-                          View(await _context.Categories.ToListAsync()) :
+                          View(await _context.Categories.Where(c => c.IsDelete == false).ToListAsync()) :
                           Problem("Entity set 'AppDbContext.Categories'  is null.");
         }
 
@@ -107,11 +107,11 @@ namespace ShoeShop.Areas.Admin.Controllers
             var category = await _context.Categories.FindAsync(id);
             if (category != null)
             {
-                _context.Categories.Remove(category);
+                category.IsDelete = true;
             }
             
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Ok(new { message = "Delete successfully" });
         }
 
         private bool CategoryExists(int id)

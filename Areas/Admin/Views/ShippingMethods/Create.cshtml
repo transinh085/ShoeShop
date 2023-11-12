@@ -1,0 +1,67 @@
+﻿@model ShoeShop.Models.ShippingMethod
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Hero -->
+<div class="bg-body-light">
+    <div class="content content-full">
+        <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
+            <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">Add Shipping Method</h1>
+            <nav class="flex-shrink-0 my-2 my-sm-0 ms-sm-3" aria-label="breadcrumb">
+                <ol class="breadcrumb breadcrumb-alt">
+                    <li class="breadcrumb-item">
+                        <a href="javascript:void(0)">Dashboard</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="javascript:void(0)">Shipping Method</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Add</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+<!-- END Hero -->
+
+<div class="content">
+    <div class="block block-rounded">
+        <div class="block-header block-header-default">
+            <a class="btn btn-alt-secondary" asp-action="Index"><i class="fa fa-arrow-left"></i> Back to list</a>
+        </div>
+        <div class="block-content">
+            <div class="row">
+                <div class="col-md-4 mx-auto py-3">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group mb-2">
+                            <label asp-for="Name" class="form-label"></label>
+                            <input asp-for="Name" class="form-control form-control-alt" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label asp-for="Description" class="form-label"></label>
+                            <input asp-for="Description" class="form-control form-control-alt" />
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label asp-for="Cost" class="form-label"></label>
+                            <input asp-for="Cost" class="form-control form-control-alt" />
+                            <span asp-validation-for="Cost" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Create" class="btn btn-primary" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

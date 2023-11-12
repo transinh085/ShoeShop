@@ -22,7 +22,7 @@ namespace ShoeShop.Areas.Admin.Controllers
 		public async Task<IActionResult> Index()
 		{
 			return _context.Brands != null ?
-						View(await _context.Brands.ToListAsync()) :
+						View(await _context.Brands.Where(c => c.IsDelete == false).ToListAsync()) :
 						Problem("Entity set 'AppDbContext.Brands'  is null.");
 		}
 
@@ -121,7 +121,6 @@ namespace ShoeShop.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
-            Console.WriteLine("test");
             if (_context.Brands == null)
             {
                 return Problem("Entity set 'AppDbContext.Brands'  is null.");
@@ -129,7 +128,7 @@ namespace ShoeShop.Areas.Admin.Controllers
             var brand = await _context.Brands.FindAsync(id);
             if (brand != null)
             {
-                _context.Brands.Remove(brand);
+                brand.IsDelete = true ;
             }
 
             await _context.SaveChangesAsync();

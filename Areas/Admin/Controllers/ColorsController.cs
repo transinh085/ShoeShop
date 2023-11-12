@@ -19,7 +19,7 @@ namespace ShoeShop.Areas.Admin.Controllers
         public async Task<IActionResult> Index()
         {
               return _context.Colors != null ? 
-                          View(await _context.Colors.ToListAsync()) :
+                          View(await _context.Colors.Where(c => c.IsDelete == false).ToListAsync()) :
                           Problem("Entity set 'AppDbContext.Colors'  is null.");
         }
 
@@ -144,11 +144,11 @@ namespace ShoeShop.Areas.Admin.Controllers
             var color = await _context.Colors.FindAsync(id);
             if (color != null)
             {
-                _context.Colors.Remove(color);
+                color.IsDelete = true;
             }
             
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Ok(new { message = "Delete successfully" });
         }
 
         private bool ColorExists(int id)
