@@ -203,7 +203,11 @@ namespace ShoeShop.Controllers
 				var materializedProducts = queryableProducts.ToList();
 
 				queryableProducts = materializedProducts.Where(product =>
-					priceRangeList.Any(range => product.Price >= range.Min && product.Price <= range.Max)
+					priceRangeList.Any(
+						range => 
+							product.Price >= range.Min && product.Price <= range.Max ||
+							product.PriceSale != 0 && product.PriceSale >= range.Min && product.PriceSale <= range.Max
+						)
 				).AsQueryable();
 			}
 
