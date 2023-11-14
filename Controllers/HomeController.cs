@@ -64,8 +64,8 @@ namespace ShoeShop.Controllers
 		public async Task<IActionResult> Checkout()
 		{
             var currentUser = await _userManager.GetUserAsync(User);
-            ViewBag.ShippingMethod = await _context.ShippingMethods.Where(p => p.IsDelete == false).ToListAsync();
             ViewBag.currentUser = currentUser;
+            ViewBag.ShippingMethod = await _context.ShippingMethods.Where(p => p.IsDelete == false).ToListAsync();
             if(currentUser != null )
             {
                 ViewBag.Addresses = _context.Addresses.Where(a => a.AppUserId == currentUser.Id).ToList();

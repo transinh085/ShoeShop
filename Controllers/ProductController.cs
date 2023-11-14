@@ -10,17 +10,23 @@ using System.Text.Json;
 using Bogus.DataSets;
 using System.Runtime.InteropServices;
 using System.Drawing.Drawing2D;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ShoeShop.Controllers
 {
     public class ProductController : Controller
     {
         private readonly AppDbContext _context;
+		private readonly SignInManager<AppUser> _signInManager;
+		private readonly UserManager<AppUser> _userManager;
 
-        public ProductController(AppDbContext context)
+		public ProductController(UserManager<AppUser> userManager,
+			SignInManager<AppUser> signInManager, AppDbContext context)
         {
             _context = context;
-        }
+			_signInManager = signInManager;
+			_userManager = userManager;
+		}
 
         public async Task<IActionResult> Index()
         {
@@ -102,8 +108,26 @@ namespace ShoeShop.Controllers
             var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
 
             if (product == null) return NotFound();
+			var currentUser = await _userManager.GetUserAsync(User);
 
-            ViewBag.Product = product;
+			if (currentUser == null)
+			{
+				ViewBag.CheckReview = 0;
+			}
+			else
+			{
+				var checkByProduct = _context.Orders.Count(
+					o => o.AppUserId == currentUser.Id &&
+					o.Details.Any(detail => detail.VariantSize.Variant.Product.Id == id)
+				);
+				ViewBag.CheckReview = checkByProduct;
+			}
+			ViewBag.Reviews = await _context.Reviews
+			.Where(review => review.ProductId == id)
+			.OrderByDescending(review => review.CreatedAt)
+			.Include(review => review.AppUser)
+			.ToListAsync();
+			ViewBag.Product = product;
 			ViewBag.Related = await _context.Products
 				.Include(product => product.Thumbnail)
 				.Where(p => p.CategoryId == product.CategoryId)
@@ -265,6 +289,31 @@ namespace ShoeShop.Controllers
 			return rangeList;
 		}
 
+		[HttpPost]
+		public async Task<IActionResult> AddReview(ReviewViewModel model)
+		{
+			if (!ModelState.IsValid)
+			{
+				return BadRequest(ModelState);
+			}
+
+			var user = await _userManager.GetUserAsync(User);
+			if (user == null)
+			{
+				return Unauthorized();
+			}
+
+			var review = new Review
+			{
+				ProductId = model.ProductId,
+				Description = model.Description,
+				Rating = model.Rating,
+				AppUserId = user.Id
+			};
+			_context.Reviews.Add(review);
+			await _context.SaveChangesAsync();
+			return Ok("Add review product successfully");
+		}
 	}
 }
 
