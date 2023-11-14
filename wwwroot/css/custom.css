@@ -19,6 +19,23 @@
     box-shadow: 0 0 0 0.25rem rgba(224, 79, 26, 0.25);
 }
 
+label.error {
+    width: 100%;
+    margin-top: .375rem;
+    font-size: .875rem;
+    color: #e04f1a !important;
+}
+
+textarea.error {
+    border-color: #fae5dd !important;
+    background-color: #fae5dd !important;
+}
+
+textarea.error:focus {
+    border-color: #e04f1a;
+    box-shadow: 0 0 0 0.25rem rgba(224, 79, 26, 0.25);
+}
+
 .custom-notify {
     z-index: 9999; /* Điều chỉnh giá trị z-index theo nhu cầu của bạn, để đảm bảo nó cao hơn modal */
 }
@@ -56,3 +73,4 @@
     object-fit: cover;
     border-radius: 50%
 }
+

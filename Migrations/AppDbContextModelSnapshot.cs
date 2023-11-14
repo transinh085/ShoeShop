@@ -514,6 +514,40 @@ namespace ShoeShop.Migrations
                     b.ToTable("Products");
                 });
 
+            modelBuilder.Entity("ShoeShop.Models.Review", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Reviews");
+                });
+
             modelBuilder.Entity("ShoeShop.Models.ShippingMethod", b =>
                 {
                     b.Property<int>("Id")
@@ -779,6 +813,23 @@ namespace ShoeShop.Migrations
                     b.Navigation("Category");
 
                     b.Navigation("Thumbnail");
+                });
+
+            modelBuilder.Entity("ShoeShop.Models.Review", b =>
+                {
+                    b.HasOne("ShoeShop.Models.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId");
+
+                    b.HasOne("ShoeShop.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("ShoeShop.Models.Variant", b =>

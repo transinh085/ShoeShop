@@ -21,5 +21,7 @@ namespace ShoeShop.Data
 		public DbSet<Address>? Addresses { get; set; }
 		public DbSet<Order>? Orders { get; set; }
 		public DbSet<OrderDetail>? OrderDetails { get; set; }
+
+		public DbSet<Review> Reviews { get; set; }
     }
 }

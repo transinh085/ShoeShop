@@ -1,14 +1,14 @@
 ﻿@{
 	var product = ViewBag.Product;
 	ViewData["Title"] = product.Name;
+	var checkReview = ViewBag.CheckReview;
 }
 @section Styles {
 	<link href="~/css/product_page.css" rel="stylesheet">
+	<link href="~/css/leave_review.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 }
 
-@section Scripts {
-	<script src="~/js/product-detail.js"></script>
-}
 <main>
 	<input id="product-id" value="@product.Id" hidden/>
 	    <div class="container margin_30">
@@ -117,6 +117,7 @@
 	        </div>
 	        <!-- /row -->
 	    </div>
+		</div>
 	    <!-- /container -->
 	    
 	    <div class="tabs_product">
@@ -165,54 +166,153 @@
 	                    </div>
 	                    <div id="collapse-B" class="collapse" role="tabpanel" aria-labelledby="heading-B">
 	                        <div class="card-body">
-	                            <div class="row justify-content-between">
-	                                <div class="col-lg-6">
-	                                    <div class="review_content">
-	                                        <div class="clearfix add_bottom_10">
-	                                            <span class="rating"><i class="icon-star"></i><i class="icon-star"></i><i class="icon-star"></i><i class="icon-star"></i><i class="icon-star"></i><em>5.0/5.0</em></span>
-	                                            <em>Published 54 minutes ago</em>
-	                                        </div>
-	                                        <h4>"Commpletely satisfied"</h4>
-	                                        <p>Eos tollit ancillae ea, lorem consulatu qui ne, eu eros eirmod scaevola sea. Et nec tantas accusamus salutatus, sit commodo veritus te, erat legere fabulas has ut. Rebum laudem cum ea, ius essent fuisset ut. Viderer petentium cu his.</p>
-	                                    </div>
-	                                </div>
-	                                <div class="col-lg-6">
-	                                    <div class="review_content">
-	                                        <div class="clearfix add_bottom_10">
-	                                            <span class="rating"><i class="icon-star"></i><i class="icon-star"></i><i class="icon-star"></i><i class="icon-star empty"></i><i class="icon-star empty"></i><em>4.0/5.0</em></span>
-	                                            <em>Published 1 day ago</em>
-	                                        </div>
-	                                        <h4>"Always the best"</h4>
-	                                        <p>Et nec tantas accusamus salutatus, sit commodo veritus te, erat legere fabulas has ut. Rebum laudem cum ea, ius essent fuisset ut. Viderer petentium cu his.</p>
-	                                    </div>
-	                                </div>
-	                            </div>
+								<div class="container">
+								<div class="row">
+									<div class="col-lg-4 mb-4">
+										<div class="p-4 border border-2" style="border-radius: 8px">
+											<div class="row justify-content-center align-items-center">
+												<div class="d-flex justify-content-center align-items-center">
+													<div style="font-size: 34px;">
+														<strong style="color: #faca50;">3.4</strong>/<span>5</span>
+													</div>
+												</div>
+												<h5 class="text-center">Có 6 lượt đánh giá</h5>
+											</div>
+											<div class="d-flex justify-content-between align-items-center">
+												<span class="rating" style="margin-right: 20px">
+													<i class="icon-star" style="color: #fec348;"></i>
+													<i class="icon-star"></i>
+													<i class="icon-star"></i>
+													<i class="icon-star"></i>
+													<i class="icon-star"></i>
+												</span>
+												<div class="progress flex-grow-1 mb-3">
+													<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+														25%
+													</div>
+												</div>
+											</div>
+											<div class="d-flex justify-content-between align-items-center">
+												<span class="rating" style="margin-right: 20px">
+													<i class="icon-star" style="color: #fec348;"></i>
+													<i class="icon-star" style="color: #fec348;"></i>
+													<i class="icon-star"></i>
+													<i class="icon-star"></i>
+													<i class="icon-star"></i>
+												</span>
+												<div class="progress flex-grow-1 mb-3">
+													<div class="progress-bar" role="progressbar" style="width: 30%;" aria-valuenow="3" aria-valuemin="0" aria-valuemax="100">
+														30%
+													</div>
+												</div>
+											</div>
+											<div class="d-flex justify-content-between align-items-center">
+												<span class="rating" style="margin-right: 20px">
+													<i class="icon-star" style="color: #fec348;"></i>
+													<i class="icon-star" style="color: #fec348;"></i>
+													<i class="icon-star" style="color: #fec348;"></i>
+													<i class="icon-star"></i>
+													<i class="icon-star"></i>
+												</span>
+												<div class="progress flex-grow-1 mb-3">
+													<div class="progress-bar" role="progressbar" style="width: 30%;" aria-valuenow="3" aria-valuemin="0" aria-valuemax="100">
+														30%
+													</div>
+												</div>
+											</div>
+											<div class="d-flex justify-content-between align-items-center">
+												<span class="rating" style="margin-right: 20px">
+													<i class="icon-star" style="color: #fec348;"></i>
+													<i class="icon-star" style="color: #fec348;"></i>
+													<i class="icon-star" style="color: #fec348;"></i>
+													<i class="icon-star" style="color: #fec348;"></i>
+													<i class="icon-star"></i>
+												</span>
+												<div class="progress flex-grow-1 mb-3">
+													<div class="progress-bar" role="progressbar" style="width: 30%;" aria-valuenow="3" aria-valuemin="0" aria-valuemax="100">
+														30%
+													</div>
+												</div>
+											</div>
+											<div class="d-flex justify-content-between align-items-center">
+												<span class="rating" style="margin-right: 20px">
+													<i class="icon-star" style="color: #fec348;"></i>
+													<i class="icon-star" style="color: #fec348;"></i>
+													<i class="icon-star" style="color: #fec348;"></i>
+													<i class="icon-star" style="color: #fec348;"></i>
+													<i class="icon-star" style="color: #fec348;"></i>
+												</span>
+												<div class="progress flex-grow-1 mb-3">
+													<div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+														0%
+													</div>
+												</div>
+											</div>
+											@if (checkReview != 0)
+											{
+												<div class="d-flex justify-content-center">
+													<button id="testReview" class="btn btn-primary" data-bs-toggle="modal"
+															data-bs-target="#modal-add-review">
+														Review
+													</button>
+												</div>
+											}
+										</div>
+									</div>
+									<div class="col-lg-8">
+										<div class="border border-2" style="border-radius: 8px">
+											<div class="p-3 d-flex bg-primary mb-1 justify-content-between" style="font-size: 16px;border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 0px; border-bottom-left-radius: 0;">
+												<div class="col-lg-6 text-white">
+													Đánh giá sản phẩm
+												</div>
+												<div class="d-flex col-md-6 justify-content-between">
+													<div class="text-white ml-4">
+														<i class="fa-solid fa-sort text-white"></i>
+														Sắp xếp: Mới nhất
+													</div>
+													<div class="text-white">
+														<i class="fa-solid fa-filter text-white"></i>
+														Lọc: Tất cả
+													</div>
+												</div>
+											</div>
+											<div class="p-2">
+												@if (ViewBag.Reviews != null && ViewBag.Reviews.Count > 0)
+												{
+													foreach (var review in ViewBag.Reviews)
+													{
+														<div class="review_content">
+															<div class="clearfix add_bottom_10">
+																<span class="rating">
+																	@for (int i = 1; i <= review.Rating; i++)
+																	{
+																		<i class="icon-star"></i>
+																	}
+																	@for (int i = 1; i <= 5 - review.Rating; i++)
+																	{
+																		<i class="icon-star empty"></i>
+																	}
+																	<em>@review.Rating/5.0</em>
+																</span>
+																<em>Published @review.CreatedAt</em>
+															</div>
+															<h4>@review.AppUser.FullName</h4>
+															<p>@review.Description</p>
+														</div>
+													}
+												}
+												else
+												{
+													<p>Chưa có lượt đánh giá nào</p>
+												}
+											</div>
+										</div>
+									</div>
+								</div>
 	                            <!-- /row -->
-	                            <div class="row justify-content-between">
-	                                <div class="col-lg-6">
-	                                    <div class="review_content">
-	                                        <div class="clearfix add_bottom_10">
-	                                            <span class="rating"><i class="icon-star"></i><i class="icon-star"></i><i class="icon-star"></i><i class="icon-star"></i><i class="icon-star empty"></i><em>4.5/5.0</em></span>
-	                                            <em>Published 3 days ago</em>
-	                                        </div>
-	                                        <h4>"Outstanding"</h4>
-	                                        <p>Eos tollit ancillae ea, lorem consulatu qui ne, eu eros eirmod scaevola sea. Et nec tantas accusamus salutatus, sit commodo veritus te, erat legere fabulas has ut. Rebum laudem cum ea, ius essent fuisset ut. Viderer petentium cu his.</p>
-	                                    </div>
-	                                </div>
-	                                <div class="col-lg-6">
-	                                    <div class="review_content">
-	                                        <div class="clearfix add_bottom_10">
-	                                            <span class="rating"><i class="icon-star"></i><i class="icon-star"></i><i class="icon-star"></i><i class="icon-star"></i><i class="icon-star"></i><em>5.0/5.0</em></span>
-	                                            <em>Published 4 days ago</em>
-	                                        </div>
-	                                        <h4>"Excellent"</h4>
-	                                        <p>Sit commodo veritus te, erat legere fabulas has ut. Rebum laudem cum ea, ius essent fuisset ut. Viderer petentium cu his.</p>
-	                                    </div>
-	                                </div>
-	                            </div>
-	                            <!-- /row -->
-	                            <p class="text-end"><a href="leave-review.html" class="btn_1">Leave a review</a></p>
+								
 	                        </div>
+							
 	                        <!-- /card-body -->
 	                    </div>
 	                </div>
@@ -276,7 +376,93 @@
 			</div>
 		</div>
 		<!--/feat-->
-
 </main>
 
-	
+@section Scripts {
+	<script src="~/js/product-detail.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/additional-methods.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/localization/messages_ar.min.js" integrity="sha512-rLFPpaF3u7n96Yj1paoZ5GBSAGR1ETxKo0T+kD8XHlyj1dDSMBwC7EPavNWpHUTqVKMI2F8yc9mlDSUCWaztRQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script>
+		$(document).ready(function () {
+			$("#form-review").validate({
+				rules: {
+					review: {
+						required: true
+					}
+				},
+				messages: {
+					review: {
+						required: "Please enter your review"
+					}
+				},
+				submitHandler: function (form) {
+					var overallRating = $("input[name='rating-input']:checked").val();
+					var reviewText = $("textarea[name='review']").val();
+					var productId = $("#product-id").val();
+
+					$.ajax({
+						type: "POST",
+						url: "/Product/AddReview",
+						data: {
+							ProductId: productId,
+							Description: reviewText,
+							Rating: overallRating
+						},
+						success: function (response) {
+							console.log(response);
+							location.reload();
+						},
+						error: function (error) {
+							console.error("Error in POST request", error);
+						}
+					});
+
+				}
+			});
+		});
+	</script>
+}
+
+@if (checkReview != 0)
+{
+	<div style="margin-top: 50px" class="modal fade" id="modal-add-review" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalAddReview" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content" style="border-radius: 8px!important;">
+				<form id="form-review">
+					<div class="modal-header">
+						<h1 class="modal-title fs-5" id="modalAddReview">Add Review</h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<div class="rating_submit">
+							<div class="form-group">
+								<label class="d-block">Overall rating</label>
+								<span class="rating mb-0">
+									<input type="radio" class="rating-input" id="5_star" name="rating-input" value="5">
+									<label for="5_star" class="rating-star"></label>
+									<input type="radio" class="rating-input" id="4_star" name="rating-input" value="4">
+									<label for="4_star" class="rating-star"></label>
+									<input type="radio" class="rating-input" id="3_star" name="rating-input" value="3">
+									<label for="3_star" class="rating-star"></label>
+									<input type="radio" class="rating-input" id="2_star" name="rating-input" value="2">
+									<label for="2_star" class="rating-star"></label>
+									<input type="radio" class="rating-input" id="1_star" name="rating-input" value="1" checked>
+									<label for="1_star" class="rating-star"></label>
+								</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label>Your review</label>
+							<textarea name="review" class="form-control" style="height: 180px;" placeholder="Write your review to help others learn about this online business"></textarea>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+						<button type="submit" class="btn btn-primary" id="submit-review">Submit</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+}
