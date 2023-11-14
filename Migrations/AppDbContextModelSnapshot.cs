@@ -280,8 +280,8 @@ namespace ShoeShop.Migrations
                     b.Property<string>("Content")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("CreateBy")
-                        .HasColumnType("int");
+                    b.Property<string>("CreateBy")
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime(6)");
@@ -530,7 +530,7 @@ namespace ShoeShop.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<bool>("IsDelete")
+                    b.Property<bool?>("IsDelete")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<int>("ProductId")
