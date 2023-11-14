@@ -25,6 +25,7 @@
 	<ItemGroup>
 	  <Folder Include="Areas\Admin\Data\" />
 	  <Folder Include="Areas\Admin\Models\" />
+	  <Folder Include="Data\Enum\" />
 	  <Folder Include="wwwroot\assets\js\pages\" />
 	</ItemGroup>
 </Project>

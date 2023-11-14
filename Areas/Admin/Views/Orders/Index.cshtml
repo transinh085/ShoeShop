@@ -89,7 +89,7 @@
         </div>
         <div class="block-content bg-body-dark">
             <!-- Search Form -->
-            <form action="be_pages_ecom_orders.html" method="POST" onsubmit="return false;">
+            <form method="POST" onsubmit="return false;">
                 <div class="mb-4">
                     <input type="text" class="form-control form-control-alt" id="dm-ecom-orders-search" name="dm-ecom-orders-search" placeholder="Search all orders..">
                 </div>
@@ -105,41 +105,48 @@
                             <th class="text-center" style="width: 100px;">ID</th>
                             <th class="d-none d-xl-table-cell">Customer</th>
                             <th class="d-none d-sm-table-cell text-start">Payment Method</th>
+                            <th class="d-none d-sm-table-cell text-start">Shipping Method</th>
                             <th class="d-none d-xl-table-cell text-center">Total</th>
                             <th>Status</th>
-                            <th class="d-none d-sm-table-cell text-center">Submitted</th>
+                            <th class="d-none d-sm-table-cell">Submitted</th>
                             <th class="text-center">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td class="text-center">
-                                <a class="fw-semibold" href="be_pages_ecom_order.html">
-                                    <strong>#019265</strong>
-                                </a>
-                            </td>
-                            <td class="d-none d-xl-table-cell">
-                                <a class="fw-semibold" href="be_pages_ecom_customer.html">Danielle Jones</a>
-                            </td>
-                            <td class="d-none d-sm-table-cell text-start">
-                                Cash on delivery
-                            </td>
-                            <td class="d-none d-xl-table-cell text-center">
-                                <strong>$700,53</strong>
-                            </td>
-                            <td class="fs-base">
-                                <span class="badge rounded-pill bg-danger">Canceled</span>
-                            </td>
-                            <td class="d-none d-sm-table-cell text-center">01/06/2020</td>
-                            <td class="text-center fs-base">
-                                <a class="btn btn-sm btn-alt-secondary" href="be_pages_ecom_order.html">
-                                    <i class="fa fa-fw fa-eye"></i>
-                                </a>
-                                <a class="btn btn-sm btn-alt-secondary" href="javascript:void(0)">
-                                    <i class="fa fa-fw fa-times text-danger"></i>
-                                </a>
-                            </td>
-                        </tr>                        
+                        @foreach (var item in ViewBag.Orders)
+                        {
+                            <tr>
+                                <td class="text-center">
+                                    <a class="fw-semibold" href="/admin/orders/detail/@item.Id">
+                                        <strong>#@item.Id</strong>
+                                    </a>
+                                </td>
+                                <td class="d-none d-xl-table-cell">
+                                    <a class="fw-semibold" href="be_pages_ecom_customer.html">@item.Customer.FullName</a>
+                                </td>
+                                <td class="d-none d-sm-table-cell text-start">
+                                    @item.PaymentMethod
+                                </td>
+                                <td class="d-none d-sm-table-cell text-start">
+                                    @item.ShippingMethod
+                                </td>
+                                <td class="d-none d-xl-table-cell text-center">
+                                    <strong>@item.Total</strong>
+                                </td>
+                                <td class="fs-base">
+                                    <span class="badge rounded-pill bg-danger">Canceled</span>
+                                </td>
+                                <td class="d-none d-sm-table-cell">@item.CreatedAt</td>
+                                <td class="text-center fs-base">
+                                    <a class="btn btn-sm btn-alt-secondary" href="/admin/orders/detail/@item.Id">
+                                        <i class="fa fa-fw fa-eye"></i>
+                                    </a>
+                                    <a class="btn btn-sm btn-alt-secondary" href="javascript:void(0)">
+                                        <i class="fa fa-fw fa-times text-danger"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>
