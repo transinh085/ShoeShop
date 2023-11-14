@@ -127,6 +127,36 @@ namespace ShoeShop.Controllers
 			.OrderByDescending(review => review.CreatedAt)
 			.Include(review => review.AppUser)
 			.ToListAsync();
+
+			var countReview = ViewBag.CountView = _context.Reviews.Count(review => review.ProductId == id);
+			ReviewStats reviewStats = new ReviewStats();
+			if (countReview != 0)
+			{
+				var totalRating = ViewBag.TotalRating = _context.Reviews
+					.Where(review => review.ProductId == id)
+					.Sum(review => review.Rating);
+				ViewBag.AverageRating = (totalRating / (decimal)countReview).ToString("0.0");
+				reviewStats.OneStar = _context.Reviews.Count(review => review.ProductId == id && review.Rating == 1);
+				reviewStats.PercentOneStar = ((decimal)reviewStats.OneStar / countReview * 100).ToString("0") + "%";
+
+				reviewStats.TwoStar = _context.Reviews.Count(review => review.ProductId == id && review.Rating == 2);
+				reviewStats.PercentTwoStar = ((decimal)reviewStats.TwoStar / countReview * 100).ToString("0") + "%";
+
+				reviewStats.ThreeStar = _context.Reviews.Count(review => review.ProductId == id && review.Rating == 3);
+				reviewStats.PercentThreeStar = ((decimal)reviewStats.ThreeStar / countReview * 100).ToString("0") + "%";
+
+				reviewStats.FourStar = _context.Reviews.Count(review => review.ProductId == id && review.Rating == 4);
+				reviewStats.PercentFourStar = ((decimal)reviewStats.FourStar / countReview * 100).ToString("0") + "%";
+
+				reviewStats.FiveStar = _context.Reviews.Count(review => review.ProductId == id && review.Rating == 5);
+				reviewStats.PercentFiveStar = ((decimal)reviewStats.FiveStar / countReview * 100).ToString("0") + "%";
+			}
+			else
+			{
+				ViewBag.AverageRating = 0;
+				ViewBag.TotalRating = 0;
+			};
+			ViewBag.ReviewStats = reviewStats;
 			ViewBag.Product = product;
 			ViewBag.Related = await _context.Products
 				.Include(product => product.Thumbnail)
@@ -325,4 +355,19 @@ public class PriceRangeInfo
 	public string Value { get; set; }
 	public int ProductCount { get; set; }
 }
+
+public class ReviewStats
+{
+	public int OneStar { get; set; } = 0;
+	public string PercentOneStar { get; set; } = "0%";
+	public int TwoStar { get; set; } = 0;
+	public string PercentTwoStar { get; set; } = "0%";
+	public int ThreeStar { get; set; } = 0;
+	public string PercentThreeStar { get; set; } = "0%";
+	public int FourStar { get; set; } = 0;
+	public string PercentFourStar { get; set; } = "0%";
+	public int FiveStar { get; set; } = 0;
+	public string PercentFiveStar { get; set; } = "0%";
+}
+
 
