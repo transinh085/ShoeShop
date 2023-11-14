@@ -24,10 +24,12 @@
     <div class="col-md-4">
         <form asp-action="Create" id="blog-form">
             <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="mb-4" >
-                <label class="form-label" for="thumbnail">Thumbnail</label>
-                <input type="file" id="thumbnail" name="thumbnail" multiple />
+            <div class="mb-4 form-group" >
+                <label class="form-label" asp-for="Thumbnail">Thumbnail</label>
+                <input type="file" id="thumbnail" asp-for="Thumbnail" class="form-control" accept="image/*" />
+                <img id="imagePreview"  style="display:none; max-width: 300px; max-height: 300px;" />
             </div>
+
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" id="blog-name" />
@@ -40,13 +42,13 @@
                 <span asp-validation-for="Slug" class="text-danger"></span>
             </div>
 
-            <div class="mb-4">
+            <div class="mb-4 form-group">
                 <label class="form-label" asp-for="TopicID">Topic</label>
                 <select class="js-select2 form-select" id="topic-id" asp-for="TopicID" style="width: 100%;" data-placeholder="Choose topic..">
                     <option></option>
                         @foreach (var topic in ViewBag.Topics)
                         {
-                        <option value="@topic.Id">@topic.Name</option>
+                            <option value="@topic.Id">@topic.Name</option>
                         }
                 </select>
             </div>

@@ -7,7 +7,7 @@
         public string? Name { get; set; }
         public Image? Thumbnail { get; set; }
         public DateTime? CreatedAt { get; set; } = DateTime.Now;
-        public int CreateBy {  get; set; }
+        public string? CreateBy {  get; set; }
         public int TopicID {  get; set; }
         public Topic? Topic { get; set; }
         public string? Content {get; set; }
