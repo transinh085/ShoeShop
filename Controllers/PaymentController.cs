@@ -87,8 +87,8 @@ namespace ShoeShop.Controllers
                     .Select(o => new
                     {
                         o.Id,
-                        o.PaymentMethod,
                         ShippingMethod = o.ShippingMethod.Name,
+                        PaymentMethod = o.PaymentMethod == 0 ? "Cash on delivery" : "Payment with Paypal",
                         o.SubTotal,
                         o.ShippingFee,
                         o.Description,

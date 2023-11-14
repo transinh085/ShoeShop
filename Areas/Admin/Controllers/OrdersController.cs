@@ -16,6 +16,18 @@ namespace ShoeShop.Areas.Admin.Controllers
 
         public IActionResult Index()
         {
+            var orders = _context.Orders.Select(o => new
+            {
+                o.Id,
+                PaymentMethod = o.PaymentMethod == 0 ? "Cash on delivery" : "Payment with Paypal",
+                ShippingMethod = o.ShippingMethod.Name,
+                Total = o.SubTotal + o.ShippingFee,
+                o.PaymentStatus,
+                o.OrderStatus,
+                o.CreatedAt,
+                Customer = o.AppUser,
+            }).ToList();
+            ViewBag.Orders = orders;
             return View();
         }
 
@@ -26,7 +38,7 @@ namespace ShoeShop.Areas.Admin.Controllers
                     .Select(o => new
                     {
                         o.Id,
-                        o.PaymentMethod,
+                        PaymentMethod = o.PaymentMethod == 0 ? "Cash on delivery" : "Payment with Paypal",
                         ShippingMethod = o.ShippingMethod.Name,
                         o.SubTotal,
                         o.ShippingFee,
@@ -47,8 +59,25 @@ namespace ShoeShop.Areas.Admin.Controllers
                             p.Quantity,
                         }).ToList()
                     }).FirstOrDefault();
+            if(order == null)
+            {
+                return NotFound();
+            }
             ViewBag.Order = order;
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Confirm(int id)
+        {
+            var order = await _context.Orders.FindAsync(id);
+            if(order != null)
+            {
+                order.OrderStatus = 1;
+                _context.SaveChangesAsync();
+                return Json(new { status = "Confirmed" });
+            }
+            return Json(new { status = "Not found order id" });
         }
     }
 }

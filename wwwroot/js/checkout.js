@@ -41,6 +41,9 @@ const loadCart = () => {
 		success: function (response) {
 			cartData = mergeCartData(response);
 			console.info(cartData);
+			if (cartData.length === 0) {
+				$("#btn-complete").prop("disabled", true);
+			}
 			renderOrderSummary();
 		},
 		error: function (error) {
@@ -82,12 +85,13 @@ $('input[name="checkout-delivery"]').change(function () {
 
 $("#btn-complete").on('click', function (e) {
 	const paymentMethod = $('input[name="checkout-payment"]:checked').val();
+	const AddressId = $('#choose-address').val();
 
 	const checkoutData = {
 		Cart: getCartStorage(),
 		ShippingMethodId: $('input[name="checkout-delivery"]:checked').data('id'),
 		PaymentMethodId: paymentMethod,
-		AddressId: $('#choose-address').val(),
+		AddressId,
 		NewAddress: {
 			FullName: $("#checkout-fullname").val(),
 			Email: $("#checkout-email").val(),
@@ -97,24 +101,26 @@ $("#btn-complete").on('click', function (e) {
 		OrderDescription: $("#checkout-desc").val()
 	}
 
-	console.info(checkoutData);
+	if (AddressId != -1 || (AddressId == -1 && $(".add-new-address-form").valid())) {
+		$.ajax({
+			url: '/payment/CreatePaymentUrl',
+			type: 'POST',
+			contentType: 'application/json',
+			data: JSON.stringify(checkoutData),
+			beforeSend: function () {
+				Dashmix.helpers('jq-notify', { type: 'info', icon: 'fa fa-spinner fa-spin me-1', align: 'center', message: 'Order is being processed !' });
+			},
+			success: function (response) {
+				location.href = response;
+				localStorage.setItem('cart', JSON.stringify([]));
+			},
+			error: function (error) {
+				console.error('Error:', error);
+			}
+		});
+	}
 
-	$.ajax({
-		url: '/payment/CreatePaymentUrl',
-		type: 'POST',
-		contentType: 'application/json',
-		data: JSON.stringify(checkoutData),
-		beforeSend: function () {
-			console.log('Request is pending...');
-		},
-		success: function (response) {
-			location.href = response;
-			localStorage.setItem('cart', JSON.stringify([]));
-		},
-		error: function (error) {
-			console.error('Error:', error);
-		}
-	});
+	
 });
 
 const checkChooseAddress = () => {
@@ -129,4 +135,30 @@ checkChooseAddress();
 $('#choose-address').on('change', function () {
 	$('.address-item').addClass('d-none');
 	checkChooseAddress();
+});
+
+jQuery(".add-new-address-form").validate({
+	ignore: [],
+	rules: {
+		"checkout-fullname": {
+			required: !0
+		},
+		"checkout-email": {
+			required: !0,
+			number: !0
+		},
+		"checkout-phone": {
+			required: !0
+		},
+		"checkout-address": {
+			required: !0,
+			number: !0
+		}
+	},
+	messages: {
+		"checkout-fullname": "Please enter fullname!",
+		"checkout-email": "Please enter a email!",
+		"checkout-phone": "Please enter a phone!",
+		"checkout-address": "Please select a address!",
+	}
 });
