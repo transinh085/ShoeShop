@@ -22,12 +22,16 @@ namespace ShoeShop.Data.Seeder
                         },
                         new Brand
                         {
-                            Name = "Nike"
+                            Name = "Nike",
                         },
 						new Brand
 						{
-							Name = "Bitis"
-						}
+							Name = "Bitis",
+						},
+                        new Brand
+                        {
+                            Name = "Ananas",
+                        },
 					});
                     context.SaveChanges();
                 }

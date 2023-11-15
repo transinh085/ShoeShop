@@ -4,6 +4,8 @@ using ShoeShop.Data;
 using ShoeShop.Models;
 using System.Diagnostics;
 
+
+
 namespace ShoeShop.Controllers
 {
     public class HomeController : Controller
@@ -18,7 +20,7 @@ namespace ShoeShop.Controllers
 
         public async Task<IActionResult> Index()
         {
-			ViewBag.Featured = await _context.Products.Where(p => p.IsFeatured == true)
+			ViewBag.Featured = await _context.Products.Where(p => p.IsFeatured == false)
 				.Include(p => p.Thumbnail)
 				.OrderByDescending(p => p.CreatedAt)
 				.Take(8)
@@ -30,11 +32,7 @@ namespace ShoeShop.Controllers
 			return View();
         }
 
-        [Route("contact")]
-        public IActionResult Contact()
-        {
-            return View();
-        }
+		
 
         [Route("trackorder")]
         public IActionResult TrackOrder()
@@ -67,3 +65,4 @@ namespace ShoeShop.Controllers
         }
     }
 }
+

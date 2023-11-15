@@ -24,6 +24,8 @@
 	<ItemGroup>
 	  <Folder Include="Areas\Admin\Data\" />
 	  <Folder Include="Areas\Admin\Models\" />
+	  <Folder Include="Areas\Admin\Views\NewFolder\" />
+	  <Folder Include="Views\NewFolder\" />
 	  <Folder Include="wwwroot\assets\js\pages\" />
 	</ItemGroup>
 </Project>
