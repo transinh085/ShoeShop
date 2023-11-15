@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using ShoeShop.Data.Enum;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ShoeShop.Models
 {
@@ -16,7 +17,7 @@ namespace ShoeShop.Models
         public string Description { get; set; }
         public int AddressId { get; set; }
         public Address Address { get; set; }
-        public int OrderStatus { get; set; }
+        public OrderStatus OrderStatus { get; set; }
         public bool PaymentStatus { get; set; } = false;
         public DateTime? CreatedAt { get; set; } = DateTime.Now;
         public List<OrderDetail> Details { get; set; }

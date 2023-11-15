@@ -3,183 +3,209 @@
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
+@section Styles {
+    <link rel="stylesheet" href="~/admin/js/plugins/sweetalert2/sweetalert2.min.css">
+    <link rel="stylesheet" href="~/admin/js/plugins/datatables-bs5/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="~/admin/js/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css">
+}
+
 <div class="content">
-    <!-- Quick Overview -->
-    <div class="row items-push">
-        <div class="col-6 col-lg-3">
-            <a class="block block-rounded block-link-shadow text-center h-100 mb-0" href="be_pages_ecom_orders.html">
-                <div class="block-content py-5">
-                    <div class="fs-3 fw-semibold text-primary mb-1">78</div>
-                    <p class="fw-semibold fs-sm text-muted text-uppercase mb-0">
-                        Pending
-                    </p>
-                </div>
-            </a>
-        </div>
-        <div class="col-6 col-lg-3">
-            <a class="block block-rounded block-link-shadow text-center h-100 mb-0" href="javascript:void(0)">
-                <div class="block-content py-5">
-                    <div class="fs-3 fw-semibold mb-1">126</div>
-                    <p class="fw-semibold fs-sm text-muted text-uppercase mb-0">
-                        Today
-                    </p>
-                </div>
-            </a>
-        </div>
-        <div class="col-6 col-lg-3">
-            <a class="block block-rounded block-link-shadow text-center h-100 mb-0" href="javascript:void(0)">
-                <div class="block-content py-5">
-                    <div class="fs-3 fw-semibold mb-1">350</div>
-                    <p class="fw-semibold fs-sm text-muted text-uppercase mb-0">
-                        Yesterday
-                    </p>
-                </div>
-            </a>
-        </div>
-        <div class="col-6 col-lg-3">
-            <a class="block block-rounded block-link-shadow text-center h-100 mb-0" href="javascript:void(0)">
-                <div class="block-content py-5">
-                    <div class="fs-3 fw-semibold mb-1">89.752</div>
-                    <p class="fw-semibold fs-sm text-muted text-uppercase mb-0">
-                        This Month
-                    </p>
-                </div>
-            </a>
-        </div>
-    </div>
-    <!-- END Quick Overview -->
     <!-- All Orders -->
     <div class="block block-rounded">
         <div class="block-header block-header-default">
             <h3 class="block-title">All Orders</h3>
-            <div class="block-options">
-                <div class="dropdown">
-                    <button type="button" class="btn btn-alt-secondary" id="dropdown-ecom-filters" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Filters
-                        <i class="fa fa-angle-down ms-1"></i>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-ecom-filters">
-                        <a class="dropdown-item d-flex align-items-center justify-content-between" href="javascript:void(0)">
-                            Pending..
-                            <span class="badge bg-primary rounded-pill">78</span>
-                        </a>
-                        <a class="dropdown-item d-flex align-items-center justify-content-between" href="javascript:void(0)">
-                            Processing
-                            <span class="badge bg-black-50 rounded-pill">12</span>
-                        </a>
-                        <a class="dropdown-item d-flex align-items-center justify-content-between" href="javascript:void(0)">
-                            For Delivery
-                            <span class="badge bg-black-50 rounded-pill">20</span>
-                        </a>
-                        <a class="dropdown-item d-flex align-items-center justify-content-between" href="javascript:void(0)">
-                            Canceled
-                            <span class="badge bg-black-50 rounded-pill">5</span>
-                        </a>
-                        <a class="dropdown-item d-flex align-items-center justify-content-between" href="javascript:void(0)">
-                            Delivered
-                            <span class="badge bg-black-50 rounded-pill">280</span>
-                        </a>
-                        <a class="dropdown-item d-flex align-items-center justify-content-between" href="javascript:void(0)">
-                            All
-                            <span class="badge bg-black-50 rounded-pill">19k</span>
-                        </a>
+        </div>
+        <div class="block-content">
+            <div class="row mb-1">
+                <div class="col-2">
+                    <select id="order-status" class="form-select" aria-label="Filters">
+                        <option value="-2" selected>All</option>
+                        <option value="-1">Canceled</option>
+                        <option value="0">Unconfirmed</option>
+                        <option value="1">Confirmed</option>
+                    </select>
+                </div>
+                <div class="col-6">
+                    <div class="input-daterange input-group" data-date-format="mm/dd/yyyy" data-week-start="1" data-autoclose="true" data-today-highlight="true">
+                        <input type="text" class="form-control" id="order-start-time" name="order-start-time" placeholder="From" data-week-start="1" data-autoclose="true" data-today-highlight="true">
+                        <span class="input-group-text fw-semibold">
+                            <i class="fa fa-fw fa-arrow-right"></i>
+                        </span>
+                        <input type="text" class="form-control" id="order-end-time" name="order-end-time" placeholder="To" data-week-start="1" data-autoclose="true" data-today-highlight="true">
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="input-group flex-nowrap">
+                        <span class="input-group-text" id="addon-wrapping"><i class="fa fa-fw fa-search"></i></span>
+                        <input type="text" class="form-control" id="order-query" name="order-query" placeholder="Search all orders..">
                     </div>
                 </div>
             </div>
         </div>
-        <div class="block-content bg-body-dark">
-            <!-- Search Form -->
-            <form method="POST" onsubmit="return false;">
-                <div class="mb-4">
-                    <input type="text" class="form-control form-control-alt" id="dm-ecom-orders-search" name="dm-ecom-orders-search" placeholder="Search all orders..">
-                </div>
-            </form>
-            <!-- END Search Form -->
-        </div>
-        <div class="block-content">
+        <div class="block-content pb-4">
             <!-- All Orders Table -->
             <div class="table-responsive">
-                <table class="table table-borderless table-striped table-vcenter fs-sm">
+                <table class="table table-striped table-vcenter fs-sm" id="orders-table">
                     <thead>
                         <tr>
                             <th class="text-center" style="width: 100px;">ID</th>
-                            <th class="d-none d-xl-table-cell">Customer</th>
-                            <th class="d-none d-sm-table-cell text-start">Payment Method</th>
-                            <th class="d-none d-sm-table-cell text-start">Shipping Method</th>
-                            <th class="d-none d-xl-table-cell text-center">Total</th>
+                            <th>Customer</th>
+                            <th>Payment Method</th>
+                            <th>Shipping Method</th>
+                            <th class="text-center">Total</th>
                             <th>Status</th>
-                            <th class="d-none d-sm-table-cell">Submitted</th>
+                            <th>Submitted</th>
                             <th class="text-center">Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        @foreach (var item in ViewBag.Orders)
-                        {
-                            <tr>
-                                <td class="text-center">
-                                    <a class="fw-semibold" href="/admin/orders/detail/@item.Id">
-                                        <strong>#@item.Id</strong>
-                                    </a>
-                                </td>
-                                <td class="d-none d-xl-table-cell">
-                                    <a class="fw-semibold" href="be_pages_ecom_customer.html">@item.Customer.FullName</a>
-                                </td>
-                                <td class="d-none d-sm-table-cell text-start">
-                                    @item.PaymentMethod
-                                </td>
-                                <td class="d-none d-sm-table-cell text-start">
-                                    @item.ShippingMethod
-                                </td>
-                                <td class="d-none d-xl-table-cell text-center">
-                                    <strong>@item.Total</strong>
-                                </td>
-                                <td class="fs-base">
-                                    <span class="badge rounded-pill bg-danger">Canceled</span>
-                                </td>
-                                <td class="d-none d-sm-table-cell">@item.CreatedAt</td>
-                                <td class="text-center fs-base">
-                                    <a class="btn btn-sm btn-alt-secondary" href="/admin/orders/detail/@item.Id">
-                                        <i class="fa fa-fw fa-eye"></i>
-                                    </a>
-                                    <a class="btn btn-sm btn-alt-secondary" href="javascript:void(0)">
-                                        <i class="fa fa-fw fa-times text-danger"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
                 </table>
             </div>
             <!-- END All Orders Table -->
-            <!-- Pagination -->
-            <nav aria-label="Photos Search Navigation">
-                <ul class="pagination justify-content-end mt-2">
-                    <li class="page-item">
-                        <a class="page-link" href="javascript:void(0)" tabindex="-1" aria-label="Previous">
-                            Prev
-                        </a>
-                    </li>
-                    <li class="page-item active">
-                        <a class="page-link" href="javascript:void(0)">1</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="javascript:void(0)">2</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="javascript:void(0)">3</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="javascript:void(0)">4</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="javascript:void(0)" aria-label="Next">
-                            Next
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-            <!-- END Pagination -->
         </div>
     </div>
     <!-- END All Orders -->
 </div>
+
+
+@section Scripts {
+    <script src="~/admin/js/plugins/sweetalert2/sweetalert2.min.js"></script>
+    <script src="~/admin/js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script src="~/admin/js/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/admin/js/plugins/datatables-bs5/js/dataTables.bootstrap5.min.js"></script>
+    <script>
+        Dashmix.helpersOnLoad(['jq-datepicker']);
+
+        const formatDateTime = (apiDateString) => {
+            const dateObject = new Date(apiDateString);
+
+            const hours = dateObject.getHours().toString().padStart(2, '0');
+            const minutes = dateObject.getMinutes().toString().padStart(2, '0');
+            const day = dateObject.getDate().toString().padStart(2, '0');
+            const month = (dateObject.getMonth() + 1).toString().padStart(2, '0'); // Tháng bắt đầu từ 0
+            const year = dateObject.getFullYear();
+
+            return `${hours}:${minutes} ${day}/${month}/${year}`;
+        }
+
+        const getBadge = (value) => {
+            let result = '';
+            switch (value) {
+                case -1:
+                    result = `<span class="badge rounded-pill bg-danger">Cancelled</span>`;
+                    break;
+                case 0:
+                    result = `<span class="badge rounded-pill bg-warning">Pending</span>`;
+                    break;
+                case 1:
+                    result = `<span class="badge rounded-pill bg-success">Confirmed</span>`;
+                    break;
+                default:
+                    result = `<span class="badge rounded-pill bg-secondary">Unknown</span>`;
+            }
+            return result;
+        };
+
+        $(document).ready(function () {
+            jQuery.extend(jQuery.fn.dataTable.ext.classes, {
+                sWrapper: "dataTables_wrapper dt-bootstrap5",
+                sFilterInput: "form-control",
+                sLengthSelect: "form-select"
+            });
+            jQuery.extend(!0, jQuery.fn.dataTable.defaults, {
+                language: {
+                    lengthMenu: "_MENU_",
+                    search: "_INPUT_",
+                    searchPlaceholder: "Search..",
+                    info: "Page <strong>_PAGE_</strong> of <strong>_PAGES_</strong>",
+                    paginate: {
+                        first: '<i class="fa fa-angle-double-left"></i>',
+                        previous: '<i class="fa fa-angle-left"></i>',
+                        next: '<i class="fa fa-angle-right"></i>',
+                        last: '<i class="fa fa-angle-double-right"></i>'
+                    }
+                }
+            });
+            var table = $("#orders-table").DataTable({
+                pageLength: 10,
+                lengthMenu: [
+                    [5, 10, 20],
+                    [5, 10, 20]
+                ],
+                "processing": true,
+                "serverSide": true,
+                "filter": false,
+                "lengthChange": false,
+                "ajax": {
+                    "url": "/admin/orders/getorders",
+                    "type": "POST",
+                    "datatype": "json",
+                    "data": function (d) {
+                        d.query = $('#order-query').val();
+                        d.dateStart = $('#order-start-time').val();
+                        d.dateEnd = $('#order-end-time').val();
+                        d.status = $('#order-status').val();
+                    }
+                },
+                "columnDefs": [
+                    { "targets": [1, 2, 3, 5, 7], "sortable": false },
+                ],
+                "columns": [
+                    { "data": "id", "name": "Id", "autoWidth": true, "className": "text-center" },
+                    { "data": "customer", "name": "Customer"},
+                    { "data": "paymentMethod", "name": "Payment Method"},
+                    { "data": "shippingMethod", "name": "Shipping Method"},
+                    { "data": "total", "name": "Total", "autoWidth": true, "className": "text-center fw-bold", render: (data) => `$${data}` },
+                    { "data": "orderStatus", "name": "Status", "autoWidth": true, "render": (data) => getBadge(data) },
+                    { "data": "createdAt", "name": "Submited", "autoWidth": true, "render": (data) => formatDateTime(data) },
+                    {
+                        "render": function (data, type, row) {
+                            return `<div class="btn-group">
+                                        <a href="/admin/orders/detail/${row.id}" class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled" data-bs-toggle="tooltip" aria-label="Edit" data-bs-original-title="Edit">
+                                          <i class="fa fa-fw fa-eye"></i>
+                                        </a>
+                                        <button type="button" data-id="${row.id}" class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled btn-delete" data-bs-toggle="tooltip" aria-label="Delete" data-bs-original-title="Delete">
+                                           <i class="fa fa-times"></i>
+                                        </button></div>`;
+                        }, "className": "text-center"
+                    },
+                ],
+                order: [
+                    [0, 'desc']
+                ],
+                autoWidth: !1,
+                responsive: !0
+            });
+
+            $('#order-query, #order-start-time, #order-end-time, #order-status').on('change', function () {
+                table.draw();
+            });
+        });
+        $(document).on("click", ".btn-delete", async function () {
+            let trid = $(this).data("id");
+            let result = await Swal.fire({
+                title: "Are you sure?",
+                text: "Would you like to delete this color?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, I'm sure!",
+                cancelButtonText: "Cancel"
+            });
+
+            if (result.value) {
+                try {
+                    let response = await $.post(`./Colors/Delete/${trid}`);
+                    if (response) {
+                        Swal.fire("Deleted!", "Successfully deleted the color.", "success");
+                        $(this).closest('tr').remove();
+                    } else {
+                        Swal.fire("Lỗi !", "Deletion of the color was not successful.", "error");
+                    }
+                } catch (error) {
+                    console.error("Error:", error);
+                    Swal.fire("Lỗi !", "Deletion of the color was not successful.", "error");
+                }
+            }
+        });
+
+    </script>
+}

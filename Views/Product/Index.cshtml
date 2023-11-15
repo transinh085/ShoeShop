@@ -272,6 +272,20 @@
 				return url.search || '';
 			}
 
+			function getLabel(product) {
+				if (product.PriceSale !== 0) {
+					var roundedPercentage = 100 - Math.round((product.PriceSale / product.Price) * 100);
+					return '<span class="ribbon off">-' + roundedPercentage + '%</span>';
+				} else {
+					if (product.Label === 1) {
+						return '<span class="ribbon new">New</span>';
+					} else if (product.Label === 2) {
+						return '<span class="ribbon hot">Hot</span>';
+					}
+				}
+				return '';
+			}
+
 			function fetchData() {
 				const queryParams = getQueryParamString();
 				const urlFetch = "/Product/allProducts" + (queryParams.length > 0 ? queryParams : '');
@@ -286,6 +300,7 @@
 						response?.Result.forEach(product => {
 							html += `<div class="col-6 col-md-4">
 									<div class="grid_item">
+												${getLabel(product)}
 										<figure>
 											<a href="/Product/Detail/${product.Id}">
 											<img class="img-fluid lazy loaded" src="img/products/${product.Thumbnail.Name}" alt="${product.name}" data-was-processed="true">
@@ -295,13 +310,8 @@
 											<h3>${product.Name}</h3>
 										</a>
 										<div class="price_box">
-												<span class="new_price">${product.Price}$</span>
+											${product.PriceSale !== 0 ? `<span class="new_price">$${product.PriceSale.toFixed(2)}</span> <span class="old_price">$${product.Price.toFixed(2)}</span>` : `<span class="new_price">$${product.Price.toFixed(2)}</span>`}
 										</div>
-										<ul>
-											<li><a href="#0" class="tooltip-1" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="Add to favorites"><i class="ti-heart"></i><span>Add to favorites</span></a></li>
-											<li><a href="#0" class="tooltip-1" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="Add to compare"><i class="ti-control-shuffle"></i><span>Add to compare</span></a></li>
-											<li><a href="#0" class="tooltip-1" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="Add to cart"><i class="ti-shopping-cart"></i><span>Add to cart</span></a></li>
-										</ul>
 									</div>
 								</div>`
 						})
