@@ -74,7 +74,10 @@
                 <label class="form-label" asp-for="TopicID">Topic</label>
                 <select class="js-select2 form-select" id="topic-id" asp-for="TopicID" style="width: 100%;" data-placeholder="Choose topic..">
                     <option></option>
-                    <option value="1">Sinh</option>
+                    @foreach (var topic in ViewBag.Topics)
+                    {
+                        <option value="@topic.Id">@topic.Name</option>
+                    }
                     <!-- Add dynamic options if needed -->
                 </select>
             </div>
