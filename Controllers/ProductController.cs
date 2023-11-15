@@ -81,7 +81,8 @@ namespace ShoeShop.Controllers
 				foreach (var range in priceRanges)
 				{
 					var productCount = await _context.Products
-						.CountAsync(product => product.Price >= range.Min && product.Price <= range.Max);
+						.CountAsync(product => product.Price >= range.Min && product.Price <= range.Max ||
+							product.PriceSale != 0 && product.PriceSale >= range.Min && product.PriceSale <= range.Max);
 
 					productsWithPrices.Add(new PriceRangeInfo
 					{
