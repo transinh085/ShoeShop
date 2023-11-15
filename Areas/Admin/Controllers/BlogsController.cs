@@ -104,7 +104,6 @@ namespace ShoeShop.Areas.Admin.Controllers
                 {
                     Slug = post.Slug,
                     Name = post.Name,
-
                     Thumbnail = img,
                     CreateBy = user,
                     TopicID = post.TopicID,

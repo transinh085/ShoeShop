@@ -286,7 +286,7 @@ namespace ShoeShop.Migrations
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<bool>("IsDetele")
+                    b.Property<bool?>("IsDetele")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Name")
@@ -372,7 +372,7 @@ namespace ShoeShop.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("VariantId")
+                    b.Property<int?>("VariantId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -743,9 +743,7 @@ namespace ShoeShop.Migrations
                 {
                     b.HasOne("ShoeShop.Models.Variant", null)
                         .WithMany("Images")
-                        .HasForeignKey("VariantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("VariantId");
                 });
 
             modelBuilder.Entity("ShoeShop.Models.Order", b =>
