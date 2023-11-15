@@ -10,17 +10,23 @@ using System.Text.Json;
 using Bogus.DataSets;
 using System.Runtime.InteropServices;
 using System.Drawing.Drawing2D;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ShoeShop.Controllers
 {
     public class ProductController : Controller
     {
         private readonly AppDbContext _context;
+		private readonly SignInManager<AppUser> _signInManager;
+		private readonly UserManager<AppUser> _userManager;
 
-        public ProductController(AppDbContext context)
+		public ProductController(UserManager<AppUser> userManager,
+			SignInManager<AppUser> signInManager, AppDbContext context)
         {
             _context = context;
-        }
+			_signInManager = signInManager;
+			_userManager = userManager;
+		}
 
         public async Task<IActionResult> Index()
         {
@@ -75,7 +81,8 @@ namespace ShoeShop.Controllers
 				foreach (var range in priceRanges)
 				{
 					var productCount = await _context.Products
-						.CountAsync(product => product.Price >= range.Min && product.Price <= range.Max);
+						.CountAsync(product => product.Price >= range.Min && product.Price <= range.Max ||
+							product.PriceSale != 0 && product.PriceSale >= range.Min && product.PriceSale <= range.Max);
 
 					productsWithPrices.Add(new PriceRangeInfo
 					{
@@ -102,8 +109,56 @@ namespace ShoeShop.Controllers
             var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
 
             if (product == null) return NotFound();
+			var currentUser = await _userManager.GetUserAsync(User);
 
-            ViewBag.Product = product;
+			if (currentUser == null)
+			{
+				ViewBag.CheckReview = 0;
+			}
+			else
+			{
+				var checkByProduct = _context.Orders.Count(
+					o => o.AppUserId == currentUser.Id &&
+					o.Details.Any(detail => detail.VariantSize.Variant.Product.Id == id)
+				);
+				ViewBag.CheckReview = checkByProduct;
+			}
+			ViewBag.Reviews = await _context.Reviews
+			.Where(review => review.ProductId == id)
+			.OrderByDescending(review => review.CreatedAt)
+			.Include(review => review.AppUser)
+			.ToListAsync();
+
+			var countReview = ViewBag.CountView = _context.Reviews.Count(review => review.ProductId == id);
+			ReviewStats reviewStats = new ReviewStats();
+			if (countReview != 0)
+			{
+				var totalRating = ViewBag.TotalRating = _context.Reviews
+					.Where(review => review.ProductId == id)
+					.Sum(review => review.Rating);
+				ViewBag.AverageRating = (totalRating / (decimal)countReview).ToString("0.0");
+				reviewStats.OneStar = _context.Reviews.Count(review => review.ProductId == id && review.Rating == 1);
+				reviewStats.PercentOneStar = ((decimal)reviewStats.OneStar / countReview * 100).ToString("0") + "%";
+
+				reviewStats.TwoStar = _context.Reviews.Count(review => review.ProductId == id && review.Rating == 2);
+				reviewStats.PercentTwoStar = ((decimal)reviewStats.TwoStar / countReview * 100).ToString("0") + "%";
+
+				reviewStats.ThreeStar = _context.Reviews.Count(review => review.ProductId == id && review.Rating == 3);
+				reviewStats.PercentThreeStar = ((decimal)reviewStats.ThreeStar / countReview * 100).ToString("0") + "%";
+
+				reviewStats.FourStar = _context.Reviews.Count(review => review.ProductId == id && review.Rating == 4);
+				reviewStats.PercentFourStar = ((decimal)reviewStats.FourStar / countReview * 100).ToString("0") + "%";
+
+				reviewStats.FiveStar = _context.Reviews.Count(review => review.ProductId == id && review.Rating == 5);
+				reviewStats.PercentFiveStar = ((decimal)reviewStats.FiveStar / countReview * 100).ToString("0") + "%";
+			}
+			else
+			{
+				ViewBag.AverageRating = 0;
+				ViewBag.TotalRating = 0;
+			};
+			ViewBag.ReviewStats = reviewStats;
+			ViewBag.Product = product;
 			ViewBag.Related = await _context.Products
 				.Include(product => product.Thumbnail)
 				.Where(p => p.CategoryId == product.CategoryId)
@@ -123,9 +178,10 @@ namespace ShoeShop.Controllers
 						ProductId = v.Variant.ProductId,
 						SizeName = v.Size.Name,
 						ColorName = v.Variant.Color.Name,
-						thumbnail = v.Variant.Thumbnail.Name,
+						Thumbnail = v.Variant.Thumbnail.Name,
 						Title = v.Variant.Product.Name,
-						Price = v.Variant.Product.Price
+						Price = v.Variant.Product.Price,
+						PriceSale = v.Variant.Product.PriceSale,
 					})
 					.ToListAsync();
 			return Ok(variantSize);
@@ -136,71 +192,95 @@ namespace ShoeShop.Controllers
 		[HttpGet, ActionName("allProducts")]
 		public IActionResult GetProductList(
 			int page = 1,
-			int pageSize = 10,
+			int pageSize = 9,
 			string query = "",
 			string categories = "",
 			string brands = "",
 			string colors = "",
-			string sizes = ""
+			string sizes = "",
+			string prices = "",
+			string sort = "date"
 		)
 		{
-			var products = _context.Products
-					.Include(product => product.Thumbnail)
-					.Include(product => product.Variants)
-						.ThenInclude(varient => varient.VariantSizes)
-					.OrderByDescending(product => product.CreatedAt)
-					.ToList();
+			var queryableProducts = _context.Products
+				.Include(product => product.Thumbnail)
+				.Include(product => product.Variants).ThenInclude(variant => variant.VariantSizes)
+				.AsQueryable();
+
+			// Filter by query
 			if (!string.IsNullOrEmpty(query))
 			{
-				products = products.Where(u =>
+				queryableProducts = queryableProducts.Where(u =>
 					u.Slug.Contains(query, StringComparison.OrdinalIgnoreCase) ||
-					u.Name.Contains(query, StringComparison.OrdinalIgnoreCase)
-					)
-					.ToList();
+					u.Name.Contains(query, StringComparison.OrdinalIgnoreCase) ||
+					u.Description.Contains(query, StringComparison.OrdinalIgnoreCase)
+				);
 			}
+
+			// Filter by categories
 			if (!string.IsNullOrEmpty(categories))
 			{
 				string[] cate = categories.Split(',');
-				products = products.Where(u => cate.Contains(u.CategoryId.ToString())).ToList();
+				queryableProducts = queryableProducts.Where(u => cate.Contains(u.CategoryId.ToString()));
 			}
-			if(!string.IsNullOrEmpty(brands))
+
+			// Filter by brands
+			if (!string.IsNullOrEmpty(brands))
 			{
 				string[] bar = brands.Split(",");
-				products = products.Where(u => bar.Contains(u.BrandId.ToString())).ToList();
+				queryableProducts = queryableProducts.Where(u => bar.Contains(u.BrandId.ToString()));
 			}
+
+			// Filter by colors
 			if (!string.IsNullOrEmpty(colors))
 			{
 				string[] col = colors.Split(",");
-				products = products.Where(u =>
-				{
-					return u.Variants.Any(item => col.Contains(item.ColorId.ToString()));
-				}).ToList();
+				queryableProducts = queryableProducts.Where(u => u.Variants.Any(item => col.Contains(item.ColorId.ToString())));
 			}
 
+			// Filter by sizes
 			if (!string.IsNullOrEmpty(sizes))
 			{
 				string[] siz = sizes.Split(",");
-				products = products.Where(u =>
-				{
-					return u.Variants.Any(variantSize =>
-					{
-						return variantSize.VariantSizes.Any(item => siz.Contains(item.SizeId.ToString()));
-					});
-				}).ToList();
+				queryableProducts = queryableProducts.Where(u =>
+					u.Variants.Any(variantSize =>
+						variantSize.VariantSizes.Any(item => siz.Contains(item.SizeId.ToString()))
+					)
+				);
 			}
 
-
-			if (page < 1)
+			// Filter by prices
+			if (!string.IsNullOrEmpty(prices))
 			{
-				page = 1;
+				var priceRangeList = ParsePriceRanges(prices);
+
+				// Materialize the query before the price range filter
+				var materializedProducts = queryableProducts.ToList();
+
+				queryableProducts = materializedProducts.Where(product =>
+					priceRangeList.Any(
+						range => 
+							product.Price >= range.Min && product.Price <= range.Max ||
+							product.PriceSale != 0 && product.PriceSale >= range.Min && product.PriceSale <= range.Max
+						)
+				).AsQueryable();
 			}
 
-			// Tính tổng số trang dựa trên số lượng sản phẩm và kích thước trang
-			int totalItems = products.Count;
-			int totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
 
-			// Lấy danh sách sản phẩm của trang hiện tại
-			var currentPageProduct = products
+			// Order by
+			queryableProducts = sort switch
+			{
+				"date" => queryableProducts.OrderByDescending(product => product.CreatedAt),
+				"price" => queryableProducts.OrderBy(product => product.Price),
+				"price-desc" => queryableProducts.OrderByDescending(product => product.Price),
+				_ => queryableProducts.OrderByDescending(product => product.CreatedAt)
+			};
+
+			// Paginate results
+			var totalItems = queryableProducts.Count();
+			var totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+
+			var currentPageProducts = queryableProducts
 				.Skip((page - 1) * pageSize)
 				.Take(pageSize)
 				.ToList();
@@ -209,24 +289,61 @@ namespace ShoeShop.Controllers
 			{
 				WriteIndented = true,
 				MaxDepth = 100,
-				ReferenceHandler = ReferenceHandler.Preserve
+				ReferenceHandler = ReferenceHandler.IgnoreCycles,
 			};
 
 			var result = new
 			{
 				CurrentPage = page,
 				TotalPages = totalPages,
-				result = currentPageProduct
+				TotalItems = totalItems,
+				Result = currentPageProducts
 			};
 
-			string json = JsonSerializer.Serialize(result, options);
+			return Ok(JsonSerializer.Serialize(result, options));
+		}
 
-			return new ContentResult
+		private List<(decimal Min, decimal Max)> ParsePriceRanges(string prices)
+		{
+			var priceRanges = prices.Split(',');
+			var rangeList = new List<(decimal Min, decimal Max)>();
+
+			foreach (var range in priceRanges)
 			{
-				Content = json,
-				ContentType = "application/json",
-			};
+				var parts = range.Split(':');
+				if (parts.Length == 2 && decimal.TryParse(parts[0], out decimal min) && decimal.TryParse(parts[1], out decimal max))
+				{
+					rangeList.Add((min, max));
+				}
+			}
 
+			return rangeList;
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> AddReview(ReviewViewModel model)
+		{
+			if (!ModelState.IsValid)
+			{
+				return BadRequest(ModelState);
+			}
+
+			var user = await _userManager.GetUserAsync(User);
+			if (user == null)
+			{
+				return Unauthorized();
+			}
+
+			var review = new Review
+			{
+				ProductId = model.ProductId,
+				Description = model.Description,
+				Rating = model.Rating,
+				AppUserId = user.Id
+			};
+			_context.Reviews.Add(review);
+			await _context.SaveChangesAsync();
+			return Ok("Add review product successfully");
 		}
 	}
 }
@@ -239,4 +356,19 @@ public class PriceRangeInfo
 	public string Value { get; set; }
 	public int ProductCount { get; set; }
 }
+
+public class ReviewStats
+{
+	public int OneStar { get; set; } = 0;
+	public string PercentOneStar { get; set; } = "0%";
+	public int TwoStar { get; set; } = 0;
+	public string PercentTwoStar { get; set; } = "0%";
+	public int ThreeStar { get; set; } = 0;
+	public string PercentThreeStar { get; set; } = "0%";
+	public int FourStar { get; set; } = 0;
+	public string PercentFourStar { get; set; } = "0%";
+	public int FiveStar { get; set; } = 0;
+	public string PercentFiveStar { get; set; } = "0%";
+}
+
 

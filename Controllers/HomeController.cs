@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ShoeShop.Data;
 using ShoeShop.Models;
@@ -10,13 +11,18 @@ namespace ShoeShop.Controllers
 {
     public class HomeController : Controller
     {
-		private readonly AppDbContext _context;
+        private readonly UserManager<AppUser> _userManager;
+        private readonly SignInManager<AppUser> _signInManager;
+        private readonly AppDbContext _context;
 
-
-		public HomeController(AppDbContext context)
+        public HomeController(UserManager<AppUser> userManager,
+            SignInManager<AppUser> signInManager,
+            AppDbContext context)
         {
-			_context = context;
-		}
+            _context = context;
+            _signInManager = signInManager;
+            _userManager = userManager;
+        }
 
         public async Task<IActionResult> Index()
         {
@@ -53,9 +59,16 @@ namespace ShoeShop.Controllers
         }
 
 		[Route("checkout")]
-		public IActionResult Checkout()
+		public async Task<IActionResult> Checkout()
 		{
-			return View();
+            var currentUser = await _userManager.GetUserAsync(User);
+            ViewBag.currentUser = currentUser;
+            ViewBag.ShippingMethod = await _context.ShippingMethods.Where(p => p.IsDelete == false).ToListAsync();
+            if(currentUser != null )
+            {
+                ViewBag.Addresses = _context.Addresses.Where(a => a.AppUserId == currentUser.Id).ToList();
+            }
+            return View();
 		}
 
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

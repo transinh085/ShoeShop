@@ -1,13 +1,13 @@
-﻿@model IEnumerable<ShoeShop.Models.Color>
-
-@{
+﻿@{
     ViewData["Title"] = "Colors";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
 @section Styles {
     <link rel="stylesheet" href="~/admin/js/plugins/sweetalert2/sweetalert2.min.css">
+    <link rel="stylesheet" href="~/admin/js/plugins/datatables-bs5/css/dataTables.bootstrap5.min.css">
 }
+
 
 <!-- Hero -->
 <div class="bg-body-light">
@@ -38,42 +38,19 @@
                 </a>
             </div>
         </div>
-        <div class="block-content">
-            <table class="table">
+        <div class="block-content pb-4">
+            <table class="table table-bordered table-striped table-vcenter" id="color-table">
                 <thead>
                     <tr>
                         <th>
-                            @Html.DisplayNameFor(model => model.Id)
+                            ID
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.Name)
+                            Name
                         </th>
                         <th class="text-center">Action</th>
                     </tr>
                 </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Id)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Name)
-                            </td>
-                            <td class="text-center">
-                                <div class="btn-group">
-                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled" data-bs-toggle="tooltip" aria-label="Edit" data-bs-original-title="Edit">
-                                        <i class="fa fa-pencil-alt"></i>
-                                    </a>
-                                    <button type="button" data-id="@item.Id" class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled btn-delete" data-bs-toggle="tooltip" aria-label="Delete" data-bs-original-title="Delete">
-                                        <i class="fa fa-times"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
             </table>
 
         </div>
@@ -82,7 +59,68 @@
 
 @section Scripts {
     <script src="~/admin/js/plugins/sweetalert2/sweetalert2.min.js"></script>
+    <script src="~/admin/js/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/admin/js/plugins/datatables-bs5/js/dataTables.bootstrap5.min.js"></script>
     <script>
+        $(document).ready(function () {
+            jQuery.extend(jQuery.fn.dataTable.ext.classes, {
+                sWrapper: "dataTables_wrapper dt-bootstrap5",
+                sFilterInput: "form-control",
+                sLengthSelect: "form-select"
+            });
+            jQuery.extend(!0, jQuery.fn.dataTable.defaults, {
+                language: {
+                    lengthMenu: "_MENU_",
+                    search: "_INPUT_",
+                    searchPlaceholder: "Search..",
+                    info: "Page <strong>_PAGE_</strong> of <strong>_PAGES_</strong>",
+                    paginate: {
+                        first: '<i class="fa fa-angle-double-left"></i>',
+                        previous: '<i class="fa fa-angle-left"></i>',
+                        next: '<i class="fa fa-angle-right"></i>',
+                        last: '<i class="fa fa-angle-double-right"></i>'
+                    }
+                }
+            });
+            var table = $("#color-table").dataTable({
+                pageLength: 5,
+                lengthMenu: [
+                    [5, 10, 20],
+                    [5, 10, 20]
+                ],
+                "processing": true,
+                "serverSide": true,
+                "filter": true,
+                "ajax": {
+                    "url": "/admin/colors/GetColors",
+                    "type": "POST",
+                    "datatype": "json"
+                },
+                "columnDefs": [
+                    {
+                        "targets": [0, 2],
+                        "sortable": false
+                    }
+                ],
+                "columns": [
+                    { "data": "id", "name": "Id", "autoWidth": true },
+                    { "data": "name", "name": "Name", "autoWidth": true },
+                    {
+                        "render": function (data, type, row) {
+                            return `<div class="btn-group">
+                                            <a href="/admin/colors/edit/${row.id}" class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled" data-bs-toggle="tooltip" aria-label="Edit" data-bs-original-title="Edit">
+                                                <i class="fa fa-pencil-alt"></i>
+                                            </a>
+                                            <button type="button" data-id="${row.id}" class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled btn-delete" data-bs-toggle="tooltip" aria-label="Delete" data-bs-original-title="Delete">
+                                                <i class="fa fa-times"></i>
+                                            </button>
+                                        </div>`;
+                        }, "className": "text-center"
+                    },
+                ]
+            });
+        });
+
         $(document).on("click", ".btn-delete", async function () {
             let trid = $(this).data("id");
             let result = await Swal.fire({

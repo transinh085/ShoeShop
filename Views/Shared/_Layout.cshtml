@@ -5,7 +5,6 @@
 
 @{
 	var currentUser = await UserManager.GetUserAsync(User);
-	Console.WriteLine(currentUser);
 }
 
 
@@ -135,7 +134,7 @@
 											</ul>
 											<div class="total_drop">
 												<div class="clearfix"><strong>Total</strong><span id="cart-total-price">$0.00</span></div>
-												<a href="~/cart" class="btn_1 outline">View Cart</a><a href="checkout.html" class="btn_1">Checkout</a>
+												<a href="~/cart" class="btn_1 outline">View Cart</a><a href="~/checkout" class="btn_1">Checkout</a>
 											</div>
 										</div>
 									</div>
@@ -196,21 +195,7 @@
 		</header>
 		<!-- /header -->
 
-		<div class="top_panel">
-			<div class="container header_panel">
-				<a href="#0" class="btn_close_top_panel"><i class="ti-close"></i></a>
-				<small>What are you looking for?</small>
-			</div>
-			<!-- /header_panel -->
-
-			<div class="container">
-				<div class="search-input">
-					<input type="text" placeholder="Search over 10.000 products...">
-					<button type="submit"><i class="ti-search"></i></button>
-				</div>
-			</div>
-			<!-- /related -->
-		</div>
+		
 		<!-- /search_panel -->
 
 		@RenderBody()
@@ -265,12 +250,15 @@
 								</div>
 							</div>
 							<div class="follow_us">
+								@{
+									string name = "@hgbaodev";
+								}
 								<h5>Follow Us</h5>
 								<ul>
-									<li><a href="#0"><img src="~/img/twitter_icon.svg" alt="" class="lazy"></a></li>
-									<li><a href="#0"><img src="~/img/facebook_icon.svg" alt="" class="lazy"></a></li>
-									<li><a href="#0"><img src="~/img/instagram_icon.svg" alt="" class="lazy"></a></li>
-									<li><a href="#0"><img src="~/img/youtube_icon.svg" alt="" class="lazy"></a></li>
+									<li><a href="https://twitter.com/hgbaodev"><img src="~/img/twitter_icon.svg" alt="" class="lazy"></a></li>
+									<li><a href="https://www.facebook.com/hgbaodev"><img src="~/img/facebook_icon.svg" alt="" class="lazy"></a></li>
+									<li><a href="https://www.instagram.com/hgbaodev"><img src="~/img/instagram_icon.svg" alt="" class="lazy"></a></li>
+									<li><a href="https://www.youtube.com/@name"><img src="~/img/youtube_icon.svg" alt="" class="lazy"></a></li>
 								</ul>
 							</div>
 						</div>
@@ -340,14 +328,14 @@
 	</div>
 	<div class="top_panel top_panel_search">
 		<div class="container header_panel">
-			<a href="#0" class="btn_close_top_panel btn_close_top_panel_search"><i class="ti-close"></i></a>
+			<a class="btn_close_top_panel btn_close_top_panel_search"><i class="ti-close"></i></a>
 			<small>What are you looking for?</small>
 		</div>
 		<!-- /header_panel -->
 
 		<div class="container">
 			<div class="search-input">
-				<input type="text" placeholder="Search over 10.000 products...">
+				<input id="search-input" type="text" placeholder="Search over 10.000 products...">
 				<button type="submit"><i class="ti-search"></i></button>
 			</div>
 		</div>
@@ -357,7 +345,26 @@
 	<!-- COMMON SCRIPTS -->
 	<script src="~/js/common_scripts.min.js"></script>
 	<script src="~/js/main.js"></script>
-
+	<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+	<script>
+		$(document).ready(function () {
+			$("#form-search").validate({
+				rules: {
+					"inputSearch": {
+						required: true
+					}
+				},
+				messages: {
+					"input-search": {
+						required: "Please enter your search"
+					}
+				},
+				submitHandler: function (form) {
+					
+				}
+			});
+		});
+	</script>
 	<!-- SPECIFIC SCRIPTS -->
     @await RenderSectionAsync("Scripts", required: false)
 </body>

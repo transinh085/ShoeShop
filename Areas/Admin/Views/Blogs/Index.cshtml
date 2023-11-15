@@ -13,51 +13,49 @@
 <table class="table">
     <thead>
         <tr>
-         @*    <th>
-                @Html.DisplayNameFor(model => model.Slug)
-            </th>*@
+            <th>
+                ID
+            </th>
             <th> 
                 Tiêu đề
             </th>
             <th>
-                Ngày tạo
+                Tác giả
             </th>
             <th>
-                Người đăng
+                Thời gian tạo
             </th>
             <th>
                 Chủ đề
             </th>
-            <th>
+           @*  <th>
                 @Html.DisplayNameFor(model => model.Content)
-            </th>
+            </th> *@
 
-            <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
-@*             <td>
-                @Html.DisplayFor(modelItem => item.Slug)
-            </td> *@
+
+                <td>@Html.DisplayFor(modelItem => item.Id)</td>
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedAt)
+                    <div class="d-flex gap-2 align-items-center">
+                        <img class="rounded" style="width: 40px; height: 40px" src="~/img/blogs/@item.Thumbnail.Name"/>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </div>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CreateBy)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Topic.Id)
+                @Html.DisplayFor(modelItem => item.CreatedAt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Topic.Name)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Content)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsDetele)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

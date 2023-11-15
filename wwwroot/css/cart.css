@@ -219,9 +219,15 @@
   font-size: 16px;
   font-size: 1rem;
 }
-.box_cart ul li span {
-  float: left;
+
+.box_cart ul li {
+  display: flex;
+  justify-content: space-between;
 }
+
+/*.box_cart ul li span {
+  float: left;
+}*/
 .box_cart ul li:last-child {
   margin-top: 10px;
   text-transform: uppercase;

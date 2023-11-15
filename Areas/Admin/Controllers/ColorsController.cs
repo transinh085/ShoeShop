@@ -18,9 +18,41 @@ namespace ShoeShop.Areas.Admin.Controllers
         // GET: Admin/Colors
         public async Task<IActionResult> Index()
         {
-              return _context.Colors != null ? 
-                          View(await _context.Colors.ToListAsync()) :
-                          Problem("Entity set 'AppDbContext.Colors'  is null.");
+              return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetColors()
+        {
+            try
+            {
+                var draw = Request.Form["draw"].FirstOrDefault();
+                var start = Request.Form["start"].FirstOrDefault();
+                var length = Request.Form["length"].FirstOrDefault();
+                var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+                var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+                var searchValue = Request.Form["search[value]"].FirstOrDefault();
+                int pageSize = length != null ? Convert.ToInt32(length) : 0;
+                int skip = start != null ? Convert.ToInt32(start) : 0;
+                int recordsTotal = 0;
+                var colorData = _context.Colors.AsQueryable();
+                if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
+                {
+                    colorData = colorData.OrderBy(c => EF.Property<object>(c, sortColumn)).ThenBy(c => c.Id);
+                }
+                if (!string.IsNullOrEmpty(searchValue))
+                {
+                    colorData = colorData.Where(m => m.Name.Contains(searchValue));
+                }
+                recordsTotal = colorData.Count();
+                var data = colorData.Skip(skip).Take(pageSize).ToList();
+                var jsonData = new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data };
+                return Ok(jsonData);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         // GET: Admin/Colors/Details/5
@@ -144,11 +176,11 @@ namespace ShoeShop.Areas.Admin.Controllers
             var color = await _context.Colors.FindAsync(id);
             if (color != null)
             {
-                _context.Colors.Remove(color);
+                color.IsDelete = true;
             }
             
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Ok(new { message = "Delete successfully" });
         }
 
         private bool ColorExists(int id)

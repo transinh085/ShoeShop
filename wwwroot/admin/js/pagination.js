@@ -166,28 +166,28 @@
 
         const range = delta + 4; // use for handle visible number of links left side
 
+        console.log('range', range)
         let render = "";
         let renderTwoSide = "";
         let dot = `<li class="page-item"><a class="page-link" href="javascript:void(0)">...</a></li>`;
         let countTruncate = 0; // use for ellipsis - truncate left side or right side
-
+        //currentPage = 11
         // use for truncate two side
-        const numberTruncateLeft = currentPage - delta;
-        const numberTruncateRight = currentPage + delta;
+        console.log('currentPage', currentPage)
+        const numberTruncateLeft = currentPage - delta; // 6,7
+        const numberTruncateRight = currentPage + delta; // 16,17
+        console.log('numberTruncateLeft', numberTruncateLeft)
+        console.log('numberTruncateRight', numberTruncateRight)
 
         let active = "";
         for (let pos = 1; pos <= totalPages; pos++) {
             active = pos === currentPage ? "active" : "";
-
-            // truncate
-            if (totalPages >= 2 * range - 1 && truncate) {
-                if (numberTruncateLeft > 3 && numberTruncateRight < totalPages - 3 + 1) {
-                    // truncate 2 side
+            if (totalPages >= 2 * range - 1 && truncate) { // 16 >= 2 * 5 - 1 && truncate = true
+                if (numberTruncateLeft > 3 && numberTruncateRight < totalPages - 3 + 1) { //6 > 3 && 16 < 16 - 3 +1
                     if (pos >= numberTruncateLeft && pos <= numberTruncateRight) {
                         renderTwoSide += this.renderPage(pos, active);
                     }
                 } else {
-                    // truncate left side or right side
                     if (
                         (currentPage < range && pos <= range) ||
                         (currentPage > totalPages - range && pos >= totalPages - range + 1) ||
@@ -259,7 +259,6 @@
             let pageId = element.getAttribute("data-page");
             this.valuePage.currentPage = pageId;
         }
-        this.pagination();
         this.handleButtonLeft();
         this.handleButtonRight();
         this.updateURL();

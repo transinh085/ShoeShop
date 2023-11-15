@@ -7,10 +7,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ShoeShop.Data;
 using ShoeShop.Models;
-using ShoeShop.ViewModels.Product;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using ShoeShop.ViewModels;
+using ShoeShop.Data.Seeder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore;
 
 namespace ShoeShop.Areas.Admin.Controllers
 {
@@ -18,11 +20,12 @@ namespace ShoeShop.Areas.Admin.Controllers
     public class BlogsController : Controller
     {
         private readonly AppDbContext _context;
+        //private readonly UserManager<AppUser> userManager;
 
-
-
-
-
+        //public BlogsController(UserManager<AppUser> userManager)
+        //{
+        //    this.userManager = userManager;
+        //}
         public BlogsController(AppDbContext context)
         {
             _context = context;
@@ -31,8 +34,11 @@ namespace ShoeShop.Areas.Admin.Controllers
         // GET: Admin/Blogs
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Blogs.Include(b => b.Topic);
-            return View(await appDbContext.ToListAsync());
+            var posts = await _context.Blogs
+                .Include(b => b.Topic)
+                .Include(b => b.Thumbnail)
+                .ToListAsync();
+            return View(posts);
         }
 
         // GET: Admin/Blogs/Details/5
@@ -57,7 +63,6 @@ namespace ShoeShop.Areas.Admin.Controllers
         // GET: Admin/Blogs/Create
         public async Task<IActionResult> Create()
         {
-            ViewData["TopicID"] = new SelectList(_context.Topics, "Id", "Id");
             ViewBag.Topics = await _context.Topics.ToListAsync();
 
             return View();
@@ -66,51 +71,55 @@ namespace ShoeShop.Areas.Admin.Controllers
         // POST: Admin/Blogs/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([FromForm] BlogViewModel blogModel)
+        public async Task<IActionResult> Create(BlogViewModel post)
         {
-            //if (ModelState.IsValid)
+            //if(await _context.Blogs.AddAsync(p => p.Slug == post.Slug))
             //{
-            //    _context.Add(blog);
-            //    await _context.SaveChangesAsync();
-            //    return RedirectToAction(nameof(Index));
+            //    ModelState.AddModelError("Slug", "Nhập Slug khác");
+            //    return View(blog);
             //}
-            //ViewData["TopicID"] = new SelectList(_context.Topics, "Id", "Id", blog.TopicID);
-            //return View(blog);
-
-
-
-
-            using (var transaction = await _context.Database.BeginTransactionAsync())
-            {
-                try
-                {
-                    Blog blog = new Blog()
-                    {
-                        //Thumbnail = blogModel.Thumbnail,
-                        Name = blogModel.Name,
-                        Slug = blogModel.Slug,
-                        CreatedAt = DateTime.Now,
-                        //CreateBy = user.Id,
-                        TopicID = Convert.ToInt32(blogModel.Topic),
-                        Content = blogModel.Content,
-                        IsDetele = false,
-                    };
-                    _context.Add(blog);
-                    await _context.SaveChangesAsync();
-                    transaction.Commit();
-
-                    return Ok(new { message = "Created blog successfully!" });
-                }
-                catch (Exception ex)
-                {
-                    transaction.Rollback();
-                    return BadRequest(new { message = "Failed to create blog." + ex.Message });
-                }
-            }
             
+                var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                post.CreateBy = user;
+                post.CreatedAt = DateTime.Now;
+
+                string uniqueFileName = Guid.NewGuid().ToString() + "_" + post.Image.FileName;
+                string filePath = Path.Combine("wwwroot/img/blogs", uniqueFileName);
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    post.Image.CopyTo(fileStream);
+                }
+
+                Image img = new Image
+                {
+                    Name = uniqueFileName
+                };
+
+
+                Blog bl = new Blog
+                {
+                    Slug = post.Slug,
+                    Name = post.Name,
+                    Thumbnail = img,
+                    CreateBy = user,
+                    TopicID = post.TopicID,
+                    Content = post.Content,
+                    IsDetele = false
+                    
+                };
+
+            Console.Write("*****&"+bl.Thumbnail.Name);
+
+
+                _context.Add(bl);
+                await _context.SaveChangesAsync();
+                return Json(new {message = "Created post successful"});
+            
+
         }
 
         // GET: Admin/Blogs/Edit/5

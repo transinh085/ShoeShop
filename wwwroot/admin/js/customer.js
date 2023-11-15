@@ -273,11 +273,6 @@
           });
         },
         error: function (xhr, status, error) {
-          // Xử lý lỗi nếu có
-          console.log("Conflict");
-          console.log(xhr.responseJSON.error);
-          console.log(error);
-          console.log(status);
           if (xhr?.responseJSON?.error)
             Dashmix.helpers("jq-notify", {
               type: "warning",

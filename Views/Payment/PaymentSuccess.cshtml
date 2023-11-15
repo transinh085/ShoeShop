@@ -1,0 +1,136 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<AppUser> SignInManager
+
+@{
+    ViewData["Title"] = "Checkout";
+    Layout = "~/Views/Shared/_CheckoutLayout.cshtml";
+    var order = ViewBag.Order;
+    var address = order.Address;
+    var details = order.Details;
+}
+
+<!-- Checkout -->
+<form onsubmit="return false;">
+    <div class="row">
+        <!-- Order Info -->
+        <div class="col-xl-7">
+            <!-- Shipping Address -->
+            <div class="block block-rounded">
+                <div class="block-content">
+                    <div class="pb-3">
+                        <a href="/">
+                            <img src="~/img/logo_black.svg" />
+                        </a>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-3 my-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="72" height="72">
+                            <g fill="none" stroke="#8EC343" stroke-width="2">
+                                <circle cx="36" cy="36" r="35" style="stroke-dasharray:240px, 240px; stroke-dashoffset: 480px;"></circle>
+                                <path d="M17.417,37.778l9.93,9.909l25.444-25.393" style="stroke-dasharray:50px, 50px; stroke-dashoffset: 0px;"></path>
+                            </g>
+                        </svg>
+                        <div class="d-inline-block">
+                            <h4 class="mb-0">
+                                Your order is successfully placed
+                            </h4>
+                            <p class="mb-0">Thank you for purchasing our products!</p>
+                        </div>
+                    </div>
+                    <h5 class="mt-4">Shipping Infomation</h5>
+                    <table class="table table-bordered table-vcenter">
+                        <tr>
+                            <td>Order Id:</td>
+                            <td class="fw-bold text-primary">#@order.Id</td>
+                        </tr>
+                        <tr>
+                            <td>Full name:</td>
+                            <td class="fw-bold text-primary">@address.FullName</td>
+                        </tr>
+                        <tr>
+                            <td>Phone:</td>
+                            <td class="fw-bold text-primary">@address.Phone</td>
+                        </tr>
+                        <tr>
+                            <td>Email:</td>
+                            <td class="fw-bold text-primary">@address.Email</td>
+                        </tr>
+                        <tr>
+                            <td>Address:</td>
+                            <td class="fw-bold text-primary">@address.SpecificAddress</td>
+                        </tr>
+                        <tr>
+                            <td>Description:</td>
+                            <td class="fw-bold text-primary">@order.Description</td>
+                        </tr>
+                        <tr>
+                            <td>Payment method:</td>
+                            <td class="fw-bold text-primary">@(order.PaymentMethod)</td>
+                        </tr>
+                        <tr>
+                            <td>Shipping method:</td>
+                            <td class="fw-bold text-primary">@(order.ShippingMethod)</td>
+                        </tr>
+                        <tr>
+                            <td>Payment status:</td>
+                            <td class="fw-bold text-primary" style="text-transform: uppercase"><span class="label-success status-label">@(order.PaymentStatus ? "Complete" : "Pending")</span></td>
+                        </tr>
+                    </table>
+
+                    <a class="btn btn-hero btn-info me-1 my-3" href="/"> Continue shopping <i class="fa fa-fw fa-arrow-right ms-1"></i></a>
+                </div>
+            </div>
+        </div>
+        <!-- END Order Info -->
+        <!-- Order Summary -->
+        <div class="col-xl-5 order-xl-last">
+            <div class="block block-rounded">
+                <div class="block-header block-header-default">
+                    <h3 class="block-title">
+                        Order Summary
+                    </h3>
+                </div>
+                <div class="block-content block-content-full">
+                    <table class="table table-vcenter">
+                        <tbody id="tbl-product">
+                            @foreach(var item in details)
+                            {
+                                <tr>
+                                    <td class="ps-0">
+                                        <div class="d-flex gap-3 align-items-center">
+                                            <img src="/img/products/@item.Thumbnail" alt="product" style="height: 70px">
+                                            <div>
+                                                <a class="fs-sm fw-semibold" href="/product/detail/@item.ProductId">@item.Quantity x @item.Name</a>
+                                                <div class="fs-sm text-muted">Size: @item.Size, Color: @item.Color</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="pe-0 fw-medium text-end">
+                                        <span>$@item.Price</span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tbody>
+                            <tr>
+                                <td class="ps-0 fw-medium">Subtotal</td>
+                                <td class="pe-0 fw-medium text-end" id="sub-total">$@order.SubTotal</td>
+                            </tr>
+                            <tr>
+                                <td class="ps-0 fw-medium">Shipping fee</td>
+                                <td class="pe-0 fw-medium text-end" id="shipping-fee">$@order.ShippingFee</td>
+                            </tr>
+                            <tr>
+                                <td class="ps-0 fw-medium">Total</td>
+                                <td class="pe-0 fw-bold text-end" id="total">$@(order.SubTotal + order.ShippingFee)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- END Order Summary -->
+    </div>
+</form>
+<!-- END Checkout -->

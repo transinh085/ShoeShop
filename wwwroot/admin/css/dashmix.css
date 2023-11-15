@@ -2972,13 +2972,13 @@ textarea.form-control-lg {
   display: block;
 }
 
-.was-validated .form-control:invalid, .form-control.is-invalid {
-  border-color: #e04f1a;
+.was-validated .form-control:invalid, .form-control.is-invalid, .form-control.error {
+    border-color: #e04f1a;
 }
-.was-validated .form-control:invalid:focus, .form-control.is-invalid:focus {
-  border-color: #e04f1a;
-  box-shadow: 0 0 0 0.25rem rgba(224, 79, 26, 0.25);
-}
+    .was-validated .form-control:invalid:focus, .form-control.is-invalid:focus, .form-control.error:focus {
+        border-color: #e04f1a;
+        box-shadow: 0 0 0 0.25rem rgba(224, 79, 26, 0.25);
+    }
 
 .was-validated .form-select:invalid, .form-select.is-invalid {
   border-color: #e04f1a;
@@ -15522,7 +15522,7 @@ small,
   #page-container.main-content-narrow > #page-header .content,
   #page-container.main-content-narrow > #main-container .content,
   #page-container.main-content-narrow > #page-footer .content {
-    width: 92%;
+    width: 96%;
   }
 }
 #page-container.main-content-boxed > #page-header .content-header,

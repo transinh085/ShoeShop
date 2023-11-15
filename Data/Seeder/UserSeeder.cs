@@ -16,6 +16,24 @@ namespace ShoeShop.Data.Seeder
                 var adminUser = await userManager.FindByEmailAsync("transinh085@gmail.com");
                 if (adminUser == null)
                 {
+                    var address = new List<Address>
+                    {
+                        new Address
+                        {
+                            FullName = "Nguyen Van A",
+                            Phone = "0387913347",
+                            Email = "transinh085@gmail.com",
+                            SpecificAddress = "205 Tran Hung Dao B, Phuong 10, Quan 5",
+                            IsDefault = true
+                        },
+                        new Address
+                        {
+                            FullName = "Nguyen Van B",
+                            Phone = "0369765342",
+                            Email = "transinh342@gmail.com",
+                            SpecificAddress = "An Duc, Hoai An, Binh Dinh"
+                        }
+                    };
                     var newAdminUser = new AppUser()
                     {
                         FullName = "Trần Nhật Sinh",
@@ -27,27 +45,49 @@ namespace ShoeShop.Data.Seeder
                         Status = true,
                         Gender = 0,
                         BirthDay = DateTime.Now,
+                        Addresses = address,
                     };
                     await userManager.CreateAsync(newAdminUser, "Coding@1234?");
                     await userManager.AddToRoleAsync(newAdminUser, UserRoles.Admin);
+
+                    
                 }
 
                 var appUser = await userManager.FindByEmailAsync("hgbao2k3@gmail.com");
                 if (appUser == null)
                 {
-                    var newAppUser = new AppUser()
+					var address = new List<Address>
+					{
+						new Address
+						{
+							FullName = "Nguyen Van A",
+							Phone = "0387913347",
+							Email = "transinh085@gmail.com",
+							SpecificAddress = "205 Tran Hung Dao B, Phuong 10, Quan 5",
+							IsDefault = true
+						},
+						new Address
+						{
+							FullName = "Nguyen Van B",
+							Phone = "0369765342",
+							Email = "transinh342@gmail.com",
+							SpecificAddress = "An Duc, Hoai An, Binh Dinh"
+						}
+					};
+					var newAppUser = new AppUser()
                     {
                         FullName = "Hoàng Gia Bảo",
                         UserName = "hgbaodev",
-                        Email = "hgbao2k3@gmail.com",
+                        Email = "hgbaodev",
                         EmailConfirmed = true,
                         PhoneNumber = "0123456789",
                         ProfileImageUrl = "https://avatars.githubusercontent.com/u/120194990?v=4",
                         Status = true,
                         Gender = 0,
                         BirthDay = DateTime.Now,
-                    };
-                    await userManager.CreateAsync(newAppUser, "Coding@1234?");
+						Addresses = address,
+					};
+                    await userManager.CreateAsync(newAppUser, "123456Aa@");
                     await userManager.AddToRoleAsync(newAppUser, UserRoles.Admin);
                 }
 
@@ -65,7 +105,7 @@ namespace ShoeShop.Data.Seeder
                         Status = true,
                         Gender = 0,
                         BirthDay = DateTime.Now,
-                    };
+					};
                     await userManager.CreateAsync(newAppUser, "Coding@1234?");
                     await userManager.AddToRoleAsync(newAppUser, UserRoles.Admin);
                 }

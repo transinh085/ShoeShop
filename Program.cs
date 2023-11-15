@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ShoeShop.Data;
 using ShoeShop.Models;
+using ShoeShop.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +33,8 @@ builder.Services.ConfigureApplicationCookie(options =>
 	options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
 	options.SlidingExpiration = true;
 });
+
+builder.Services.AddScoped<IPayPalService, PaypalService>();
 
 var app = builder.Build();
 

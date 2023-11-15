@@ -174,7 +174,8 @@ namespace ShoeShop.Areas.Admin.Controllers
                     ColorName = variant.Color.Name,
                     Thumbnail = variant.Thumbnail.Name,
                     Images = variant.Images.Select(image => image.Name).ToList(),
-                    Sizes = variant.VariantSizes.Select(size => new
+					Position = variant.Position,
+					Sizes = variant.VariantSizes.Select(size => new
                     {
                         VariantSizeId = size.Id,
                         SizeId = size.SizeId,
@@ -183,6 +184,7 @@ namespace ShoeShop.Areas.Admin.Controllers
                         SizeName = size.Size.Name
                     }).ToList()
                 })
+                .OrderBy(v => v.Position)
                 .ToListAsync();
             return Ok(variants);
         }

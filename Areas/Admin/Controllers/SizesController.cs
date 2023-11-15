@@ -18,27 +18,42 @@ namespace ShoeShop.Areas.Admin.Controllers
         // GET: Admin/Sizes
         public async Task<IActionResult> Index()
         {
-              return _context.Sizes != null ? 
-                          View(await _context.Sizes.ToListAsync()) :
-                          Problem("Entity set 'AppDbContext.Sizes'  is null.");
+              return View();
         }
 
-        // GET: Admin/Sizes/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> GetSizes()
         {
-            if (id == null || _context.Sizes == null)
+            try
             {
-                return NotFound();
+                var draw = Request.Form["draw"].FirstOrDefault();
+                var start = Request.Form["start"].FirstOrDefault();
+                var length = Request.Form["length"].FirstOrDefault();
+                var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+                var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+                var searchValue = Request.Form["search[value]"].FirstOrDefault();
+                int pageSize = length != null ? Convert.ToInt32(length) : 0;
+                int skip = start != null ? Convert.ToInt32(start) : 0;
+                int recordsTotal = 0;
+                var sizeData = _context.Sizes.Where(p => p.IsDelete == false).AsQueryable();
+                if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
+                {
+                    sizeData = sizeData.OrderBy(c => EF.Property<object>(c, sortColumn)).ThenBy(c => c.Id);
+                }
+                if (!string.IsNullOrEmpty(searchValue))
+                {
+                    sizeData = sizeData.Where(m => m.Name.Contains(searchValue));
+                }
+                recordsTotal = sizeData.Count();
+                var data = sizeData.Skip(skip).Take(pageSize).ToList();
+                var jsonData = new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data };
+                return Ok(jsonData);
             }
-
-            var size = await _context.Sizes
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (size == null)
+            catch (Exception ex)
             {
-                return NotFound();
+                throw;
             }
-            return View(size);
         }
+        
 
         // GET: Admin/Sizes/Create
         public IActionResult Create()
@@ -47,8 +62,6 @@ namespace ShoeShop.Areas.Admin.Controllers
         }
 
         // POST: Admin/Sizes/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name")] Size size)
@@ -113,27 +126,8 @@ namespace ShoeShop.Areas.Admin.Controllers
             return View(size);
         }
 
-        // GET: Admin/Sizes/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.Sizes == null)
-            {
-                return NotFound();
-            }
-
-            var size = await _context.Sizes
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (size == null)
-            {
-                return NotFound();
-            }
-
-            return View(size);
-        }
-
         // POST: Admin/Sizes/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Sizes == null)
@@ -143,11 +137,11 @@ namespace ShoeShop.Areas.Admin.Controllers
             var size = await _context.Sizes.FindAsync(id);
             if (size != null)
             {
-                _context.Sizes.Remove(size);
+                size.IsDelete = true;
             }
-            
+
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Json(new {message = "Delete size successful !"});
         }
 
         private bool SizeExists(int id)

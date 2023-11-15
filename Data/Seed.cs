@@ -15,6 +15,7 @@ namespace ShoeShop.Data
 			//new TopicSeeder(applicationBuilder);
 			//new BlogSeeder(applicationBuilder);
 			new ProductSeeder(applicationBuilder);
+			new ShippingMethodSeeder(applicationBuilder);
 		}
 	}
 }
