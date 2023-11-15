@@ -316,11 +316,10 @@
 								</div>`
 						})
 						document.getElementById("products").innerHTML = html
-
 						if (response?.Result.length != 0) {
-							let pagiantonNote = ``;
+							let pagiantonNode = ``;
 							for (let i = 1; i <= response?.TotalPages; i++) {
-								pagiantonNote += `<li>
+								pagiantonNode += `<li>
 										<a href="#0" data-id="${i}" class="${i == response?.CurrentPage ? "active" : ""}">${i}</a>
 									</li>`;
 							}
@@ -328,7 +327,7 @@
 							let paginationHtml = `<li>
 											<a href="#0" class="prev-page" title="previous page">&#10094;</a>
 										</li>
-											${pagiantonNote}
+											${pagiantonNode}
 										<li>
 											<a href="#0" class="next-page" title="next page">&#10095;</a>
 										</li>`;
