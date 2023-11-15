@@ -81,49 +81,45 @@ namespace ShoeShop.Areas.Admin.Controllers
             //    ModelState.AddModelError("Slug", "Nhập Slug khác");
             //    return View(blog);
             //}
+            
+                var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                post.CreateBy = user;
+                post.CreatedAt = DateTime.Now;
 
-            var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            post.CreateBy = user;
-            post.CreatedAt = DateTime.Now;
+                string uniqueFileName = Guid.NewGuid().ToString() + "_" + post.Image.FileName;
+                string filePath = Path.Combine("wwwroot/img/blogs", uniqueFileName);
 
-            string uniqueFileName = Guid.NewGuid().ToString() + "_" + post.Image.FileName;
-            string filePath = Path.Combine("wwwroot/img/blogs", uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    post.Image.CopyTo(fileStream);
+                }
 
-            using (var fileStream = new FileStream(filePath, FileMode.Create))
-            {
-                post.Image.CopyTo(fileStream);
-            }
-            _context.Add(post);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+                Image img = new Image
+                {
+                    Name = uniqueFileName
+                };
 
-            //using (var transaction = await _context.Database.BeginTransactionAsync())
-            //{
-            //    try
-            //    {
-            //        Blog blog = new Blog()
-            //        {
-            //            //Thumbnail = blogModel.Thumbnail,
-            //            Name = blogModel.Name,
-            //            Slug = blogModel.Slug,
-            //            CreatedAt = DateTime.Now,
-            //            //CreateBy = user.Id,
-            //            TopicID = Convert.ToInt32(blogModel.Topic),
-            //            Content = blogModel.Content,
-            //            IsDetele = false,
-            //        };
-            //        _context.Add(blog);
-            //        await _context.SaveChangesAsync();
-            //        transaction.Commit();
 
-            //        return Ok(new { message = "Created blog successfully!" });
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        transaction.Rollback();
-            //        return BadRequest(new { message = "Failed to create blog." + ex.Message });
-            //    }
-            //}
+                Blog bl = new Blog
+                {
+                    Slug = post.Slug,
+                    Name = post.Name,
+
+                    Thumbnail = img,
+                    CreateBy = user,
+                    TopicID = post.TopicID,
+                    Content = post.Content,
+                    IsDetele = false
+                    
+                };
+
+            Console.Write("*****&"+bl.Thumbnail.Name);
+
+
+                _context.Add(bl);
+                await _context.SaveChangesAsync();
+                return Json(new {message = "Created post successful"});
+            
 
         }
 
