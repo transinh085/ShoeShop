@@ -34,8 +34,11 @@ namespace ShoeShop.Areas.Admin.Controllers
         // GET: Admin/Blogs
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Blogs.Include(b => b.Topic);
-            return View(await appDbContext.ToListAsync());
+            var posts = await _context.Blogs
+                .Include(b => b.Topic)
+                .Include(b => b.Thumbnail)
+                .ToListAsync();
+            return View(posts);
         }
 
         // GET: Admin/Blogs/Details/5
@@ -60,7 +63,6 @@ namespace ShoeShop.Areas.Admin.Controllers
         // GET: Admin/Blogs/Create
         public async Task<IActionResult> Create()
         {
-            ViewData["TopicID"] = new SelectList(_context.Topics, "Id", "Id");
             ViewBag.Topics = await _context.Topics.ToListAsync();
 
             return View();
@@ -72,7 +74,7 @@ namespace ShoeShop.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Slug,Thumbnail,TopicID,Content")] BlogViewModel post)
+        public async Task<IActionResult> Create(BlogViewModel post)
         {
             //if(await _context.Blogs.AddAsync(p => p.Slug == post.Slug))
             //{
@@ -80,28 +82,20 @@ namespace ShoeShop.Areas.Admin.Controllers
             //    return View(blog);
             //}
 
-            if (ModelState.IsValid)
+            var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            post.CreateBy = user;
+            post.CreatedAt = DateTime.Now;
+
+            string uniqueFileName = Guid.NewGuid().ToString() + "_" + post.Image.FileName;
+            string filePath = Path.Combine("wwwroot/img/blogs", uniqueFileName);
+
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
-                var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                post.CreateBy = user;
-                post.CreatedAt = DateTime.Now;
-               
-                string uniqueFileName = Guid.NewGuid().ToString() + "_" + post.Image.FileName;
-                string filePath = Path.Combine("wwwroot/img/blogs", uniqueFileName);
-
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    post.Image.CopyTo(fileStream);
-                }   
-                _context.Add(post);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                post.Image.CopyTo(fileStream);
             }
-            ViewData["TopicID"] = new SelectList(_context.Topics, "Id", "Id", post.TopicID);
-            return View(post);
-
-
-
+            _context.Add(post);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
 
             //using (var transaction = await _context.Database.BeginTransactionAsync())
             //{
