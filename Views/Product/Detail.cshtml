@@ -86,35 +86,6 @@
 	                        </div>
 	                    </div>
 	                </div>
-				@* <div class="list-service py-3">
-					<ul class="list-group">
-						<li class="list-group-item">
-							<div class="d-flex align-items-center gap-3">
-								<i class="ti ti-world"></i>
-								<span>Cam kết chính hãng 100%</span>
-							</div>
-						</li>
-						<li class="list-group-item">
-							<div class="d-flex align-items-center gap-3">
-								<i class="ti ti-star"></i>
-								<span>Bảo hành 06 tháng</span>
-							</div>
-						</li>
-						<li class="list-group-item">
-							<div class="d-flex align-items-center gap-3">
-								<i class="ti ti-heart"></i>
-								<span>Đổi size trong vòng 7 ngày</span>
-							</div>
-						</li>
-						<li class="list-group-item">
-							<div class="d-flex align-items-center gap-3">
-								<i class="ti ti-truck"></i>
-								<span>Free ship đơn hàng 1.5 Triệu</span>
-							</div>
-						</li>
-					</ul>
-				</div>
-	            </div> *@
 	        </div>
 	        <!-- /row -->
 	    </div>
@@ -297,7 +268,10 @@
 																</span>
 																<em>Published @review.CreatedAt</em>
 															</div>
-															<h4>@review.AppUser.FullName</h4>
+															<div class="d-flex align-items-center">
+																<span style="font-size: 16px; font-weight: bold">@review.AppUser.FullName</span>
+																<img style="width: 18px; height: 18px; margin-left: 10px; margin-right: 5px" src="/img/buy_product.webp" alt="Đã mua hàng"> Đã mua hàng
+															</div>
 															<p>@review.Description</p>
 														</div>
 													}
