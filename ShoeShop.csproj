@@ -6,6 +6,17 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Areas\Admin\Views\NewFolder\**" />
+    <Compile Remove="Views\NewFolder\**" />
+    <Content Remove="Areas\Admin\Views\NewFolder\**" />
+    <Content Remove="Views\NewFolder\**" />
+    <EmbeddedResource Remove="Areas\Admin\Views\NewFolder\**" />
+    <EmbeddedResource Remove="Views\NewFolder\**" />
+    <None Remove="Areas\Admin\Views\NewFolder\**" />
+    <None Remove="Views\NewFolder\**" />
+  </ItemGroup>
+
 	<ItemGroup>
 		<PackageReference Include="Bogus" Version="34.0.2" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.21" />
@@ -25,8 +36,6 @@
 	<ItemGroup>
 	  <Folder Include="Areas\Admin\Data\" />
 	  <Folder Include="Areas\Admin\Models\" />
-	  <Folder Include="Areas\Admin\Views\NewFolder\" />
-	  <Folder Include="Views\NewFolder\" />
 	  <Folder Include="wwwroot\assets\js\pages\" />
 	  <Folder Include="wwwroot\img\blogs\" />
 	</ItemGroup>
