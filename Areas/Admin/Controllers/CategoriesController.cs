@@ -18,13 +18,46 @@ namespace ShoeShop.Areas.Admin.Controllers
         // GET: Admin/Categories
         public async Task<IActionResult> Index()
         {
-              return _context.Categories != null ? 
-                          View(await _context.Categories.Where(c => c.IsDelete == false).ToListAsync()) :
-                          Problem("Entity set 'AppDbContext.Categories'  is null.");
+              return View();
         }
 
-        // GET: Admin/Categories/Create
-        public IActionResult Create()
+		[HttpPost]
+		public async Task<IActionResult> GetCategories()
+		{
+			try
+			{
+				var draw = Request.Form["draw"].FirstOrDefault();
+				var start = Request.Form["start"].FirstOrDefault();
+				var length = Request.Form["length"].FirstOrDefault();
+				var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+				var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+				var searchValue = Request.Form["search[value]"].FirstOrDefault();
+				int pageSize = length != null ? Convert.ToInt32(length) : 0;
+				int skip = start != null ? Convert.ToInt32(start) : 0;
+				int recordsTotal = 0;
+				var categoryData = _context.Categories.AsQueryable();
+				if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
+				{
+					categoryData = categoryData.OrderBy(c => EF.Property<object>(c, sortColumn)).ThenBy(c => c.Id);
+				}
+				if (!string.IsNullOrEmpty(searchValue))
+				{
+					categoryData = categoryData.Where(m => m.Name.Contains(searchValue));
+				}
+				recordsTotal = categoryData.Count();
+				var data = categoryData.Skip(skip).Take(pageSize).ToList();
+				var jsonData = new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data };
+				return Ok(jsonData);
+			}
+			catch (Exception ex)
+			{
+				throw;
+			}
+		}
+
+
+		// GET: Admin/Categories/Create
+		public IActionResult Create()
         {
             return View();
         }
