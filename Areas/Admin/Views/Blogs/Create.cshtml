@@ -6,8 +6,6 @@
 }
 
 @section Scripts {
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-
     <script src="~/admin/js/plugins/select2/js/select2.full.min.js"></script>
     <script src="~/admin/js/plugins/ckeditor/ckeditor.js"></script>
     <script src="~/admin/js/plugins/jquery-validation/jquery.validate.min.js"></script>
@@ -20,8 +18,11 @@
 
                 var formData = new FormData($(this)[0]);
 
-                // Additional form data
                 formData.append('Content', CKEDITOR.instances['js-ckeditor'].getData());
+
+                for (let [key, value] of formData.entries()) {
+                    console.log(`${key}: ${value}`);
+                }
 
                 // AJAX request to submit form
                 $.ajax({
@@ -31,7 +32,7 @@
                     processData: false,
                     contentType: false,
                     success: function (data) {
-                        window.location.href = '/Admin/Blogs/Index';
+                        // window.location.href = '/Admin/Blogs/Index';
                     },
                     error: function (xhr, status, error) {
                         console.error(error);
@@ -71,8 +72,8 @@
             </div>
 
             <div class="mb-4 form-group">
-                <label class="form-label" asp-for="TopicID">Topic</label>
-                <select class="js-select2 form-select" id="topic-id" asp-for="TopicID" style="width: 100%;" data-placeholder="Choose topic..">
+                <label class="form-label" asp-for="TopicId">Topic</label>
+                <select class="js-select2 form-select" id="topic-id" asp-for="TopicId" style="width: 100%;" data-placeholder="Choose topic..">
                     <option></option>
                     @foreach (var topic in ViewBag.Topics)
                     {
@@ -84,7 +85,7 @@
 
             <div class="mb-4">
                 <label class="form-label">Content</label>
-                <textarea id="js-ckeditor" name="content" asp-for="Content"></textarea>
+                <textarea id="js-ckeditor"></textarea>
             </div>
 
             <div class="form-group">
@@ -97,3 +98,16 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+
+
+<form id="product-form" method="POST" onsubmit="return false;">
+<div class="content">
+    <div class="row">
+        <div class="col-8">
+            <!-- Info -->
+            <div class="block block-rounded">
+                <div class="block-header block-header-default">
+                    <h3 class="block-title">Add Posts</h3>
+                </div>
+                </div>
+                </div>
