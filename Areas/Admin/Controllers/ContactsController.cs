@@ -17,22 +17,37 @@ namespace ShoeShop.Areas.Admin.Controllers
 		}
 
 
-		public async Task<IActionResult> Index()
+		public async Task<IActionResult> Index(string? searchInput)
 		{
-			return _context.Contacts != null ?
+            if (searchInput != null)
+            {
+
+                var contactlist = await _context.Contacts.Where(c => c.Name.ToLower().Contains(searchInput.ToLower())).ToListAsync();
+
+                if (contactlist == null)
+                {
+                    return NotFound(contactlist);
+                }
+
+                return View(contactlist);
+            }
+
+            return _context.Contacts != null ?
 						  View(await _context.Contacts.ToListAsync()) :
 						  Problem("Entity set 'AppDbContext.Sizes'  is null.");
 		}
 
-        [HttpPost, ActionName("Details")]
         public async Task<IActionResult> Details(int? id)
         {
+            if (id == null || _context.Contacts == null)
+            {
+                return NotFound();
+            }
+
             var contact = await _context.Contacts.FirstOrDefaultAsync(c => c.Id == id);
-            Console.WriteLine(contact.Name);
             if (contact == null) return NotFound();
 
             ViewBag.Contact = contact;
-
             return View();
         }
 
@@ -48,5 +63,18 @@ namespace ShoeShop.Areas.Admin.Controllers
             }
             return Ok(new { message = "Delete successfully" });
         }
+
+        public async Task<IActionResult> Read(Contact ct)
+        {
+            var contact = await _context.Contacts.FindAsync(ct.Id);
+            if (contact != null)
+            {
+                contact.IsSeen = ct.IsSeen;
+                _context.Update(contact);
+                await _context.SaveChangesAsync();
+            }
+            return Ok(new { message = "Update successfully" });
+        }
+
     }
 }

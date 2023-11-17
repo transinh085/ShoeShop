@@ -73,53 +73,44 @@ namespace ShoeShop.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(BlogViewModel post)
+        public async Task<IActionResult> Create([FromForm]BlogViewModel post)
         {
-            //if(await _context.Blogs.AddAsync(p => p.Slug == post.Slug))
+            //if (await _context.Blogs.AddAsync(p => p.Slug == post.Slug))
             //{
             //    ModelState.AddModelError("Slug", "Nhập Slug khác");
             //    return View(blog);
             //}
-            
-                var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                post.CreateBy = user;
-                post.CreatedAt = DateTime.Now;
 
-                string uniqueFileName = Guid.NewGuid().ToString() + "_" + post.Image.FileName;
-                string filePath = Path.Combine("wwwroot/img/blogs", uniqueFileName);
+            var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    post.Image.CopyTo(fileStream);
-                }
+            string uniqueFileName = Guid.NewGuid().ToString() + "_" + post.Image.FileName;
+            string filePath = Path.Combine("wwwroot/img/blogs", uniqueFileName);
 
-                Image img = new Image
-                {
-                    Name = uniqueFileName
-                };
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                post.Image.CopyTo(fileStream);
+            }
+
+            Image img = new Image
+            {
+                Name = uniqueFileName
+            };
 
 
-                Blog bl = new Blog
-                {
-                    Slug = post.Slug,
-                    Name = post.Name,
-                    Thumbnail = img,
-                    CreateBy = user,
-                    TopicID = post.TopicID,
-                    Content = post.Content,
-                    IsDetele = false
-                    
-                };
+            Blog bl = new Blog
+            {
+                Slug = post.Slug,
+                Name = post.Name,
+                Thumbnail = img,
+                CreateBy = user,
+                TopicID = post.TopicId,
+                Content = post.Content,
+                IsDetele = false
+            };
 
-            Console.Write("*****&"+bl.Thumbnail.Name);
-
-
-                _context.Add(bl);
-                await _context.SaveChangesAsync();
-                return Json(new {message = "Created post successful"});
-            
-
+            _context.Add(bl);
+            await _context.SaveChangesAsync();
+            return Json(new { message = "Created post successful" });
         }
 
         // GET: Admin/Blogs/Edit/5
