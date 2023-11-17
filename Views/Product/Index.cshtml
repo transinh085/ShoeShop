@@ -262,7 +262,6 @@
 					// Now, update the checkboxes based on the URL parameters
 					updateFromURLParameters();
 					updatingURL = false; // Reset the flag
-					scrollSearch()
 					fetchData()
 				}
 			}
@@ -349,7 +348,6 @@
 					else {
 						currentPage--;
 						updateUrlParameter('page', currentPage || '1');
-						scrollSearch()
 						// Gọi lại hàm fetchData với trang mới
 						fetchData();
 					}
@@ -358,7 +356,6 @@
 					else {
 						currentPage++;
 						updateUrlParameter('page', currentPage || '1');
-						scrollSearch()
 						// Gọi lại hàm fetchData với trang mới
 						fetchData();
 					}
@@ -368,7 +365,6 @@
 
 					// Cập nhật tham số 'page' trong URL bằng giá trị id hoặc thêm nếu chưa có
 					updateUrlParameter('page', pageId || '1');
-					scrollSearch()
 					// Gọi lại hàm fetchData với trang mới
 					fetchData();
 				}
@@ -465,15 +461,7 @@
 				history.replaceState(null, null, urlWithoutSearch);
 				fetchData();
 				updateFromURLParameters();
-				scrollSearch()
 			})
-
-			function scrollSearch(){
-				const stickHereElement = document.getElementById('page');
-				if (stickHereElement) {
-					stickHereElement.scrollIntoView({ behavior: 'smooth' });
-				}
-			}
 		});
 	</script>
 }
