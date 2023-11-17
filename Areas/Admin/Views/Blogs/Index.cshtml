@@ -10,13 +10,14 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
 <table class="table">
     <thead>
         <tr>
             <th>
                 ID
             </th>
-            <th> 
+            <th>
                 Tiêu đề
             </th>
             <th>
@@ -28,14 +29,11 @@
             <th>
                 Chủ đề
             </th>
-           @*  <th>
-                @Html.DisplayNameFor(model => model.Content)
-            </th> *@
 
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+    @foreach (var item in Model) {
         <tr>
 
                 <td>@Html.DisplayFor(modelItem => item.Id)</td>
@@ -46,6 +44,7 @@
                     </div>
             </td>
             <td>
+                    ;
                 @Html.DisplayFor(modelItem => item.CreateBy)
             </td>
             <td>
@@ -55,9 +54,6 @@
                 @Html.DisplayFor(modelItem => item.Topic.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Content)
-            </td>
-            <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
@@ -65,4 +61,7 @@
         </tr>
 }
     </tbody>
-</table>
+</table> 
+
+
+
