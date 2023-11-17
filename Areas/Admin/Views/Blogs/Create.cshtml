@@ -4,6 +4,9 @@
     ViewData["Title"] = "Create";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
+@section Styles {
+    <link rel="stylesheet" href="~/admin/js/plugins/select2/css/select2.min.css">
+}
 
 @section Scripts {
     <script src="~/admin/js/plugins/select2/js/select2.full.min.js"></script>
@@ -11,6 +14,7 @@
     <script src="~/admin/js/plugins/jquery-validation/jquery.validate.min.js"></script>
     <script src="~/admin/js/plugins/jquery-validation/additional-methods.js"></script>
     <script>Dashmix.helpersOnLoad(['jq-select2', 'js-ckeditor']);</script>
+    <script src="~/admin//js/blog/add-blog.js"></script>
     <script>
         $(document).ready(function () {
             $('#blog-form').submit(function (e) {
@@ -32,7 +36,7 @@
                     processData: false,
                     contentType: false,
                     success: function (data) {
-                        // window.location.href = '/Admin/Blogs/Index';
+                        window.location.href = '/Admin/Blogs/Index';
                     },
                     error: function (xhr, status, error) {
                         console.error(error);
@@ -44,34 +48,34 @@
     </script>
 }
 
-<h1>Create</h1>
 
-<h4>Blog</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create" id="blog-form" enctype="multipart/form-data">
-            <div asp-validation-summary="All" class="text-danger"></div>
+<form asp-action="Create" id="blog-form" enctype="multipart/form-data">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="col-8" style="background-color:white;display:flex; justify-content:center;align-items:center; margin:10px 200px">
 
-            <div class="mb-4 form-group">
+        <div class="col-10">
+            <div class="block-header block-header-default">
+                <h3 class="block-header-default" style="margin:10px">Add Post</h3>
+            </div>
+            <div class="col-8 form-group">
                 <label class="form-label" asp-for="Image">Image</label>
                 <input type="file" id="thumbnail" asp-for="Image" class="form-control" accept="image/*" />
-                <img id="imagePreview" style="display:none; max-width: 300px; max-height: 300px;" />
+                <img id="imagePreview" style="display:none; max-width: 400px; max-height: 300px; " />
             </div>
 
-            <div class="form-group">
+            <div class="col-8 form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" id="blog-name" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
+            <div class="col-8  form-group">
                 <label asp-for="Slug" class="control-label"></label>
                 <input asp-for="Slug" class="form-control" id="blog-slug" />
                 <span asp-validation-for="Slug" class="text-danger"></span>
             </div>
 
-            <div class="mb-4 form-group">
+            <div class="col-8 form-group">
                 <label class="form-label" asp-for="TopicId">Topic</label>
                 <select class="js-select2 form-select" id="topic-id" asp-for="TopicId" style="width: 100%;" data-placeholder="Choose topic..">
                     <option></option>
@@ -83,31 +87,21 @@
                 </select>
             </div>
 
-            <div class="mb-4">
+            <div class="form group">
                 <label class="form-label">Content</label>
                 <textarea id="js-ckeditor"></textarea>
             </div>
-
-            <div class="form-group">
-                <input type="submit" value="Create" id="btn-add-blog" class="btn btn-primary" />
+            <div class="mb-4 form-group" style="display:flex; justify-content:end;">
+                <button type="button" class="btn btn-danger" style="margin:10px"> <a asp-action="Index" style="color:white">Back to List</a></button>
+                <button type="submit" value="Create" id="btn-add-blog" class="btn btn-primary" style="margin:10px">Create Post</button>
             </div>
-        </form>
+
+
+        </div>
     </div>
-</div>
+</form>
 
-<div>
+@* <div>
     <a asp-action="Index">Back to List</a>
-</div>
+</div> *@
 
-
-<form id="product-form" method="POST" onsubmit="return false;">
-<div class="content">
-    <div class="row">
-        <div class="col-8">
-            <!-- Info -->
-            <div class="block block-rounded">
-                <div class="block-header block-header-default">
-                    <h3 class="block-title">Add Posts</h3>
-                </div>
-                </div>
-                </div>

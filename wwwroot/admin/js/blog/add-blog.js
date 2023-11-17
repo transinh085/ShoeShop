@@ -1,25 +1,20 @@
-﻿
+﻿document.getElementById('thumbnail').addEventListener('change', function (e) {
+    var previewImage = document.getElementById('imagePreview');
+    var fileInput = e.target;
 
-// Lắng nghe sự kiện thay đổi của input file
-document.querySelector('.thumbnail').addEventListener('change', function (event) {
-        // Lấy đối tượng input file
-    var input = event.target;
-        // Đảm bảo người dùng đã chọn ít nhất một file
-        if (input.files && input.files[0]) {
-            // Đọc dữ liệu của file hình ảnh
-            var reader = new FileReader();
-            // Xác định sự kiện xảy ra sau khi đọc xong file
-            reader.onload = function (e) {
-                // Hiển thị hình ảnh trong thẻ <img>
-                document.querySelector('.imagePreview').src = e.target.result;
-                document.querySelector('.imagePreview').style.display = 'block'; // Hiển thị thẻ <img>
-            };
-            alert(e.target.result)
+    if (fileInput.files && fileInput.files[0]) {
+        var reader = new FileReader();
 
-            // Đọc file hình ảnh dưới dạng URL dữ liệu (data URL)
-            reader.readAsDataURL(input.files[0]);
-        }
-    });
+        reader.onload = function (e) {
+            // Hiển thị hình ảnh trong thẻ <img>
+            previewImage.src = e.target.result;
+            previewImage.style.display = 'block'; // Hiển thị thẻ <img> nếu đang ẩn
+        };
+
+        // Đọc dữ liệu hình ảnh dưới dạng URL
+        reader.readAsDataURL(fileInput.files[0]);
+    }
+});
 
 const setThumbnail = (event) => {
     event.stopPropagation();
@@ -90,7 +85,7 @@ $("#btn-add-blog").click(() => {
             success: function (response) {
                 // Xử lý phản hồi từ máy chủ, ví dụ: đóng modal và reset form
                 console.log(response);
-                
+
                 pagination.getPagination();
                 Dashmix.helpers("jq-notify", {
                     type: "success",
@@ -114,3 +109,4 @@ $("#btn-add-blog").click(() => {
         });
     }
 });
+
