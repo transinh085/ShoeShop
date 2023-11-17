@@ -35,12 +35,15 @@
         </div>
         <div class="block-content">
             <div class="row mb-3">
+                <form asp-controller="Contacts" asp-action="Index">
+
                 <div class="input-group">
                     <input type="text" class="form-control form-control-alt" id="searchInput" name="searchInput" placeholder="TÌm kiếm...">
-                    <button type="submit" class="input-group-text bg-body border-0 btn-search">
+                    <button type="submit" class="input-group-text bg-body border-0 btn-search" value="Search">
                         <i class="fa fa-search"></i>
                     </button>
                 </div>
+                </form>
             </div>
             <div class="table-responsive">
                 <table class="table table-vcenter">
@@ -78,12 +81,12 @@
                                     @Html.DisplayFor(modelItem => item.Message)
                                 </th>
                                 <th>
-                                    @Html.DisplayFor(modelItem => item.CreatedAt)
+                                     @Html.DisplayFor(modelItem => item.CreatedAt)
                                 </th>
                                 
                                 <th class="text-center">
                                         <div class="btn-group">
-                                    <a  data-id="@item.Id" asp-controller="Contacts" asp-action="Details" class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled" data-bs-toggle="tooltip" >
+                                            <a asp-route-id="@item.Id" asp-action="Details" class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled" data-bs-toggle="tooltip">
                                                 <i class="fa  fa-eye"></i>
                                     </a>
                                     <button data-id="@item.Id" type="button" class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled btn-delete" data-bs-toggle="tooltip" aria-label="Delete" data-bs-original-title="Delete">
@@ -126,7 +129,7 @@
             let trid = $(this).data("id");
             let result = await Swal.fire({
                 title: "Are you sure?",
-                text: "Would you like to delete this product?",
+                text: "Would you like to delete this contact?",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonText: "Yes, I'm sure",
@@ -140,7 +143,7 @@
                     $(this).closest('tr').remove();
                 } catch (error) {
                     console.error("Error:", error);
-                    Swal.fire("Lỗi !", "Deletion of the product was not successful.", "error");
+                    Swal.fire("Lỗi !", "Deletion of the contact was not successful.", "error");
                 }
             }
         });
