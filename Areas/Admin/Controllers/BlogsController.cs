@@ -20,12 +20,7 @@ namespace ShoeShop.Areas.Admin.Controllers
     public class BlogsController : Controller
     {
         private readonly AppDbContext _context;
-        //private readonly UserManager<AppUser> userManager;
-
-        //public BlogsController(UserManager<AppUser> userManager)
-        //{
-        //    this.userManager = userManager;
-        //}
+       
         public BlogsController(AppDbContext context)
         {
             _context = context;
@@ -126,7 +121,7 @@ namespace ShoeShop.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            ViewData["TopicID"] = new SelectList(_context.Topics, "Id", "Id", blog.TopicID);
+            ViewData["TopicID"] = new SelectList(_context.Topics, "Id", "Name", blog.TopicID);
             return View(blog);
         }
 
