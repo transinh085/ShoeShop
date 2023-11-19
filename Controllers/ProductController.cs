@@ -11,6 +11,7 @@ using Bogus.DataSets;
 using System.Runtime.InteropServices;
 using System.Drawing.Drawing2D;
 using Microsoft.AspNetCore.Authorization;
+using ShoeShop.Data.Enum;
 
 namespace ShoeShop.Controllers
 {
@@ -118,7 +119,8 @@ namespace ShoeShop.Controllers
 			else
 			{
 				var checkByProduct = _context.Orders.Count(
-					o => o.AppUserId == currentUser.Id &&
+					o => o.OrderStatus == OrderStatus.Confirmed &&
+					o.AppUserId == currentUser.Id &&
 					o.Details.Any(detail => detail.VariantSize.Variant.Product.Id == id)
 				);
 				ViewBag.CheckReview = checkByProduct;
