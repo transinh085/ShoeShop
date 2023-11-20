@@ -336,7 +336,7 @@
 		<div class="container">
 			<div class="search-input">
 				<input id="search-input" type="text" placeholder="Search over 10.000 products...">
-				<button type="submit"><i class="ti-search"></i></button>
+				<button id="btn-search" type="submit"><i class="ti-search"></i></button>
 			</div>
 		</div>
 		<!-- /related -->
@@ -348,21 +348,11 @@
 	<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
 	<script>
 		$(document).ready(function () {
-			$("#form-search").validate({
-				rules: {
-					"inputSearch": {
-						required: true
-					}
-				},
-				messages: {
-					"input-search": {
-						required: "Please enter your search"
-					}
-				},
-				submitHandler: function (form) {
-					
-				}
-			});
+			$("#btn-search").on("click", () => {
+				let inputSearch = $("#search-input").val();
+				console.log('inputSearch', inputSearch);
+				window.location.href = `/product?query=${inputSearch}`
+			})
 		});
 	</script>
 	<!-- SPECIFIC SCRIPTS -->

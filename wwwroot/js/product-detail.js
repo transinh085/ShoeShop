@@ -84,8 +84,7 @@
 
 	const initCarousel = () => {
 
-		var changeSlide = 4; // mobile -1, desktop + 1
-		// Resize and refresh page. slider-two slideBy bug remove
+		var changeSlide = 4; 
 		var slide = changeSlide;
 		if ($(window).width() < 600) {
 			var slide = changeSlide;
