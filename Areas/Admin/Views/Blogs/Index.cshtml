@@ -127,7 +127,7 @@
                                         <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled" data-bs-toggle="tooltip" aria-label="Edit" data-bs-original-title="Edit">
                                             <i class="fa fa-pencil-alt"></i>
                                         </a>
-                                        <button type="button" data-id="@item.Id" class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled btn-delete" data-bs-toggle="tooltip" aria-label="Delete" data-bs-original-title="Delete">
+                                        <button asp-action="Delete" type="button" data-id="@item.Id" class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled btn-delete" data-bs-toggle="tooltip" aria-label="Delete" data-bs-original-title="Delete">
                                             <i class="fa fa-times"></i>
                                         </button>
                                     </div>
@@ -141,5 +141,32 @@
         </div>
     </div>
 </div>
+@section Scripts {
+    <script src="~/admin/js/plugins/sweetalert2/sweetalert2.min.js"></script>
+    <script>
+        $(document).on("click", ".btn-delete", async function () {
+            let trid = $(this).data("id");
+            let result = await Swal.fire({
+                title: "Are you sure?",
+                text: "Would you like to delete this post?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, I'm sure",
+                cancelButtonText: "Cannel"
+            });
+
+            if (result.value) {
+                try {
+                    let response = await $.post(`./Blogs/Delete/${trid}`);
+                    Swal.fire("Deleted!", "Successfully deleted the post.", "success");
+                    $(this).closest('tr').remove();
+                } catch (error) {
+                    console.error("Error:", error);
+                    Swal.fire("Lỗi !", "Deletion of the post was not successful.", "error");
+                }
+            }
+        });
+    </script>
+}
 
 

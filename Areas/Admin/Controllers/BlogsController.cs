@@ -161,43 +161,38 @@ namespace ShoeShop.Areas.Admin.Controllers
             return View(blog);
         }
 
-        // GET: Admin/Blogs/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.Blogs == null)
-            {
-                return NotFound();
-            }
-
-            var blog = await _context.Blogs
-                .Include(b => b.Topic)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (blog == null)
-            {
-                return NotFound();
-            }
-
-            return View(blog);
-        }
-
         // POST: Admin/Blogs/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> Delete(int? id)
         {
-            if (_context.Blogs == null)
-            {
-                return Problem("Entity set 'AppDbContext.Blog'  is null.");
-            }
             var blog = await _context.Blogs.FindAsync(id);
             if (blog != null)
             {
-                _context.Blogs.Remove(blog);
+                blog.IsDetele = true;
+                _context.Update(blog);
+                await _context.SaveChangesAsync();
             }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Ok(new { message = "Delete successfully" });
         }
+
+        //// POST: Admin/Blogs/Delete/5
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> DeleteConfirmed(int id)
+        //{
+        //    if (_context.Blogs == null)
+        //    {
+        //        return Problem("Entity set 'AppDbContext.Blog'  is null.");
+        //    }
+        //    var blog = await _context.Blogs.FindAsync(id);
+        //    if (blog != null)
+        //    {
+        //        _context.Blogs.Remove(blog);
+        //    }
+            
+        //    await _context.SaveChangesAsync();
+        //    return RedirectToAction(nameof(Index));
+        //}
 
         private bool BlogExists(int id)
         {
