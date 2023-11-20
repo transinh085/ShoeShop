@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Bogus.DataSets;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using ShoeShop.Data;
+using ShoeShop.Helpers;
 using ShoeShop.Models;
 using ShoeShop.ViewModels.Product;
 using System.Drawing;
+using System.Linq;
 using Image = ShoeShop.Models.Image;
 
 namespace ShoeShop.Areas.Admin.Controllers
@@ -23,29 +26,95 @@ namespace ShoeShop.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
+
             if (_context.Products != null)
             {
-                var products = await _context.Products.Include(product => product.Category)
-                    .Include(product => product.Brand)
-                    .Include(product => product.Thumbnail)
-                    .Where(product => product.IsDetele == false)
-                    .OrderByDescending(product => product.CreatedAt)
-                    .ToListAsync();
-                return View(products);
+				ViewBag.Categories = await _context.Categories.ToListAsync();
+				ViewBag.Brands = await _context.Brands.ToListAsync();
+				ViewBag.Colors = await _context.Colors.ToListAsync();
+				ViewBag.Sizes = await _context.Sizes.ToListAsync();
+
+                return View();
             }
             return Problem("Entity set 'AppDbContext.Products'  is null.");
+        }
+        [HttpPost]
+        public async Task<IActionResult> GetProducts(string query, int[] categories, int[] colors, int[] brands, string[] prices)
+        {
+			var draw = int.Parse(Request.Form["draw"].FirstOrDefault());
+			var skip = int.Parse(Request.Form["start"].FirstOrDefault());
+			var pageSize = int.Parse(Request.Form["length"].FirstOrDefault());
+			var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+			var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+
+			var products = _context.Products
+                .Include(product => product.Thumbnail)
+                .Include(product => product.Category)
+                .Include(product => product.Brand)
+                .Where(p => !p.IsDetele)
+                .AsQueryable();
+
+			switch (sortColumn.ToLower())
+			{
+				case "id":
+					products = sortColumnDirection.ToLower() == "asc" ? products.OrderBy(o => o.Id) : products.OrderByDescending(o => o.Id);
+					break;
+				case "name":
+					products = sortColumnDirection.ToLower() == "asc" ? products.OrderBy(o => o.Name) : products.OrderByDescending(o => o.Name);
+					break;
+				case "price":
+					products = sortColumnDirection.ToLower() == "asc" ? products.OrderBy(o => o.Price) : products.OrderByDescending(o => o.Price);
+					break;
+				default:
+					products = products.OrderBy(o => o.Id);
+					break;
+			}
+
+			if (!string.IsNullOrEmpty(query))
+			{
+				products = products.Where(m => m.Name.Contains(query));
+			}
+
+			if (categories.Length != 0)
+			{
+                products = products.Where(u => categories.Contains(u.CategoryId));
+            }
+
+			if (colors.Length != 0)
+			{
+				products = products.Where(u => u.Variants.Any(item => colors.Contains(item.ColorId)));
+			}
+
+			if (brands.Length != 0)
+			{
+				products = products.Where(u => brands.Contains(u.BrandId));
+			}
+
+			if (prices.Length != 0)
+			{
+				var priceRangeList = PriceRangesConverter.Parse(prices);
+				priceRangeList.ForEach(e => Console.WriteLine(e));
+				products = products.ToList().Where(product =>
+					priceRangeList.Any(range =>
+						(product.Price >= range.Min && product.Price <= range.Max) ||
+						(product.PriceSale != 0 && product.PriceSale >= range.Min && product.PriceSale <= range.Max)
+					)
+				).AsQueryable();
+			}
+
+			var recordsTotal = products.Count();
+			var data = products.OrderByDescending(o => o.Id).Skip(skip).Take(pageSize).ToList();
+			
+			var jsonData = new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data };
+			return Ok(jsonData);
         }
 
         public async Task<IActionResult> Create()
         {
-            var brands = await _context.Brands.ToListAsync();
-            var categories = await _context.Categories.ToListAsync();
-            var colors = await _context.Colors.ToListAsync();
-            var sizes = await _context.Sizes.ToListAsync();
-            ViewBag.Brands = brands;
-            ViewBag.Categories = categories;
-            ViewBag.Colors = colors;
-            ViewBag.Sizes = sizes;
+            ViewBag.Brands = await _context.Brands.ToListAsync();
+            ViewBag.Categories = await _context.Categories.ToListAsync();
+            ViewBag.Colors = await _context.Colors.ToListAsync();
+            ViewBag.Sizes = await _context.Sizes.ToListAsync();
             return View();
         }
 

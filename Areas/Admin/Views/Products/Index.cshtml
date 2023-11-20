@@ -1,11 +1,19 @@
-﻿@model IEnumerable<ShoeShop.Models.Product>
-
-    @{
+﻿@{
     ViewData["Title"] = "Products";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
-    }
+	var categories = ViewBag.Categories;
+
+	var brands = ViewBag.Brands;
+	var products = ViewBag.Products as List<Product>;
+	var colors = ViewBag.Colors;
+	var sizes = ViewBag.Sizes;
+	var priceRanges = ViewBag.PriceRanges;
+}
+
 @section Styles {
     <link rel="stylesheet" href="~/admin/js/plugins/sweetalert2/sweetalert2.min.css">
+    <link rel="stylesheet" href="~/admin/js/plugins/select2/css/select2.min.css">
+	<link rel="stylesheet" href="~/admin/js/plugins/datatables-bs5/css/dataTables.bootstrap5.min.css">
 }
 
     <div class="content">
@@ -18,77 +26,141 @@
                     </a>
                 </div>
             </div>
-            <div class="block-content">
-                <table class="table align-middle">
+			<div class="block-content">
+				<div class="mb-1">
+				<input type="text" class="form-control form-control-alt" id="product-query" name="product-query" placeholder="Search all products..">
+				</div>
+				<div class="row filters_listing_1">
+					<div class="col-lg-3 col-md-6 col-sm-6">
+						<div class="dropdown">
+							<a href="#" data-bs-toggle="dropdown" class="drop">Categories</a>
+							<div class="dropdown-menu">
+								<div class="filter_type">
+									<ul>
+									@if (categories != null)
+									{
+										foreach (var c in (dynamic)categories)
+										{
+											<li>
+												<label class="container_check">
+													@c.Name
+													<input type="checkbox" name="categories" value="@c.Id">
+													<span class="checkmark"></span>
+												</label>
+											</li>
+										}
+									}
+									</ul>
+								</div>
+							</div>
+						</div>
+						<!-- /dropdown -->
+					</div>
+					<div class="col-lg-3 col-md-6 col-sm-6">
+						<div class="dropdown">
+							<a href="#" data-bs-toggle="dropdown" class="drop">Color</a>
+							<div class="dropdown-menu">
+								<div class="filter_type">
+									<ul>
+									@if (colors != null)
+									{
+										foreach (var c in colors)
+										{
+											<li>
+												<label class="container_check">
+													@c.Name
+													<input type="checkbox" name="colors" value="@c.Id">
+													<span class="checkmark"></span>
+												</label>
+											</li>
+										}
+									}
+									</ul>
+								</div>
+							</div>
+						</div>
+						<!-- /dropdown -->
+					</div>
+					<div class="col-lg-3 col-md-6 col-sm-6">
+						<div class="dropdown">
+							<a href="#" data-bs-toggle="dropdown" class="drop">Brand</a>
+							<div class="dropdown-menu">
+								<div class="filter_type">
+									<ul>
+									@if (brands != null)
+									{
+										foreach (var c in brands)
+										{
+											<li>
+												<label class="container_check">
+													@c.Name
+													<input type="checkbox" name="brands" value="@c.Id">
+													<span class="checkmark"></span>
+												</label>
+											</li>
+										}
+									}
+									</ul>
+								</div>
+							</div>
+						</div>
+						<!-- /dropdown -->
+					</div>
+					<div class="col-lg-3 col-md-6 col-sm-6">
+						<div class="dropdown">
+							<a href="#" data-bs-toggle="dropdown" class="drop">Price</a>
+							<div class="dropdown-menu">
+								<div class="filter_type">
+									<ul>
+										<li>
+											<label class="container_check">
+												$0 — $50
+												<input type="checkbox" name="prices" value="0:50">
+												<span class="checkmark"></span>
+											</label>
+										</li>
+										<li>
+											<label class="container_check">
+												$50 — $100
+												<input type="checkbox" name="prices" value="50:100">
+												<span class="checkmark"></span>
+											</label>
+										</li>
+										<li>
+											<label class="container_check">
+												$100 — $150
+											<input type="checkbox" name="prices" value="100:150">
+												<span class="checkmark"></span>
+											</label>
+										</li>
+										<li>
+											<label class="container_check">
+												$150 — $200
+												<input type="checkbox" name="prices" value="150:200">
+												<span class="checkmark"></span>
+											</label>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<!-- /dropdown -->
+					</div>
+				</div>
+				</div>
+            <div class="block-content pb-3 pt-0">
+                <table class="table align-middle" id="product-table">
                     <thead>
                         <tr>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Id)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Name)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Price)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Category)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Brand)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Status)
-                            </th>
+                            <th>Id</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Category</th>
+                            <th>Brand</th>
+                            <th>Status</th>
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        @if(item.IsDetele == false)
-                    {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Id)
-                            </td>
-                            <td>
-                                <div class="d-flex gap-2 align-items-center">
-                                    <img class="rounded" style="width: 40px; height: 40px" src="~/img/products/@Html.DisplayFor(modelItem => item.Thumbnail.Name)" />
-                                    @Html.DisplayFor(modelItem => item.Name)
-                                </div>
-                            </td>
-                            <td class="fw-semibold">
-                                $@Html.DisplayFor(modelItem => item.Price)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Category.Name)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Brand.Name)
-                            </td>
-                            <td>
-                                @if (item.Status)
-                                {
-                                <span class="badge rounded-pill bg-success">Selling</span>
-                                }
-                                else
-                                {
-                                <span class="badge rounded-pill bg-warning">draft</span>
-                                }
-                            </td>
-                            <td class="text-center">
-                                <div class="btn-group">
-                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled" data-bs-toggle="tooltip" aria-label="Edit" data-bs-original-title="Edit">
-                                        <i class="fa fa-pencil-alt"></i></a>
-                                    <button type="button" data-id="@item.Id" class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled btn-delete" data-bs-toggle="tooltip" aria-label="Delete" data-bs-original-title="Delete">
-                                            <i class="fa fa-times"></i>
-                                    </button>
-                                </div>
-                                
-                            </td>
-                        </tr>
-                    }
-                    </tbody>
                 </table>
 
             </div>
@@ -96,8 +168,161 @@
     </div>
 @section Scripts {
     <script src="~/admin/js/plugins/sweetalert2/sweetalert2.min.js"></script>
+    <script src="~/admin/js/plugins/select2/js/select2.full.min.js"></script>
+	<script src="~/admin/js/plugins/datatables/jquery.dataTables.min.js"></script>
+	<script src="~/admin/js/plugins/datatables-bs5/js/dataTables.bootstrap5.min.js"></script>
+    <script>Dashmix.helpersOnLoad(['jq-select2']);</script>
     <script>
-        $(document).on("click", ".btn-delete", async function () {
+		let categories = [], colors = [], brands = [], prices = [];
+
+		$("[name='categories']").on("click", function (t) {
+			let id = parseInt($(this).val());
+			let index = categories.findIndex(c => c == id);
+			if (index != -1) {
+				categories.splice(index, 1);
+			} else {
+				categories.push(id);
+			}
+		})
+
+		$("[name='colors']").on("click", function (t) {
+			let id = parseInt($(this).val());
+			let index = colors.findIndex(c => c == id);
+			if (index != -1) {
+				colors.splice(index, 1);
+			} else {
+				colors.push(id);
+			}
+		})
+
+		$("[name='brands']").on("click", function (t) {
+			let id = parseInt($(this).val());
+			let index = brands.findIndex(c => c == id);
+			if (index != -1) {
+				brands.splice(index, 1);
+			} else {
+				brands.push(id);
+			}
+		})
+
+		$("[name='prices']").on("click", function (t) {
+			let id = $(this).val();
+			let index = prices.findIndex(c => c == id);
+			if (index != -1) {
+				prices.splice(index, 1);
+			} else {
+				prices.push(id);
+			}
+		})
+
+
+		$(".filters_listing_1 .dropdown-menu .filter_type ul").on("click",function(t){t.stopPropagation()})
+
+		const getBadge = (value) => {
+			let result = '';
+			switch (value) {
+				case false:
+					result = `<span class="badge rounded-pill bg-warning">Draft</span>`;
+					break;
+				case true:
+					result = `<span class="badge rounded-pill bg-success">Public</span>`;
+					break;
+				default:
+					result = `<span class="badge rounded-pill bg-secondary">Unknown</span>`;
+			}
+			return result;
+		};
+
+
+		$(document).ready(function () {
+			jQuery.extend(jQuery.fn.dataTable.ext.classes, {
+				sWrapper: "dataTables_wrapper dt-bootstrap5",
+				sFilterInput: "form-control",
+				sLengthSelect: "form-select"
+			});
+			jQuery.extend(!0, jQuery.fn.dataTable.defaults, {
+				language: {
+					lengthMenu: "_MENU_",
+					search: "_INPUT_",
+					searchPlaceholder: "Search..",
+					info: "Page <strong>_PAGE_</strong> of <strong>_PAGES_</strong>",
+					paginate: {
+						first: '<i class="fa fa-angle-double-left"></i>',
+						previous: '<i class="fa fa-angle-left"></i>',
+						next: '<i class="fa fa-angle-right"></i>',
+						last: '<i class="fa fa-angle-double-right"></i>'
+					}
+				}
+			});
+			var table = $("#product-table").DataTable({
+				pageLength: 10,
+				lengthMenu: [
+					[5, 10, 20],
+					[5, 10, 20]
+				],
+				"processing": true,
+				"serverSide": true,
+				"filter": false,
+				"lengthChange": false,
+				"ajax": {
+					"url": "/admin/products/getproducts",
+					"type": "POST",
+					"datatype": "json",
+					"data": function (d) {
+						d.query = $('#product-query').val();
+						d.categories = categories;
+						d.colors = colors;
+						d.brands = brands;
+						d.prices = prices;
+					}
+				},
+				"columnDefs": [
+					{ "targets": [3,4,6], "sortable": false },
+				],
+				"columns": [
+					{ "data": "id", "name": "Id", "autoWidth": true, "className": "text-center" },
+					{
+						"data": "name", "name": "Name", 
+						"render": function (data, type, row) {
+							return `<div class="d-flex gap-2 align-items-center">
+																	<img class="rounded" style="width: 40px; height: 40px" src="/img/products/${row.thumbnail.name}" />
+													${row.name}
+												</div>`;
+						},
+					},
+					{ "data": "price", "name": "Price", "autoWidth": true, "className": "text-center fw-bold", render: (data) => `$${data}` },
+					{ "data": "category.name", "name": "Category", "autoWidth": true},
+					{ "data": "brand.name", "name": "Brand", "autoWidth": true },
+					{ "data": "status", "name": "Status", "autoWidth": true, "render": (data) => getBadge(data) },
+					{
+						"render": function (data, type, row) {
+							return `<div class="btn-group">
+												<a href="/admin/products/edit/${row.id}" class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled" data-bs-toggle="tooltip" aria-label="Edit" data-bs-original-title="Edit">
+												  <i class="fa fa-pencil-alt"></i>
+												</a>
+												<button type="button" data-id="${row.id}" class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled btn-delete" data-bs-toggle="tooltip" aria-label="Delete" data-bs-original-title="Delete">
+												   <i class="fa fa-times"></i>
+												</button></div>`;
+						}, "className": "text-center"
+					}
+				],
+				order: [
+					[0, 'desc']
+				],
+				autoWidth: !1,
+				responsive: !0
+			});
+
+			$('#product-query').on('change', function () {
+				table.draw();
+			});
+
+			$("[name='categories'],[name='colors'],[name='brands'],[name='prices']").on('click', function () {
+				table.draw();
+			});
+		});
+		
+		$(document).on("click", ".btn-delete", async function () {
             let trid = $(this).data("id");
             let result = await Swal.fire({
                 title: "Are you sure?",

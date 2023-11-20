@@ -35,12 +35,20 @@ namespace ShoeShop.Areas.Admin.Controllers
 				int pageSize = length != null ? Convert.ToInt32(length) : 0;
 				int skip = start != null ? Convert.ToInt32(start) : 0;
 				int recordsTotal = 0;
-				var categoryData = _context.Categories.AsQueryable();
-				if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
-				{
-					categoryData = categoryData.OrderBy(c => EF.Property<object>(c, sortColumn)).ThenBy(c => c.Id);
-				}
-				if (!string.IsNullOrEmpty(searchValue))
+				var categoryData = _context.Categories.Where(b => b.IsDelete == false).AsQueryable();
+                switch (sortColumn.ToLower())
+                {
+                    case "id":
+                        categoryData = sortColumnDirection.ToLower() == "asc" ? categoryData.OrderBy(o => o.Id) : categoryData.OrderByDescending(o => o.Id);
+                        break;
+                    case "name":
+                        categoryData = sortColumnDirection.ToLower() == "asc" ? categoryData.OrderBy(o => o.Name) : categoryData.OrderByDescending(o => o.Name);
+                        break;
+                    default:
+                        categoryData = categoryData.OrderBy(o => o.Id);
+                        break;
+                }
+                if (!string.IsNullOrEmpty(searchValue))
 				{
 					categoryData = categoryData.Where(m => m.Name.Contains(searchValue));
 				}
