@@ -64,16 +64,21 @@ namespace ShoeShop.Areas.Admin.Controllers
             return Ok(new { message = "Delete successfully" });
         }
 
-        public async Task<IActionResult> Read(Contact ct)
+        public async Task<IActionResult> Read(int? id)
         {
-            var contact = await _context.Contacts.FindAsync(ct.Id);
+            var contact = await _context.Contacts.FindAsync(id);
             if (contact != null)
             {
-                contact.IsSeen = ct.IsSeen;
-                _context.Update(contact);
-                await _context.SaveChangesAsync();
+                if (contact.IsSeen == true) contact.IsSeen = false; else contact.IsSeen = true;
+                {
+                    _context.Update(contact);
+                    await _context.SaveChangesAsync();
+                }
             }
-            return Ok(new { message = "Update successfully" });
+            else
+            { return NotFound(); }
+            return RedirectToAction("Index");
+
         }
 
     }
