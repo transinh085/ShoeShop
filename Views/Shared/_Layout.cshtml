@@ -29,6 +29,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <!-- BASE CSS -->
     <link href="~/css/bootstrap.min.css" rel="stylesheet">
@@ -161,7 +162,7 @@
 														<a asp-controller="authentication" asp-action="signin"><i class="ti-package"></i>My Orders</a>
 													</li>
 													<li>
-														<a asp-controller="account" asp-action="index"><i class="ti-user"></i>My Profile</a>
+														<a asp-controller="account" asp-action="profile"><i class="ti-user"></i>My Profile</a>
 													</li>
 													<li>
 														<a href="help"><i class="ti-help-alt"></i>Help and Faq</a>
@@ -350,7 +351,6 @@
 		$(document).ready(function () {
 			$("#btn-search").on("click", () => {
 				let inputSearch = $("#search-input").val();
-				console.log('inputSearch', inputSearch);
 				window.location.href = `/product?query=${inputSearch}`
 			})
 		});
