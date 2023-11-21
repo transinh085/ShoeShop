@@ -1,9 +1,8 @@
-﻿@model IEnumerable<ShoeShop.Models.Blog>
+﻿@model IEnumerable<ShoeShop.Models.Blog> 
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
-    
 }
 @section Styles {
     <link rel="stylesheet" href="~/admin/js/plugins/sweetalert2/sweetalert2.min.css">
@@ -111,9 +110,8 @@
                                         @Html.DisplayFor(modelItem => item.Name)
                                     </div>
                                 </td>
-                                <td class="fw-semibold">
-                                    @Html.DisplayFor(modelItem => item.CreateBy)
-                                </td>
+                                @{
+                                }
                                 <td>
                                     @Html.DisplayFor(modelItem => item.CreatedAt)
                                 </td>

@@ -4,6 +4,9 @@
 @section Styles {
 	<link href="~/css/blog.css" rel="stylesheet">
 }
+@{
+	var blog = ViewBag.Blogs as List<Blog>;
+}
 
 <main class="bg_gray">
 	<div class="container margin_30">
@@ -27,8 +30,8 @@
 					</div>
 				</div>
 				<!-- /widget -->
-				<div class="row">
-					<div class="col-md-6">
+				 <div class="row" id="posts">
+					@*	<div class="col-md-6">
 						<article class="blog">
 							<figure>
 								<a asp-controller="Blog" asp-action="Detail" asp-route-id="1">
@@ -164,15 +167,14 @@
 							</div>
 						</article>
 						<!-- /article -->
-					</div>
+					</div> *@
 					<!-- /col -->
 				</div>
 				<!-- /row -->
 
-				<div class="pagination__wrapper no_border add_bottom_30">
+				@* <div class="pagination__wrapper no_border add_bottom_30">
 					<ul class="pagination">
 						<li><a href="#0" class="prev" title="previous page">&#10094;</a></li>
-						<li>
 							<a href="#0" class="active">1</a>
 						</li>
 						<li>
@@ -254,12 +256,108 @@
 						<a href="#">Transports</a>
 						<a href="#">Restaurants</a>
 					</div>
-				</div>
+				</div> *@
 				<!-- /widget -->
 			</aside>
 			<!-- /aside -->
 		</div>
 		<!-- /row -->
-	</div>
+	 </div> 
 	<!-- /container -->
 </main>
+
+@section Scripts{
+	<script src="~/js/sticky_sidebar.min.js"></script>
+	<script src="~/js/specific_listing.js"></script>
+	<script>
+		function fetchData() {
+			const queryParams = getQueryParamString();
+			const urlFetch = "/Blogs/allBlogs" + (queryParams.length > 0 ? queryParams : '');
+			$.ajax({
+				url: urlFetch,
+				method: "get",
+				dataType: "json",
+				success: function (response) {
+					currentPage = response.CurrentPage;
+					totalPage = response.TotalPages;
+					let html = ``;
+					response?.Result.forEach( blog => {
+						html += `<div class="col-md-6">
+								<article class="blog">
+									<figure>
+										<a asp-controller="Blog" asp-action="Detail" asp-route-id="${blog.Id}">
+											<img src="~/img/blogs/${blog.Thumbnail.Name}" alt="">
+											<div class="preview"><span>Read more</span></div>
+										</a>
+									</figure>
+									<div class="post_info">
+										<small>${blog.Topic.Name} - ${blog.CreatedAt}</small>
+										<h2><a asp-controller="Blog" asp-action="Detail" asp-route-id="${blog.Id}">${blog.Name}</a></h2>
+										<p>Loading...</p>
+										<ul>
+											<li>
+												<div class="thumb"><img src="~/img/avatar.jpg" alt=""></div> ${blog.CreateBy}
+											</li>
+										</ul>
+									</div>
+								</article>
+								<!-- /article -->
+							</div>`
+					})
+					document.getElementById("posts").innerHTML = html
+					if (response?.Result.length != 0) {
+						let pagiantonNode = ``;
+						for (let i = 1; i <= response?.TotalPages; i++) {
+							pagiantonNode += `<li>
+									<a href="#0" data-id="${i}" class="${i == response?.CurrentPage ? "active" : ""}">${i}</a>
+								</li>`;
+						}
+
+						let paginationHtml = `<li>
+										<a href="#0" class="prev-page" title="previous page">&#10094;</a>
+									</li>
+										${pagiantonNode}
+									<li>
+										<a href="#0" class="next-page" title="next page">&#10095;</a>
+									</li>`;
+						document.querySelector(".pagination").innerHTML = paginationHtml
+					} else if (response?.Result.length === 0) {
+						document.querySelector(".pagination").innerHTML = `<h2>Not found products</h2><img class="img-fluid lazy loaded" src="img/notfoundProduct.png" alt="Not found product" data-was-processed="true">`
+					}
+				},
+				error: function (err) {
+					console.error(err.responseText);
+				},
+			});
+		}
+
+		$(document).on('click', '.pagination a', function (e) {
+			e.preventDefault();
+			if (this.classList.contains("prev-page")) {
+				if (currentPage == 1) return
+				else {
+					currentPage--;
+					updateUrlParameter('page', currentPage || '1');
+					// Gọi lại hàm fetchData với trang mới
+					fetchData();
+				}
+			} else if (this.classList.contains("next-page")) {
+				if (currentPage == totalPage) return
+				else {
+					currentPage++;
+					updateUrlParameter('page', currentPage || '1');
+					// Gọi lại hàm fetchData với trang mới
+					fetchData();
+				}
+			} else {
+				// Lấy giá trị của id từ thuộc tính data-id
+				const pageId = $(this).data('id');
+
+				// Cập nhật tham số 'page' trong URL bằng giá trị id hoặc thêm nếu chưa có
+				updateUrlParameter('page', pageId || '1');
+				// Gọi lại hàm fetchData với trang mới
+				fetchData();
+			}
+		});
+	</script>
+}
