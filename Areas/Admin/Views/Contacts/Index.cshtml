@@ -63,14 +63,14 @@
                             if (item.IsDeleted == false)
                             {
                             <tr>
-                                <th>
+                                <td>
                                         @if(item.IsSeen == false)
                                         {
                                             <a >
                                                 <i class="fa fa-bell"></i>
                                             </a>
                                         }
-                                    </th>
+                                    </td>
                                 <th>
                                     @Html.DisplayFor(modelItem => item.Name)
                                 </th>
