@@ -35,9 +35,17 @@ namespace ShoeShop.Areas.Admin.Controllers
                 int skip = start != null ? Convert.ToInt32(start) : 0;
                 int recordsTotal = 0;
                 var sizeData = _context.Sizes.Where(p => p.IsDelete == false).AsQueryable();
-                if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
+                switch (sortColumn.ToLower())
                 {
-                    sizeData = sizeData.OrderBy(c => EF.Property<object>(c, sortColumn)).ThenBy(c => c.Id);
+                    case "id":
+                        sizeData = sortColumnDirection.ToLower() == "asc" ? sizeData.OrderBy(o => o.Id) : sizeData.OrderByDescending(o => o.Id);
+                        break;
+                    case "name":
+                        sizeData = sortColumnDirection.ToLower() == "asc" ? sizeData.OrderBy(o => o.Name) : sizeData.OrderByDescending(o => o.Name);
+                        break;
+                    default:
+                        sizeData = sizeData.OrderBy(o => o.Id);
+                        break;
                 }
                 if (!string.IsNullOrEmpty(searchValue))
                 {

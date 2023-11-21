@@ -180,6 +180,7 @@
                 table.draw();
             });
         });
+
         $(document).on("click", ".btn-delete", async function () {
             let trid = $(this).data("id");
             let result = await Swal.fire({

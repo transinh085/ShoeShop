@@ -33,6 +33,17 @@ namespace ShoeShop.Areas.Admin.Controllers
             var customerUsers = users
                 .Where(u => userManager.IsInRoleAsync(u, UserRoles.Customer).Result)
                 .Where(u => u.IsDeleted == false)
+                .Select(u => new
+                {
+                    u.Id,
+                    u.FullName,
+                    u.UserName,
+                    u.Gender,
+                    u.BirthDay,
+                    u.Email,
+                    u.PhoneNumber,
+                    u.JoinTime,
+                })
                 .OrderByDescending(u => u.JoinTime)
                 .ToList();
 

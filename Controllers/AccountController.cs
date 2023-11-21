@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ShoeShop.Controllers
 {
 	public class AccountController : Controller
 	{
-		public IActionResult Index()
+		[Authorize]
+		public IActionResult Profile()
 		{
 			return View();
 		}

@@ -83,7 +83,7 @@ namespace ShoeShop.Areas.Admin.Controllers
                     orderData = orderData.Where(o => o.CreatedAt >= startDate && o.CreatedAt < endDate);
                 }
 
-                if (status != -2) // Assuming 0 is a default value, adjust this according to your use case
+                if (status != -2)
                 {
                     var orderStatusFilter = (OrderStatus)status;
                     orderData = orderData.Where(o => o.OrderStatus == orderStatusFilter);

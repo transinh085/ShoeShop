@@ -1,53 +1,132 @@
 ﻿@model ShoeShop.Models.Blog
 
+
 @{
     ViewData["Title"] = "Edit";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/admin/js/plugins/select2/css/select2.min.css">
+}
+@section Scripts {
+    <script src="~/admin/js/plugins/select2/js/select2.full.min.js"></script>
+    <script src="~/admin/js/plugins/ckeditor/ckeditor.js"></script>
+    <script src="~/admin/js/plugins/jquery-validation/jquery.validate.min.js"></script>
+    <script src="~/admin/js/plugins/jquery-validation/additional-methods.js"></script>
+    <script src="~/admin//js/blog/add-blog.js"></script >
+    <script>Dashmix.helpersOnLoad(['jq-select2', 'js-ckeditor']);</script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
 
 <h1>Edit</h1>
 
 <h4>Blog</h4>
 <hr />
+
+
+
+
+@* <form asp-action="Edit" id="blog-form" enctype="multipart/form-data">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="col-8" style="background-color:white;display:flex; justify-content:center;align-items:center; margin:10px 200px">
+
+        <div class="col-10">
+            <div class="block-header block-header-default">
+                <h3 class="block-header-default" style="margin:10px">Add Post</h3>
+            </div>
+            <div class="col-8 form-group">
+                @* <label class="form-label" asp-for="Thumbnail">Image</label>
+                <input type="file" id="thumbnail" asp-for="Thumbnail" class="form-control" accept="image/*" />
+                <img id="imagePreview" src="~/img/blogs/@blog.Thumbnail.Name" style="display:block; max-width: 400px; max-height: 300px; " /> 
+            </div>
+
+            <div class="col-8 form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" id="blog-name" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="col-8  form-group">
+                <label asp-for="Slug" class="control-label"></label>
+                <input asp-for="Slug" class="form-control" id="blog-slug"  />
+                <span asp-validation-for="Slug" class="text-danger"></span>
+            </div>
+
+            <div class="col-8 form-group">
+                <label class="form-label" asp-for="TopicId">Topic</label>
+                <select class="js-select2 form-select" id="topic-id" asp-for="TopicId" style="width: 100%;" data-placeholder="Choose topic..">
+                    <option></option>
+                    @foreach (var topic in ViewBag.Topics)
+                    {
+                        <option value="@topic.Id" selected="@(topic.Id)">@topic.Name</option>
+                    }
+                    <!-- Add dynamic options if needed -->
+                </select>
+            </div>
+
+            <div class="form group">
+                <label class="form-label">Content</label>
+                <textarea id="js-ckeditor">
+                    @blog.Content
+                </textarea>
+            </div>
+            <div class="mb-4 form-group" style="display:flex; justify-content:end;">
+                <button type="button" class="btn btn-danger" style="margin:10px"> <a asp-action="Index" style="color:white">Back to List</a></button>
+                <button type="submit" class="btn btn-primary" style="margin:10px">Update Post</button>
+            </div>
+
+
+        </div>
+    </div>
+</form> *@
+
+
+
+
+
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
+            @* <input type="hidden" asp-for="Id" /> *@
             <div class="form-group">
-                <label asp-for="Slug" class="control-label"></label>
-                <input asp-for="Slug" class="form-control" />
-                <span asp-validation-for="Slug" class="text-danger"></span>
+                 <label class="form-label" asp-for="Thumbnail">Image</label>
+                <input type="file" id="thumbnail" asp-for="Thumbnail" class="form-control" accept="image/*"/>
+                <img id="imagePreview"  style="display:block; max-width: 400px; max-height: 300px; " />
             </div>
+
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Slug" class="control-label"></label>
+                <input asp-for="Slug" class="form-control" />
+                <span asp-validation-for="Slug" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="CreatedAt" class="control-label"></label>
-                <input asp-for="CreatedAt" class="form-control" />
+                <input asp-for="CreatedAt" class="form-control" readonly/>
                 <span asp-validation-for="CreatedAt" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="CreateBy" class="control-label"></label>
-                <input asp-for="CreateBy" class="form-control" />
+                <input asp-for="CreateBy" class="form-control" readonly/>
                 <span asp-validation-for="CreateBy" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="TopicID" class="control-label"></label>
-                <select asp-for="TopicID" class="form-control" asp-items="ViewBag.TopicID"></select>
+                <select asp-for="TopicID" class="form-control" asp-items="ViewBag.TopicId">
+                </select>
                 <span asp-validation-for="TopicID" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Content" class="control-label"></label>
-                <input asp-for="Content" class="form-control" />
+                <textarea id="js-ckeditor" asp-for="Content" class="form-control"></textarea> />
                 <span asp-validation-for="Content" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsDetele" /> @Html.DisplayNameFor(model => model.IsDetele)
-                </label>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
@@ -59,7 +138,5 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+ 
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
