@@ -26,12 +26,14 @@ namespace ShoeShop.Controllers
 
         public async Task<IActionResult> Index()
         {
-			ViewBag.Featured = await _context.Products.Where(p => p.IsFeatured == false)
+			ViewBag.Featured = await _context.Products.Where(p => p.IsFeatured == true)
+				.Where(p => !p.IsDetele)
 				.Include(p => p.Thumbnail)
 				.OrderByDescending(p => p.CreatedAt)
 				.Take(8)
 				.ToListAsync();
 			ViewBag.NewProduct = await _context.Products.Include(p => p.Thumbnail)
+				.Where(p => !p.IsDetele)
 				.OrderByDescending(p => p.CreatedAt)
 				.Take(8)
 				.ToListAsync();

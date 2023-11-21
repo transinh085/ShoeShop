@@ -26,22 +26,46 @@ namespace ShoeShop.Areas.Admin.Controllers
 						Problem("Entity set 'AppDbContext.Brands'  is null.");
 		}
 
-		// GET: Admin/Brands/Details/5
-		public async Task<IActionResult> Details(int? id)
+        [HttpPost]
+        public async Task<IActionResult> GetBrands()
         {
-            if (id == null || _context.Brands == null)
+            try
             {
-                return NotFound();
+                var draw = Request.Form["draw"].FirstOrDefault();
+                var start = Request.Form["start"].FirstOrDefault();
+                var length = Request.Form["length"].FirstOrDefault();
+                var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+                var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+                var searchValue = Request.Form["search[value]"].FirstOrDefault();
+                int pageSize = length != null ? Convert.ToInt32(length) : 0;
+                int skip = start != null ? Convert.ToInt32(start) : 0;
+                int recordsTotal = 0;
+                var categoryData = _context.Brands.Where(b => b.IsDelete == false).AsQueryable();
+                switch (sortColumn.ToLower())
+                {
+                    case "id":
+                        categoryData = sortColumnDirection.ToLower() == "asc" ? categoryData.OrderBy(o => o.Id) : categoryData.OrderByDescending(o => o.Id);
+                        break;
+                    case "name":
+                        categoryData = sortColumnDirection.ToLower() == "asc" ? categoryData.OrderBy(o => o.Name) : categoryData.OrderByDescending(o => o.Name);
+                        break;
+                    default:
+                        categoryData = categoryData.OrderBy(o => o.Id);
+                        break;
+                }
+                if (!string.IsNullOrEmpty(searchValue))
+                {
+                    categoryData = categoryData.Where(m => m.Name.Contains(searchValue));
+                }
+                recordsTotal = categoryData.Count();
+                var data = categoryData.Skip(skip).Take(pageSize).ToList();
+                var jsonData = new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data };
+                return Ok(jsonData);
             }
-
-            var brand = await _context.Brands
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (brand == null)
+            catch (Exception ex)
             {
-                return NotFound();
+                throw;
             }
-
-            return View(brand);
         }
 
         // GET: Admin/Brands/Create

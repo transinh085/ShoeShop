@@ -35,10 +35,18 @@ namespace ShoeShop.Areas.Admin.Controllers
                 int pageSize = length != null ? Convert.ToInt32(length) : 0;
                 int skip = start != null ? Convert.ToInt32(start) : 0;
                 int recordsTotal = 0;
-                var colorData = _context.Colors.AsQueryable();
-                if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
+                var colorData = _context.Colors.Where(b => b.IsDelete == false).AsQueryable();
+                switch (sortColumn.ToLower())
                 {
-                    colorData = colorData.OrderBy(c => EF.Property<object>(c, sortColumn)).ThenBy(c => c.Id);
+                    case "id":
+                        colorData = sortColumnDirection.ToLower() == "asc" ? colorData.OrderBy(o => o.Id) : colorData.OrderByDescending(o => o.Id);
+                        break;
+                    case "name":
+                        colorData = sortColumnDirection.ToLower() == "asc" ? colorData.OrderBy(o => o.Name) : colorData.OrderByDescending(o => o.Name);
+                        break;
+                    default:
+                        colorData = colorData.OrderBy(o => o.Id);
+                        break;
                 }
                 if (!string.IsNullOrEmpty(searchValue))
                 {

@@ -12,6 +12,7 @@ using System.Runtime.InteropServices;
 using System.Drawing.Drawing2D;
 using Microsoft.AspNetCore.Authorization;
 using ShoeShop.Data.Enum;
+using ShoeShop.Helpers;
 
 namespace ShoeShop.Controllers
 {
@@ -109,7 +110,7 @@ namespace ShoeShop.Controllers
 
             var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
 
-            if (product == null) return NotFound();
+            if (product == null || product.IsDetele) return NotFound();
 			var currentUser = await _userManager.GetUserAsync(User);
 
 			if (currentUser == null)
@@ -205,6 +206,7 @@ namespace ShoeShop.Controllers
 		)
 		{
 			var queryableProducts = _context.Products
+				.Where(p => !p.IsDetele)
 				.Include(product => product.Thumbnail)
 				.Include(product => product.Variants).ThenInclude(variant => variant.VariantSizes)
 				.AsQueryable();
@@ -254,8 +256,7 @@ namespace ShoeShop.Controllers
 			// Filter by prices
 			if (!string.IsNullOrEmpty(prices))
 			{
-				var priceRangeList = ParsePriceRanges(prices);
-
+				var priceRangeList = PriceRangesConverter.Parse(prices);
 				// Materialize the query before the price range filter
 				var materializedProducts = queryableProducts.ToList();
 
@@ -303,23 +304,6 @@ namespace ShoeShop.Controllers
 			};
 
 			return Ok(JsonSerializer.Serialize(result, options));
-		}
-
-		private List<(decimal Min, decimal Max)> ParsePriceRanges(string prices)
-		{
-			var priceRanges = prices.Split(',');
-			var rangeList = new List<(decimal Min, decimal Max)>();
-
-			foreach (var range in priceRanges)
-			{
-				var parts = range.Split(':');
-				if (parts.Length == 2 && decimal.TryParse(parts[0], out decimal min) && decimal.TryParse(parts[1], out decimal max))
-				{
-					rangeList.Add((min, max));
-				}
-			}
-
-			return rangeList;
 		}
 
 		[HttpPost]
