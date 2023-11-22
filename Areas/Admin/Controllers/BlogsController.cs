@@ -13,6 +13,7 @@ using ShoeShop.ViewModels;
 using ShoeShop.Data.Seeder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore;
+using System.Collections;
 
 namespace ShoeShop.Areas.Admin.Controllers
 {
@@ -20,10 +21,12 @@ namespace ShoeShop.Areas.Admin.Controllers
     public class BlogsController : Controller
     {
         private readonly AppDbContext _context;
-       
-        public BlogsController(AppDbContext context)
+        private readonly UserManager<AppUser> _userManager;
+
+        public BlogsController(AppDbContext context, UserManager<AppUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Admin/Blogs
@@ -33,6 +36,8 @@ namespace ShoeShop.Areas.Admin.Controllers
                 .Include(b => b.Topic)
                 .Include(b => b.Thumbnail)
                 .ToListAsync();
+            List<AppUser> authors = await _userManager.Users.ToListAsync();
+
             return View(posts);
         }
 
@@ -68,7 +73,7 @@ namespace ShoeShop.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromForm]BlogViewModel post)
+        public async Task<IActionResult> Create([FromForm] BlogViewModel post)
         {
             //if (await _context.Blogs.AddAsync(p => p.Slug == post.Slug))
             //{
@@ -91,13 +96,13 @@ namespace ShoeShop.Areas.Admin.Controllers
                 Name = uniqueFileName
             };
 
-
+            AppUser author = await _userManager.FindByIdAsync(user);
             Blog bl = new Blog
             {
                 Slug = post.Slug,
                 Name = post.Name,
                 Thumbnail = img,
-                CreateBy = user,
+                User = author,
                 TopicID = post.TopicId,
                 Content = post.Content,
                 IsDetele = false
@@ -116,12 +121,17 @@ namespace ShoeShop.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var blog = await _context.Blogs.FindAsync(id);
+            var blog = await _context.Blogs .Include(b => b.Thumbnail)
+                                            .Include(b => b.User)
+                                            .FirstOrDefaultAsync(b => b.Id == id); ;
+            //.FindAsync(id)
             if (blog == null)
             {
                 return NotFound();
             }
+            
             ViewData["TopicID"] = new SelectList(_context.Topics, "Id", "Name", blog.TopicID);
+            Console.WriteLine(blog.Thumbnail.Name+"------------------0000_______________________");
             return View(blog);
         }
 
@@ -175,29 +185,30 @@ namespace ShoeShop.Areas.Admin.Controllers
             return Ok(new { message = "Delete successfully" });
         }
 
-        //// POST: Admin/Blogs/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> DeleteConfirmed(int id)
-        //{
-        //    if (_context.Blogs == null)
-        //    {
-        //        return Problem("Entity set 'AppDbContext.Blog'  is null.");
-        //    }
-        //    var blog = await _context.Blogs.FindAsync(id);
-        //    if (blog != null)
-        //    {
-        //        _context.Blogs.Remove(blog);
-        //    }
-            
-        //    await _context.SaveChangesAsync();
-        //    return RedirectToAction(nameof(Index));
-        //}
 
         private bool BlogExists(int id)
         {
-          return (_context.Blogs?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Blogs?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
     }
 }
+//    [HttpGet, ActionName("allBlogs")]
+//    public IActionResult GetAllBlogs(
+//int page = 1,
+//    int pageSize = 9,
+//    string query = "",
+//    string topics = "",
+//    string author = ""
+
+//    )
+
+//    {
+//        var queryableBlogs = _context.Blogs
+//            .Where(b => !b.IsDetele)
+//            .Include(b => b.Topic)
+//            .Include(b => b.Thumbnail)
+//            .AsQueryable();
+//    }
+
+

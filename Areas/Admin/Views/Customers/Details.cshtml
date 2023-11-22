@@ -1,0 +1,70 @@
+﻿@{
+    ViewData["Title"] = "Contacts";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+
+    var contact = ViewBag.Contact;
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/detailcontact.css">
+}
+
+    
+    <div id="page-container" class="sidebar-o sidebar-dark enable-page-overlay side-scroll page-header-fixed">
+      
+      <main id="main-container">
+        <!-- Page Content -->
+        <div class="row g-0 flex-md-grow-1">
+          <div class="col-md-8 col-lg-7 col-xl-9 bg-body-dark">
+                <div class="block-header block-header-default">
+                    <a class="btn btn-alt-secondary"  asp-action="Index">
+                        <i class="fa fa-arrow-left me-1" ></i> Back
+                    </a>
+                    <div class="block-options">
+                        <form asp-controller="Contacts" asp-action="Read">
+                        <div class="form-check form-switch">
+                            @{
+                                var check = "";
+                                if(@contact.IsSeen == true){
+                                    check = "checked"; 
+                                } 
+                            }
+                            <a class="btn btn-sm btn-alt-info btn-checkbox" asp-route-id="@contact.Id">Mark as read</a>
+                            <input class="form-check-input" type="checkbox" disabled id="dm-post-edit-active" @check>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            <!-- Main Content -->
+            <div class="content">
+              <!-- Message -->
+              <div class="block block-rounded">
+                <div class="block-content block-content-sm block-content-full bg-body-light">
+                  <div class="d-flex py-3">
+                    <div class="flex-shrink-0 me-3 ms-2 overlay-container overlay-right">
+                                    <img class="img-avatar img-avatar48" src="~/img/avatar.jpg" alt="">
+                    </div>
+                    <div class="flex-grow-1">
+                      <div class="row">
+                        <div class="col-sm-7">
+                          <a class="fw-semibold link-fx" href="be_pages_generic_profile.html">@contact.Name</a>
+                          <div class="fs-sm text-muted">@contact.Email</div>
+                        </div>
+                        <div class="col-sm-5 d-sm-flex align-items-sm-center">
+                          <div class="fs-sm text-muted text-sm-end w-100 mt-2 mt-sm-0">
+                            <p class="mb-0">@contact.CreatedAt</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="block-content">
+                  <p>@contact.Message</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+     
+    </div>
