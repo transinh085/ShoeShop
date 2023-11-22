@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ShoeShop.Controllers
 {
+	[Authorize]
 	public class AccountController : Controller
 	{
-		[Authorize]
 		public IActionResult Profile()
 		{
 			return View();
