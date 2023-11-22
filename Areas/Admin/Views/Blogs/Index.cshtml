@@ -110,8 +110,9 @@
                                         @Html.DisplayFor(modelItem => item.Name)
                                     </div>
                                 </td>
-                                @{
-                                }
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.User.FullName)
+                                </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.CreatedAt)
                                 </td>

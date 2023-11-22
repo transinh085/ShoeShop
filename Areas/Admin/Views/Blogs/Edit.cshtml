@@ -1,4 +1,4 @@
-﻿@model ShoeShop.Models.Blog
+﻿@model ShoeShop.ViewModels.BlogViewModel
 
 
 @{
@@ -92,13 +92,14 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             @* <input type="hidden" asp-for="Id" /> *@
             <div class="form-group">
-                 <label class="form-label" asp-for="Thumbnail">Image</label>
-                <input type="file" id="thumbnail" asp-for="Thumbnail" class="form-control" accept="image/*"/>
+                 <label class="form-label" asp-for="Image">Image</label>
+                <input type="file" id="thumbnail" asp-for="Image.Name" class="form-control" accept="image/*">
                 <img id="imagePreview"  style="display:block; max-width: 400px; max-height: 300px; " />
+
             </div>
 
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
+                <label asp-for="Name" class="control-label">Tiêu đề</label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
@@ -108,24 +109,24 @@
                 <span asp-validation-for="Slug" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CreatedAt" class="control-label"></label>
+                <label asp-for="CreatedAt" class="control-label">Thời gian tạo</label>
                 <input asp-for="CreatedAt" class="form-control" readonly/>
                 <span asp-validation-for="CreatedAt" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CreateBy" class="control-label"></label>
-                <input asp-for="CreateBy" class="form-control" readonly/>
-                <span asp-validation-for="CreateBy" class="text-danger"></span>
+                <label asp-for="User.FullName" class="control-label">Tác giả</label>
+                <input asp-for="User.FullName" class="form-control" readonly />
+                <span asp-validation-for="User.FullName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="TopicID" class="control-label"></label>
-                <select asp-for="TopicID" class="form-control" asp-items="ViewBag.TopicId">
+                <label asp-for="TopicId" class="control-label">Chủ đề</label>
+                <select asp-for="TopicId" class="form-control" asp-items="ViewBag.TopicId">
                 </select>
-                <span asp-validation-for="TopicID" class="text-danger"></span>
+                <span asp-validation-for="TopicId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Content" class="control-label"></label>
-                <textarea id="js-ckeditor" asp-for="Content" class="form-control"></textarea> />
+                <label asp-for="Content" class="control-label">Nội dung</label>
+                <textarea id="js-ckeditor" asp-for="Content" class="form-control"></textarea>
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
             <div class="form-group">

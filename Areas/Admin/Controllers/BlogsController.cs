@@ -102,7 +102,7 @@ namespace ShoeShop.Areas.Admin.Controllers
                 Slug = post.Slug,
                 Name = post.Name,
                 Thumbnail = img,
-                CreateBy = author.Id,
+                User = author,
                 TopicID = post.TopicId,
                 Content = post.Content,
                 IsDetele = false
@@ -121,12 +121,17 @@ namespace ShoeShop.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var blog = await _context.Blogs.FindAsync(id);
+            var blog = await _context.Blogs .Include(b => b.Thumbnail)
+                                            .Include(b => b.User)
+                                            .FirstOrDefaultAsync(b => b.Id == id); ;
+            //.FindAsync(id)
             if (blog == null)
             {
                 return NotFound();
             }
+            
             ViewData["TopicID"] = new SelectList(_context.Topics, "Id", "Name", blog.TopicID);
+            Console.WriteLine(blog.Thumbnail.Name+"------------------0000_______________________");
             return View(blog);
         }
 

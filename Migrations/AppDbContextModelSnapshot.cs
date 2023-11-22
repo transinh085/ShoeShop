@@ -286,7 +286,7 @@ namespace ShoeShop.Migrations
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<bool?>("IsDetele")
+                    b.Property<bool>("IsDetele")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Name")
@@ -301,11 +301,16 @@ namespace ShoeShop.Migrations
                     b.Property<int>("TopicID")
                         .HasColumnType("int");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("varchar(255)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ThumbnailId");
 
                     b.HasIndex("TopicID");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Blogs");
                 });
@@ -766,9 +771,15 @@ namespace ShoeShop.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("ShoeShop.Models.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
                     b.Navigation("Thumbnail");
 
                     b.Navigation("Topic");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ShoeShop.Models.Image", b =>
