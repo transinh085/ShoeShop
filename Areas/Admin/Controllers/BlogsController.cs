@@ -14,7 +14,8 @@ using ShoeShop.Data.Seeder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore;
 using System.Collections;
-
+using System.IO;
+using Microsoft.AspNetCore.Http;
 namespace ShoeShop.Areas.Admin.Controllers
 {
     [Area("Admin")]
@@ -129,10 +130,18 @@ namespace ShoeShop.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            
-            ViewData["TopicID"] = new SelectList(_context.Topics, "Id", "Name", blog.TopicID);
-            Console.WriteLine(blog.Thumbnail.Name+"------------------0000_______________________");
+
+                ViewData["TopicID"] = new SelectList(_context.Topics, "Id", "Name", blog.TopicID);
+            BlogViewModel post = new BlogViewModel()
+            {
+                Name = blog.Name,
+                Slug = blog.Slug,
+                User = blog.User,
+                CreatedAt = blog.CreatedAt,
+                Content = blog.Content
+            };
             return View(blog);
+            //return RedirectToAction("Edit","Blogs");
         }
 
         // POST: Admin/Blogs/Edit/5

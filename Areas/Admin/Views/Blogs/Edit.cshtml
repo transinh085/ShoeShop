@@ -1,4 +1,4 @@
-﻿@model ShoeShop.ViewModels.BlogViewModel
+﻿@model ShoeShop.Models.Blog;
 
 
 @{
@@ -18,6 +18,22 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+<script>
+    function openFileInput() {
+        // Khi button được click, kích hoạt sự kiện click cho input file ẩn
+        document.getElementById('thumbnail').click();
+    }
+
+    // Sự kiện change của input file
+    document.getElementById('thumbnail').addEventListener('change', function () {
+        // Lấy tên file từ input file
+        var fileName = this.value.split('\\').pop();
+
+        // Hiển thị tên file hoặc đường dẫn của file trong phần tử span
+        document.getElementById('imgPreview').src = fileName;
+    });
+
+</script>
 }
 
 <h1>Edit</h1>
@@ -92,9 +108,9 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             @* <input type="hidden" asp-for="Id" /> *@
             <div class="form-group">
-                 <label class="form-label" asp-for="Image">Image</label>
-                <input type="file" id="thumbnail" asp-for="Image.Name" class="form-control" accept="image/*">
-                <img id="imagePreview"  style="display:block; max-width: 400px; max-height: 300px; " />
+                 <label class="form-label" asp-for="Thumbnail">Image</label>
+                <input type="file" id="thumbnail" asp-for="Thumbnail" class="form-control" accept="image/*"value="@Model.Thumbnail.Name" >
+                <img id="imagePreview" style="display:block; max-width: 400px; max-height: 300px;" src="~/img/blogs/@Model.Thumbnail.Name"/>
 
             </div>
 
@@ -119,10 +135,10 @@
                 <span asp-validation-for="User.FullName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="TopicId" class="control-label">Chủ đề</label>
-                <select asp-for="TopicId" class="form-control" asp-items="ViewBag.TopicId">
+                <label asp-for="TopicID" class="control-label">Chủ đề</label>
+                <select asp-for="TopicID" class="form-control" asp-items="ViewBag.TopicId">
                 </select>
-                <span asp-validation-for="TopicId" class="text-danger"></span>
+                <span asp-validation-for="TopicID" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Content" class="control-label">Nội dung</label>
@@ -139,5 +155,6 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+
  
 
