@@ -59,8 +59,29 @@
 
                     <div class="container-fluid px-4">
                         <div class="row">
-                            <div class="col-12 bg-white rounded shadow-sm">
-                                hello
+                            <div class="col-12 bg-white rounded shadow-sm p-2">
+                                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Profile</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="change-password-tab" data-bs-toggle="pill" data-bs-target="#change-password" type="button" role="tab" aria-controls="change-password" aria-selected="false">Change password</button>
+                                    </li>
+                                </ul>
+                                <div class="tab-content pt-4" id="pills-tabContent">
+                                    <div class="tab-pane fade show active" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                                        <div class="d-flex justify-content-center image-container" style="position: relative;">
+                                            <label for="input-file" id="image-label" style="cursor: pointer">
+                                                <img alt="avatar" src="@currentUser.ProfileImageUrl" class="pic-avatar" id="profile-pic">
+                                                <div class="edit-icon">
+                                                    <i class="fas fa-edit"></i>
+                                                </div>
+                                            </label>
+                                            <input type="file" accept="image/jpeg, image/png, image/jpg, image/svg" id="input-file" style="display: none;">
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="change-password" role="tabpanel" aria-labelledby="change-password-tab">...</div>
+                                </div>
                             </div>
                         </div>
 
@@ -77,7 +98,20 @@
             toggleButton.onclick = function () {
                 el.classList.toggle("toggled");
             };
+            
+            document.getElementById('input-file').addEventListener('change', function (event) {
+                // Lấy ra đối tượng input file và kiểm tra xem có file nào được chọn không
+                var input = event.target;
+                if (input.files && input.files[0]) {
+                    // Đọc file hình ảnh và cập nhật thuộc tính src của thẻ img
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        document.getElementById('profile-pic').src = e.target.result;
+                    };
+                    reader.readAsDataURL(input.files[0]);
+                }
+            });
+            
         </script>
-		</div>
 	</div>
 </main>
