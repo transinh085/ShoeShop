@@ -16,5 +16,17 @@ namespace ShoeShop.Models
         public Topic? Topic { get; set; }
         public string? Content {get; set; }
         public bool IsDetele { get; set; } = false;
+
+        public IFormFile CreateDefaultFormFile(Image Thumbnail)
+        {
+            if (Thumbnail != null)
+            {
+                IFormFile a = new FormFile(new MemoryStream(), 0, 0, Thumbnail.Name, Thumbnail.Name);
+                return a;
+            }
+            else
+                return null;
+            
+        }
     }
 }

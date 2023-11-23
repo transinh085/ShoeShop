@@ -31,7 +31,7 @@
 				</div>
 				<!-- /widget -->
 				 <div class="row" id="posts">
-					@*	<div class="col-md-6">
+					@* 	<div class="col-md-6">
 						<article class="blog">
 							<figure>
 								<a asp-controller="Blog" asp-action="Detail" asp-route-id="1">
@@ -168,11 +168,12 @@
 						</article>
 						<!-- /article -->
 					</div> *@
+
 					<!-- /col -->
 				</div>
 				<!-- /row -->
 
-				@* <div class="pagination__wrapper no_border add_bottom_30">
+				<div class="pagination__wrapper no_border add_bottom_30">
 					<ul class="pagination">
 						<li><a href="#0" class="prev" title="previous page">&#10094;</a></li>
 							<a href="#0" class="active">1</a>
@@ -256,7 +257,7 @@
 						<a href="#">Transports</a>
 						<a href="#">Restaurants</a>
 					</div>
-				</div> *@
+				</div>
 				<!-- /widget -->
 			</aside>
 			<!-- /aside -->
@@ -268,8 +269,15 @@
 
 @section Scripts{
 	<script src="~/js/sticky_sidebar.min.js"></script>
-	<script src="~/js/specific_listing.js"></script>
+	@* <script src="~/js/specific_listing.js"></script> *@
 	<script>
+		var currentPage = null;
+		var totalPage = null;
+		function getQueryParamString() {
+			var url = new URL(window.location.href);
+			return url.search || '';
+		}
+
 		function fetchData() {
 			const queryParams = getQueryParamString();
 			const urlFetch = "/Blogs/allBlogs" + (queryParams.length > 0 ? queryParams : '');
@@ -282,6 +290,7 @@
 					totalPage = response.TotalPages;
 					let html = ``;
 					response?.Result.forEach( blog => {
+						console.log(blog);
 						html += `<div class="col-md-6">
 								<article class="blog">
 									<figure>

@@ -139,26 +139,69 @@ namespace ShoeShop.Areas.Admin.Controllers
 
         // POST: Admin/Topics/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Topics == null)
             {
-                return Problem("Entity set 'AppDbContext.Topic'  is null.");
+                return Problem("Entity set 'AppDbContext.Topics'  is null.");
             }
+
             var topic = await _context.Topics.FindAsync(id);
             if (topic != null)
             {
-                _context.Topics.Remove(topic);
+                topic.IsDelete = true;
             }
-            
+
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Ok(new { message = "Delete successfully" });
         }
 
         private bool TopicExists(int id)
         {
           return (_context.Topics?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> GetTopics()
+        {
+            try
+            {
+                var draw = Request.Form["draw"].FirstOrDefault();
+                var start = Request.Form["start"].FirstOrDefault();
+                var length = Request.Form["length"].FirstOrDefault();
+                var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+                var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+                var searchValue = Request.Form["search[value]"].FirstOrDefault();
+                int pageSize = length != null ? Convert.ToInt32(length) : 0;
+                int skip = start != null ? Convert.ToInt32(start) : 0;
+                int recordsTotal = 0;
+                var topicData = _context.Topics.Where(b => b.IsDelete == false).AsQueryable();
+                switch (sortColumn.ToLower())
+                {
+                    case "id":
+                        topicData = sortColumnDirection.ToLower() == "asc" ? topicData.OrderBy(o => o.Id) : topicData.OrderByDescending(o => o.Id);
+                        break;
+                    case "name":
+                        topicData = sortColumnDirection.ToLower() == "asc" ? topicData.OrderBy(o => o.Name) : topicData.OrderByDescending(o => o.Name);
+                        break;
+                    default:
+                        topicData = topicData.OrderBy(o => o.Id);
+                        break;
+                }
+                if (!string.IsNullOrEmpty(searchValue))
+                {
+                    topicData = topicData.Where(m => m.Name.Contains(searchValue));
+                }
+                recordsTotal = topicData.Count();
+                var data = topicData.Skip(skip).Take(pageSize).ToList();
+                var jsonData = new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data };
+                return Ok(jsonData);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
     }
 }

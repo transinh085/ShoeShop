@@ -16,6 +16,8 @@ using Microsoft.AspNetCore;
 using System.Collections;
 using System.IO;
 using Microsoft.AspNetCore.Http;
+using ShoeShop.Helpers;
+
 namespace ShoeShop.Areas.Admin.Controllers
 {
     [Area("Admin")]
@@ -36,9 +38,9 @@ namespace ShoeShop.Areas.Admin.Controllers
             var posts = await _context.Blogs
                 .Include(b => b.Topic)
                 .Include(b => b.Thumbnail)
+                .Include(b => b.User)
                 .ToListAsync();
-            List<AppUser> authors = await _userManager.Users.ToListAsync();
-
+            ViewBag.Topics = await _context.Topics.ToListAsync();
             return View(posts);
         }
 
@@ -132,15 +134,19 @@ namespace ShoeShop.Areas.Admin.Controllers
             }
 
                 ViewData["TopicID"] = new SelectList(_context.Topics, "Id", "Name", blog.TopicID);
+
             BlogViewModel post = new BlogViewModel()
             {
+                Id = blog.Id,
+                Thumbnail = blog.Thumbnail,
                 Name = blog.Name,
                 Slug = blog.Slug,
                 User = blog.User,
                 CreatedAt = blog.CreatedAt,
+                TopicId = blog.TopicID,
                 Content = blog.Content
             };
-            return View(blog);
+            return View(post);
             //return RedirectToAction("Edit","Blogs");
         }
 
@@ -149,23 +155,49 @@ namespace ShoeShop.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Slug,Name,CreatedAt,CreateBy,TopicID,Content,IsDetele")] Blog blog)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Slug,Content,Image,TopicID")] BlogViewModel bl)
+        //public async Task<IActionResult> Edit(int id, [FromForm]Blog blog) 
         {
-            if (id != blog.Id)
+            if (id != bl.Id)
             {
                 return NotFound();
             }
+            string uniqueFileName = Guid.NewGuid().ToString() + "_" + bl.Image.FileName;
+            string filePath = Path.Combine("wwwroot/img/blogs", uniqueFileName);
 
+            var img = new Image();
+            if (bl.Image.FileName != "")
+            {
+                img = new Image
+                {
+                    Name = uniqueFileName
+                };
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    bl.Image.CopyTo(fileStream);
+                }
+            }
             if (ModelState.IsValid)
             {
                 try
                 {
+                    var blog = await _context.Blogs.FindAsync(id);
+
+                    blog.Name = bl.Name;
+                    blog.Slug = bl.Slug;
+                    blog.Content = bl.Content;
+                    if (img != null)
+                    {
+                        blog.Thumbnail = img;
+                    }
+                    blog.TopicID = bl.TopicId;
+
                     _context.Update(blog);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BlogExists(blog.Id))
+                    if (!BlogExists(id))
                     {
                         return NotFound();
                     }
@@ -174,11 +206,12 @@ namespace ShoeShop.Areas.Admin.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Index)); // Redirect to the list of blogs after successful edit
+                }
+
+                return View(bl);
             }
-            ViewData["TopicID"] = new SelectList(_context.Topics, "Id", "Id", blog.TopicID);
-            return View(blog);
-        }
+        
 
         // POST: Admin/Blogs/Delete/5
         [HttpPost, ActionName("Delete")]
@@ -200,24 +233,61 @@ namespace ShoeShop.Areas.Admin.Controllers
             return (_context.Blogs?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
+        [HttpPost]
+        public async Task<IActionResult> GetBlogs(string query, int[] topics)
+        {
+            var draw = int.Parse(Request.Form["draw"].FirstOrDefault());
+            var skip = int.Parse(Request.Form["start"].FirstOrDefault());
+            var pageSize = int.Parse(Request.Form["length"].FirstOrDefault());
+            var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+            var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+
+            var Blogs = _context.Blogs
+                .Include(b => b.Thumbnail)
+                .Include(b => b.User)
+                .Include(b => b.Topic)
+                .OrderByDescending(b => b.CreatedAt)
+                .Where(p => !p.IsDetele)
+                .AsQueryable();
+
+            switch (sortColumn.ToLower())
+            {
+                case "id":
+                    Blogs = sortColumnDirection.ToLower() == "asc" ? Blogs.OrderBy(o => o.Id) : Blogs.OrderByDescending(o => o.Id);
+                    break;
+                case "name":
+                    Blogs = sortColumnDirection.ToLower() == "asc" ? Blogs.OrderBy(o => o.Name) : Blogs.OrderByDescending(o => o.Name);
+                    break;
+                case "topic":
+                    Blogs = sortColumnDirection.ToLower() == "asc" ? Blogs.OrderBy(o => o.Topic.Name) : Blogs.OrderByDescending(o => o.Topic.Name);
+                    break;
+                case "user":
+                    Blogs = sortColumnDirection.ToLower() == "asc" ? Blogs.OrderBy(o => o.User.FullName) : Blogs.OrderByDescending(o => o.User.FullName);
+                    break;
+                default:
+                    Blogs = Blogs.OrderBy(o => o.Id);
+                    break;
+            }
+
+            if (!string.IsNullOrEmpty(query))
+            {
+                Blogs = Blogs.Where(m => m.Name.Contains(query));
+            }
+
+            if (topics.Length != 0)
+            {
+                Blogs = Blogs.Where(u => topics.Contains(u.TopicID));
+            }
+
+            var recordsTotal = Blogs.Count();
+            var data = Blogs.OrderByDescending(o => o.Id).Skip(skip).Take(pageSize).ToList();
+
+            var jsonData = new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data };
+            return Ok(jsonData);
+        }
+
     }
 }
-//    [HttpGet, ActionName("allBlogs")]
-//    public IActionResult GetAllBlogs(
-//int page = 1,
-//    int pageSize = 9,
-//    string query = "",
-//    string topics = "",
-//    string author = ""
 
-//    )
-
-//    {
-//        var queryableBlogs = _context.Blogs
-//            .Where(b => !b.IsDetele)
-//            .Include(b => b.Topic)
-//            .Include(b => b.Thumbnail)
-//            .AsQueryable();
-//    }
 
 

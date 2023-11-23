@@ -1,4 +1,4 @@
-﻿@model ShoeShop.Models.Blog;
+﻿@model ShoeShop.ViewModels.BlogViewModel;
 
 
 @{
@@ -34,97 +34,37 @@
     });
 
 </script>
+
+
 }
 
-<h1>Edit</h1>
-
-<h4>Blog</h4>
-<hr />
 
 
-
-
-@* <form asp-action="Edit" id="blog-form" enctype="multipart/form-data">
+<form asp-action="Edit" id="blog-form" enctype="multipart/form-data">
     <div asp-validation-summary="All" class="text-danger"></div>
-    <div class="col-8" style="background-color:white;display:flex; justify-content:center;align-items:center; margin:10px 200px">
-
-        <div class="col-10">
-            <div class="block-header block-header-default">
-                <h3 class="block-header-default" style="margin:10px">Add Post</h3>
+    <div class="col-8" style="background-color:white;display:block; margin:10px 250px">
+        <div class="block-header block-header-default" style="width:100%">
+            <h3 class="block-header-default" style="margin:10px">Edit Post</h3>
+        </div>
+        <div class="col-8" style="width:100%;padding:10px 100px">
+            <div class="form-group" >
+                <label class="form-label" asp-for="Image">Image</label>
+                <input type="file" id="thumbnail" asp-for="Image" class="form-control" accept="image/*" />
+                <img id="imagePreview" style="display:block; width: 400px; height: 350px; margin:10px 60px" src="~/img/blogs/@Model.Thumbnail.Name" />
             </div>
-            <div class="col-8 form-group">
-                @* <label class="form-label" asp-for="Thumbnail">Image</label>
-                <input type="file" id="thumbnail" asp-for="Thumbnail" class="form-control" accept="image/*" />
-                <img id="imagePreview" src="~/img/blogs/@blog.Thumbnail.Name" style="display:block; max-width: 400px; max-height: 300px; " /> 
-            </div>
 
-            <div class="col-8 form-group">
+            <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" id="blog-name" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
 
-            <div class="col-8  form-group">
-                <label asp-for="Slug" class="control-label"></label>
-                <input asp-for="Slug" class="form-control" id="blog-slug"  />
-                <span asp-validation-for="Slug" class="text-danger"></span>
-            </div>
-
-            <div class="col-8 form-group">
-                <label class="form-label" asp-for="TopicId">Topic</label>
-                <select class="js-select2 form-select" id="topic-id" asp-for="TopicId" style="width: 100%;" data-placeholder="Choose topic..">
-                    <option></option>
-                    @foreach (var topic in ViewBag.Topics)
-                    {
-                        <option value="@topic.Id" selected="@(topic.Id)">@topic.Name</option>
-                    }
-                    <!-- Add dynamic options if needed -->
-                </select>
-            </div>
-
-            <div class="form group">
-                <label class="form-label">Content</label>
-                <textarea id="js-ckeditor">
-                    @blog.Content
-                </textarea>
-            </div>
-            <div class="mb-4 form-group" style="display:flex; justify-content:end;">
-                <button type="button" class="btn btn-danger" style="margin:10px"> <a asp-action="Index" style="color:white">Back to List</a></button>
-                <button type="submit" class="btn btn-primary" style="margin:10px">Update Post</button>
-            </div>
-
-
-        </div>
-    </div>
-</form> *@
-
-
-
-
-
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            @* <input type="hidden" asp-for="Id" /> *@
-            <div class="form-group">
-                 <label class="form-label" asp-for="Thumbnail">Image</label>
-                <input type="file" id="thumbnail" asp-for="Thumbnail" class="form-control" accept="image/*"value="@Model.Thumbnail.Name" >
-                <img id="imagePreview" style="display:block; max-width: 400px; max-height: 300px;" src="~/img/blogs/@Model.Thumbnail.Name"/>
-
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Name" class="control-label">Tiêu đề</label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
             <div class="form-group">
                 <label asp-for="Slug" class="control-label"></label>
-                <input asp-for="Slug" class="form-control" />
+                <input asp-for="Slug" class="form-control" id="blog-slug" />
                 <span asp-validation-for="Slug" class="text-danger"></span>
             </div>
-            <div class="form-group">
+             <div class="form-group">
                 <label asp-for="CreatedAt" class="control-label">Thời gian tạo</label>
                 <input asp-for="CreatedAt" class="form-control" readonly/>
                 <span asp-validation-for="CreatedAt" class="text-danger"></span>
@@ -135,26 +75,26 @@
                 <span asp-validation-for="User.FullName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="TopicID" class="control-label">Chủ đề</label>
-                <select asp-for="TopicID" class="form-control" asp-items="ViewBag.TopicId">
-                </select>
-                <span asp-validation-for="TopicID" class="text-danger"></span>
+                <label asp-for="TopicId" class="control-label">Chủ đề</label>
+                 <select asp-for="TopicId" class="form-control" asp-items="ViewBag.TopicId"></select>
+                
+                <span asp-validation-for="TopicId" class="text-danger"></span>
             </div>
-            <div class="form-group">
+
+             <div class="form-group">
                 <label asp-for="Content" class="control-label">Nội dung</label>
                 <textarea id="js-ckeditor" asp-for="Content" class="form-control"></textarea>
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+            <div class="mb-4 form-group" style="display:flex;justify-content:end;padding:10px 20px">
+                <button type="button" class="btn btn-danger" style="margin:10px"> <a asp-action="Index" style="color:white">Back to List</a></button>
+                <button type="submit" value="Create" id="btn-add-blog" class="btn btn-primary" style="width:100px;margin:10px">Save</button>
             </div>
-        </form>
-    </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+
+        </div>
+    </div>
+</form>
 
  
 
