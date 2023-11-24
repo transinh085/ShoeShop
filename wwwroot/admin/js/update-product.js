@@ -76,12 +76,40 @@ const showImage = () => {
   checkUI();
   let images = "";
   files.forEach(function (file, index) {
-      images += `<div class="preview-image-item" onClick=(setThumbnail(event))>
+      images += `<div class="preview-image-item" draggable="true" onClick=(setThumbnail(event)) ondragstart="handleDragStart(event, ${index})" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
                      <img src="${URL.createObjectURL(file)}" alt="image" data-id="${index}"/>
-                        <span class="btn-delete-image" onClick="handleDelete(event,${index}, this.parentElement)"><i class="fa fa-fw fa-times"></i></span></div>`;
+                     <span class="btn-delete-image" onClick="handleDelete(event, ${index}, this.parentElement)"><i class="fa fa-fw fa-times"></i></span>
+               </div>`;
   });
   hasImage.innerHTML = images;
 };
+
+let draggedIndex = null;
+
+const handleDragStart = (event, index) => {
+  draggedIndex = index;
+  event.dataTransfer.effectAllowed = 'move';
+  event.dataTransfer.setData('text/html', event.target.innerHTML);
+};
+
+const handleDragOver = (event) => {
+  event.preventDefault();
+};
+
+const handleDrop = (event) => {
+  event.preventDefault();
+  const dropIndex = parseInt(event.target.getAttribute('data-id'), 10);
+  if (!isNaN(dropIndex) && draggedIndex !== null) {
+    // Swap the positions in the files array
+    const temp = files[dropIndex];
+    files[dropIndex] = files[draggedIndex];
+    files[draggedIndex] = temp;
+
+    // Redraw the images
+    showImage();
+  }
+};
+
 
 const handleDelete = (event, index, parentElement) => {
   event.stopPropagation();
@@ -250,7 +278,7 @@ $("#btn-save-product").click(() => {
             productData.Variants.forEach((variant, variantIndex) => {
                 formData.append(`Variants[${variantIndex}].VariantId`, variant.variantId);
                 formData.append(`Variants[${variantIndex}].ColorId`, variant.colorId);
-                formData.append(`Variants[${variantIndex}].Thumbnail`, variant.Thumbnail);
+                formData.append(`Variants[${variantIndex}].Thumbnail`, variant.thumbnail);
 
                 // Thêm các hình ảnh blob cho biến thể hiện tại
                 variant.images.forEach((imageBlob, imageIndex) => {
@@ -274,10 +302,10 @@ $("#btn-save-product").click(() => {
                 processData: false,
                 contentType: false,
                 success: function (response) {
-                    Dashmix.helpers('jq-notify', { type: 'success', icon: 'fa fa-check me-1', message: 'Create product successfully !' });
-                    //setTimeout(() => {
-                    //    location.href = "/admin/products";
-                    //}, 2000);
+                    Dashmix.helpers('jq-notify', { type: 'success', icon: 'fa fa-check me-1', message: 'Update product successfully !' });
+                    setTimeout(() => {
+                        location.href = "/admin/products";
+                    }, 2000);
                 },
                 error: function (error) {
                     console.error(error);

@@ -24,18 +24,41 @@ uploadImgInput.addEventListener("change", (e) => {
 });
 
 const showImage = () => {
-  checkUI();
-  let images = "";
-    console.info(files);
-  files.forEach(function (file, index) {
-      images += `<div class="preview-image-item" onClick=(setThumbnail(event))>
+    checkUI();
+    let images = "";
+    files.forEach(function (file, index) {
+        images += `<div class="preview-image-item" draggable="true" onClick=(setThumbnail(event)) ondragstart="handleDragStart(event, ${index})" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
                      <img src="${URL.createObjectURL(file)}" alt="image" data-id="${index}"/>
-                        <span class="btn-delete-image" onClick="handleDelete(event,${index}, this.parentElement)>
-                            <i class="fa fa-fw fa-times"></i>
-                        </span>
-                  </div>`;
-  });
-  hasImage.innerHTML = images;
+                     <span class="btn-delete-image" onClick="handleDelete(event, ${index}, this.parentElement)"><i class="fa fa-fw fa-times"></i></span>
+               </div>`;
+    });
+    hasImage.innerHTML = images;
+};
+
+let draggedIndex = null;
+
+const handleDragStart = (event, index) => {
+    draggedIndex = index;
+    event.dataTransfer.effectAllowed = 'move';
+    event.dataTransfer.setData('text/html', event.target.innerHTML);
+};
+
+const handleDragOver = (event) => {
+    event.preventDefault();
+};
+
+const handleDrop = (event) => {
+    event.preventDefault();
+    const dropIndex = parseInt(event.target.getAttribute('data-id'), 10);
+    if (!isNaN(dropIndex) && draggedIndex !== null) {
+        // Swap the positions in the files array
+        const temp = files[dropIndex];
+        files[dropIndex] = files[draggedIndex];
+        files[draggedIndex] = temp;
+
+        // Redraw the images
+        showImage();
+    }
 };
 
 const handleDelete = (event, index, parentElement) => {
@@ -195,7 +218,7 @@ $("#btn-save-product").click(() => {
             // Thêm các biến thể của sản phẩm
             productData.Variants.forEach((variant, variantIndex) => {
                 formData.append(`Variants[${variantIndex}].ColorId`, variant.colorId);
-                formData.append(`Variants[${variantIndex}].Thumbnail`, variant.Thumbnail);
+                formData.append(`Variants[${variantIndex}].Thumbnail`, variant.thumbnail);
 
                 // Thêm các hình ảnh blob cho biến thể hiện tại
                 variant.images.forEach((imageBlob, imageIndex) => {

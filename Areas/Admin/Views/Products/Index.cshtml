@@ -297,10 +297,13 @@
 					{
 						"render": function (data, type, row) {
 							return `<div class="btn-group">
-												<a href="/admin/products/edit/${row.id}" class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled" data-bs-toggle="tooltip" aria-label="Edit" data-bs-original-title="Edit">
+												<a href="/products/${row.slug}" class="btn btn-sm btn-alt-secondary" >
+												  <i class="fa fa-eye"></i>
+												</a>
+												<a href="/admin/products/edit/${row.id}" class="btn btn-sm btn-alt-secondary">
 												  <i class="fa fa-pencil-alt"></i>
 												</a>
-												<button type="button" data-id="${row.id}" class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled btn-delete" data-bs-toggle="tooltip" aria-label="Delete" data-bs-original-title="Delete">
+												<button type="button" data-id="${row.id}" class="btn btn-sm btn-alt-secondary btn-delete">
 												   <i class="fa fa-times"></i>
 												</button></div>`;
 						}, "className": "text-center"
