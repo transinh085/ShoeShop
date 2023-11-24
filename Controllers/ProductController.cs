@@ -29,7 +29,7 @@ namespace ShoeShop.Controllers
 			_signInManager = signInManager;
 			_userManager = userManager;
 		}
-
+        [Route("products")]
         public async Task<IActionResult> Index()
         {
 			if (_context.Products != null)

@@ -279,5 +279,11 @@ namespace ShoeShop.Areas.Admin.Controllers
             return Ok(new {message = "Delete successfully"});
         }
 
+        [HttpPost]
+        public async Task<IActionResult> CheckSlug(string slug)
+        {
+            var product = await _context.Products.FirstOrDefaultAsync(v => v.Slug == slug);
+            return Json(new { IsUnique = product == null });
+        } 
     }
 }
