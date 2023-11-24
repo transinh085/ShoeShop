@@ -9,12 +9,16 @@
   <ItemGroup>
     <Compile Remove="Areas\Admin\Views\NewFolder\**" />
     <Compile Remove="Views\NewFolder\**" />
+    <Compile Remove="wwwroot\assets\**" />
     <Content Remove="Areas\Admin\Views\NewFolder\**" />
     <Content Remove="Views\NewFolder\**" />
+    <Content Remove="wwwroot\assets\**" />
     <EmbeddedResource Remove="Areas\Admin\Views\NewFolder\**" />
     <EmbeddedResource Remove="Views\NewFolder\**" />
+    <EmbeddedResource Remove="wwwroot\assets\**" />
     <None Remove="Areas\Admin\Views\NewFolder\**" />
     <None Remove="Views\NewFolder\**" />
+    <None Remove="wwwroot\assets\**" />
   </ItemGroup>
 
 	<ItemGroup>
@@ -37,7 +41,6 @@
 	<ItemGroup>
 	  <Folder Include="Areas\Admin\Data\" />
 	  <Folder Include="Areas\Admin\Models\" />
-	  <Folder Include="wwwroot\assets\js\pages\" />
 	  <Folder Include="wwwroot\img\blogs\" />
 	</ItemGroup>
 </Project>
