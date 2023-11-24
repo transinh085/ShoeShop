@@ -195,7 +195,7 @@ $("#btn-save-product").click(() => {
             // Thêm các biến thể của sản phẩm
             productData.Variants.forEach((variant, variantIndex) => {
                 formData.append(`Variants[${variantIndex}].ColorId`, variant.colorId);
-                formData.append(`Variants[${variantIndex}].ColorName`, variant.colorName);
+                formData.append(`Variants[${variantIndex}].Thumbnail`, variant.Thumbnail);
 
                 // Thêm các hình ảnh blob cho biến thể hiện tại
                 variant.images.forEach((imageBlob, imageIndex) => {

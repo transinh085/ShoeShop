@@ -250,7 +250,7 @@ $("#btn-save-product").click(() => {
             productData.Variants.forEach((variant, variantIndex) => {
                 formData.append(`Variants[${variantIndex}].VariantId`, variant.variantId);
                 formData.append(`Variants[${variantIndex}].ColorId`, variant.colorId);
-                formData.append(`Variants[${variantIndex}].ColorName`, variant.colorName);
+                formData.append(`Variants[${variantIndex}].Thumbnail`, variant.Thumbnail);
 
                 // Thêm các hình ảnh blob cho biến thể hiện tại
                 variant.images.forEach((imageBlob, imageIndex) => {
@@ -275,9 +275,9 @@ $("#btn-save-product").click(() => {
                 contentType: false,
                 success: function (response) {
                     Dashmix.helpers('jq-notify', { type: 'success', icon: 'fa fa-check me-1', message: 'Create product successfully !' });
-                    setTimeout(() => {
-                        location.href = "/admin/products";
-                    }, 2000);
+                    //setTimeout(() => {
+                    //    location.href = "/admin/products";
+                    //}, 2000);
                 },
                 error: function (error) {
                     console.error(error);
@@ -316,7 +316,7 @@ $("#btn-update-variant").click(function () {
 
 const getObjVariant = () => {
     const colorId = parseInt(colorEl.val());
-    const variantId = parseInt($("#variant-id").val());
+    const variantId = $("#variant-id").val();
     const colorName = $("#color-id option:selected").text();
     const sizes = sizeEl.val().map(sizeId => {
         const sizeName = $(`#size-id option[value='${sizeId}']`).text();
