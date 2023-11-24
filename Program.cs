@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using ShoeShop.Data;
 using ShoeShop.Hubs;
 using ShoeShop.Models;
@@ -39,6 +40,13 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 builder.Services.AddScoped<IPayPalService, PaypalService>();
+
+builder.Services.Configure<IdentityOptions>(opt =>
+{
+    opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(10);
+    opt.Lockout.MaxFailedAccessAttempts = 5;
+    opt.Lockout.AllowedForNewUsers = true;
+});
 
 var app = builder.Build();
 

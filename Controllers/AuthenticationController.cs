@@ -45,11 +45,16 @@ namespace ShoeShop.Controllers
 				if (passwordCheck)
 				{
 					//Password correct, sign in
-					var result = await _signInManager.PasswordSignInAsync(user, loginViewModel.Password, loginViewModel.RememberMe, true);
+					var result = await _signInManager.PasswordSignInAsync(user.UserName, loginViewModel.Password, loginViewModel.RememberMe, lockoutOnFailure: true);
+					Console.WriteLine(result);
 					if (result.Succeeded)
 					{
 						if (!string.IsNullOrEmpty(returnUrl)) return Redirect(returnUrl);
 						return RedirectToAction("Index", "Home");
+					} 
+					if(result.IsLockedOut)
+					{
+                        return View("Lockout");
 					}
 				}
 				//Password is incorrect
