@@ -22,11 +22,10 @@
 				<div class="breadcrumbs">
 					<ul>
 						<li><a href="#">Home</a></li>
-						<li><a href="#">Category</a></li>
-						<li>Page active</li>
+						<li>Products</li>
 					</ul>
 				</div>
-				<h1>Shoes - Grid listing</h1>
+				<h1>Products</h1>
 			</div>
 		</div>
 		<img src="~/img/bg_cat_shoes.jpg" class="img-fluid" alt="">
@@ -299,11 +298,11 @@
 									<div class="grid_item">
 												${getLabel(product)}
 										<figure>
-											<a href="/Product/Detail/${product.Id}">
+											<a href="/products/${product.Slug}">
 											<img class="img-fluid lazy loaded" src="img/products/${product.Thumbnail.Name}" alt="${product.name}" data-was-processed="true">
 											</a>
 										</figure>
-											<a href="/Product/Detail/${product.Id}">
+											<a href="/products/${product.Slug}">
 											<h3>${product.Name}</h3>
 										</a>
 										<div class="price_box">

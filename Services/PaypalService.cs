@@ -25,6 +25,7 @@ namespace ShoeShop.Services
                     .Where(p => p.Id == v.VariantSizeId)
                     .Select(p => new {
                         Id = p.Variant.Product.Id,
+                        Slug = p.Variant.Product.Slug,
                         Name = p.Variant.Product.Name,
                         Size = p.Size.Name,
                         Color = p.Variant.Color.Name,
@@ -38,7 +39,7 @@ namespace ShoeShop.Services
                     Quantity = v.Quantity.ToString(),
                     Sku = "sku",
                     Tax = "0",
-                    Url = $"https://localhost:7107/Product/Detail/{p.Id}",
+                    Url = $"https://localhost:7107/products/{p.Slug}",
                 };
 
             }).ToList();

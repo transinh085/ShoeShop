@@ -43,8 +43,8 @@
                                 @foreach (var item in detail)
                                 {
                                     <tr>
-                                        <td class="text-center"><a href="~/product/detail/@item.ProductId"><strong>@item.ProductId</strong></a></td>
-                                        <td><a href="~/product/detail/@item.ProductId"><strong>@item.Name</strong></a></td>
+                                        <td class="text-center"><a href="~/products/@item.ProductSlug"><strong>@item.ProductId</strong></a></td>
+                                        <td><a href="~/products/@item.ProductSlug"><strong>@item.Name</strong></a></td>
                                         <td class="text-center">@item.Size</td>
                                         <td>@item.Color</td>
                                         <td class="text-center"><strong>@item.Quantity</strong></td>

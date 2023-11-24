@@ -60,7 +60,7 @@ const renderOrderSummary = () => {
 		html += `<tr><td class="ps-0"><div class="d-flex gap-3 align-items-center">
                    <img src="/img/products/${item.thumbnail}" alt="product" style="height: 70px" />
                  <div>
-                 <a class="fs-sm fw-semibold" href="/product/detail/${item.productId}">${item.quantity} x ${item.title}</a>
+                 <a class="fs-sm fw-semibold" href="/products/${item.productSlug}">${item.quantity} x ${item.title}</a>
                  <div class="fs-sm text-muted">Size: ${item.sizeName}, Color: ${item.colorName}</div></div></div></td>
                  <td class="pe-0 fw-medium text-end">
 				 <span>$${item.priceSale != 0 ? item.priceSale : item.price}</span>

@@ -124,7 +124,8 @@ namespace ShoeShop.Areas.Admin.Controllers
                         Details = o.Details.Select(p => new
                         {
                             VariantSizeId = p.VariantSizeId,
-                            ProductId = p.VariantSize.Variant.Product.Id,
+                            ProductSlug = p.VariantSize.Variant.Product.Slug,
+							ProductId = p.VariantSize.Variant.Product.Id,
                             Name = p.VariantSize.Variant.Product.Name,
                             Size = p.VariantSize.Size.Name,
                             Color = p.VariantSize.Variant.Color.Name,

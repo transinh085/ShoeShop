@@ -104,6 +104,7 @@ namespace ShoeShop.Controllers
                         {
                             VariantSizeId = p.VariantSizeId,
                             ProductId = p.VariantSize.Variant.Product.Id,
+                            ProductSlug = p.VariantSize.Variant.Product.Slug,
                             Name = p.VariantSize.Variant.Product.Name,
                             Thumbnail = p.VariantSize.Variant.Product.Thumbnail.Name,
                             Size = p.VariantSize.Size.Name,
