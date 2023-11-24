@@ -33,6 +33,7 @@ namespace ShoeShop.Controllers
                 ViewBag.topics = topicsWithCount;
                 ViewBag.Blog = await _context.Blogs
                      .Include(blog => blog.Thumbnail)
+                     .Include(blog => blog.Topic)
                      .Include(blog => blog.User)
                      .OrderByDescending(blog => blog.CreatedAt)
                      .ToListAsync();
@@ -47,7 +48,7 @@ namespace ShoeShop.Controllers
 		}
 
 
-        [HttpGet, ActionName("allBlogs")]
+        [HttpGet,ActionName("getallblogs")]
         public IActionResult GetAllBlogs(
         int page = 1,
         int pageSize = 9,
@@ -59,13 +60,15 @@ namespace ShoeShop.Controllers
                 .Where(b => !b.IsDetele)
                 .Include(blog => blog.Topic)
                 .Include(blog => blog.Thumbnail)
+                .Include(blog => blog.User)
                 .AsQueryable();
 
             if (!string.IsNullOrEmpty(query))
             {
                 queryableBlogs = queryableBlogs.Where(u =>
                     u.Slug.Contains(query, StringComparison.OrdinalIgnoreCase) ||
-                    u.Name.Contains(query, StringComparison.OrdinalIgnoreCase)
+                    u.Name.Contains(query, StringComparison.OrdinalIgnoreCase) ||
+                    u.User.FullName.Contains(query,StringComparison.OrdinalIgnoreCase)
                 );
             }
             // Filter by topics
