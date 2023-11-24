@@ -1,11 +1,14 @@
-﻿@{
+﻿@model IEnumerable<ShoeShop.Models.Blog>;
+@{
 	ViewData["Title"] = "Blogs";
 }
 @section Styles {
 	<link href="~/css/blog.css" rel="stylesheet">
+	<link href="~/css/listing.css" rel="stylesheet">
 }
 @{
 	var blog = ViewBag.Blogs as List<Blog>;
+	var topics = ViewBag.Topics;
 }
 
 <main class="bg_gray">
@@ -31,144 +34,6 @@
 				</div>
 				<!-- /widget -->
 				 <div class="row" id="posts">
-					@* 	<div class="col-md-6">
-						<article class="blog">
-							<figure>
-								<a asp-controller="Blog" asp-action="Detail" asp-route-id="1">
-									<img src="~/img/blog-1.jpg" alt="">
-									<div class="preview"><span>Read more</span></div>
-								</a>
-							</figure>
-							<div class="post_info">
-								<small>Category - 20 Nov. 2017</small>
-								<h2><a asp-controller="Blog" asp-action="Detail" asp-route-id="1">Ea exerci option hendrerit</a></h2>
-								<p>Quodsi sanctus pro eu, ne audire scripserit quo. Vel an enim offendit salutandi, in eos quod omnes epicurei, ex veri qualisque scriptorem mei.</p>
-								<ul>
-									<li>
-										<div class="thumb"><img src="~/img/avatar.jpg" alt=""></div> Admin
-									</li>
-									<li><i class="ti-comment"></i>20</li>
-								</ul>
-							</div>
-						</article>
-						<!-- /article -->
-					</div>
-					<!-- /col -->
-					<div class="col-md-6">
-						<article class="blog">
-							<figure>
-								<a asp-controller="Blog" asp-action="Detail" asp-route-id="1">
-									<img src="~/img/blog-2.jpg" alt="">
-									<div class="preview"><span>Read more</span></div>
-								</a>
-							</figure>
-							<div class="post_info">
-								<small>Category - 20 Nov. 2017</small>
-								<h2><a asp-controller="Blog" asp-action="Detail" asp-route-id="1">At usu sale dolorum offendit</a></h2>
-								<p>Quodsi sanctus pro eu, ne audire scripserit quo. Vel an enim offendit salutandi, in eos quod omnes epicurei, ex veri qualisque scriptorem mei.</p>
-								<ul>
-									<li>
-										<div class="thumb"><img src="~/img/avatar.jpg" alt=""></div> Admin
-									</li>
-									<li><i class="ti-comment"></i>20</li>
-								</ul>
-							</div>
-						</article>
-						<!-- /article -->
-					</div>
-					<!-- /col -->
-					<div class="col-md-6">
-						<article class="blog">
-							<figure>
-								<a asp-controller="Blog" asp-action="Detail" asp-route-id="1">
-									<img src="~/img/blog-3.jpg" alt="">
-									<div class="preview"><span>Read more</span></div>
-								</a>
-							</figure>
-							<div class="post_info">
-								<small>Category - 20 Nov. 2017</small>
-								<h2><a asp-controller="Blog" asp-action="Detail" asp-route-id="1">Iusto nominavi petentium in</a></h2>
-								<p>Quodsi sanctus pro eu, ne audire scripserit quo. Vel an enim offendit salutandi, in eos quod omnes epicurei, ex veri qualisque scriptorem mei.</p>
-								<ul>
-									<li>
-										<div class="thumb"><img src="~/img/avatar.jpg" alt=""></div> Admin
-									</li>
-									<li><i class="ti-comment"></i>20</li>
-								</ul>
-							</div>
-						</article>
-						<!-- /article -->
-					</div>
-					<!-- /col -->
-					<div class="col-md-6">
-						<article class="blog">
-							<figure>
-								<a asp-controller="Blog" asp-action="Detail" asp-route-id="1">
-									<img src="~/img/blog-4.jpg" alt="">
-									<div class="preview"><span>Read more</span></div>
-								</a>
-							</figure>
-							<div class="post_info">
-								<small>Category - 20 Nov. 2017</small>
-								<h2><a asp-controller="Blog" asp-action="Detail" asp-route-id="1">Assueverit concludaturque quo</a></h2>
-								<p>Quodsi sanctus pro eu, ne audire scripserit quo. Vel an enim offendit salutandi, in eos quod omnes epicurei, ex veri qualisque scriptorem mei.</p>
-								<ul>
-									<li>
-										<div class="thumb"><img src="~/img/avatar.jpg" alt=""></div> Admin
-									</li>
-									<li><i class="ti-comment"></i>20</li>
-								</ul>
-							</div>
-						</article>
-						<!-- /article -->
-					</div>
-					<!-- /col -->
-					<div class="col-md-6">
-						<article class="blog">
-							<figure>
-								<a asp-controller="Blog" asp-action="Detail" asp-route-id="1">
-									<img src="~/img/blog-5.jpg" alt="">
-									<div class="preview"><span>Read more</span></div>
-								</a>
-							</figure>
-							<div class="post_info">
-								<small>Category - 20 Nov. 2017</small>
-								<h2><a asp-controller="Blog" asp-action="Detail" asp-route-id="1">Nec nihil menandri appellantur</a></h2>
-								<p>Quodsi sanctus pro eu, ne audire scripserit quo. Vel an enim offendit salutandi, in eos quod omnes epicurei, ex veri qualisque scriptorem mei.</p>
-								<ul>
-									<li>
-										<div class="thumb"><img src="~/img/avatar.jpg" alt=""></div> Admin
-									</li>
-									<li><i class="ti-comment"></i>20</li>
-								</ul>
-							</div>
-						</article>
-						<!-- /article -->
-					</div>
-					<!-- /col -->
-					<div class="col-md-6">
-						<article class="blog">
-							<figure>
-								<a asp-controller="Blog" asp-action="Detail" asp-route-id="1">
-									<img src="~/img/blog-6.jpg" alt="">
-									<div class="preview"><span>Read more</span></div>
-								</a>
-							</figure>
-							<div class="post_info">
-								<small>Category - 20 Nov. 2017</small>
-								<h2><a asp-controller="Blog" asp-action="Detail" asp-route-id="1">Te congue everti his salutandi</a></h2>
-								<p>Quodsi sanctus pro eu, ne audire scripserit quo. Vel an enim offendit salutandi, in eos quod omnes epicurei, ex veri qualisque scriptorem mei.</p>
-								<ul>
-									<li>
-										<div class="thumb"><img src="~/img/avatar.jpg" alt=""></div> Admin
-									</li>
-									<li><i class="ti-comment"></i>20</li>
-								</ul>
-							</div>
-						</article>
-						<!-- /article -->
-					</div> *@
-
 					<!-- /col -->
 				</div>
 				<!-- /row -->
@@ -205,62 +70,32 @@
 				<!-- /widget -->
 				<div class="widget">
 					<div class="widget-title">
-						<h4>Latest Post</h4>
+						<h4>Topics of Post</h4>
 					</div>
 					<ul class="comments-list">
-						<li>
-							<div class="alignleft">
-								<a href="#0"><img src="~/img/blog-5.jpg" alt=""></a>
-							</div>
-							<small>Category - 11.08.2016</small>
-							<h3><a href="#" title="">Verear qualisque ex minimum...</a></h3>
-						</li>
-						<li>
-							<div class="alignleft">
-								<a href="#0"><img src="~/img/blog-6.jpg" alt=""></a>
-							</div>
-							<small>Category - 11.08.2016</small>
-							<h3><a href="#" title="">Verear qualisque ex minimum...</a></h3>
-						</li>
-						<li>
-							<div class="alignleft">
-								<a href="#0"><img src="~/img/blog-4.jpg" alt=""></a>
-							</div>
-							<small>Category - 11.08.2016</small>
-							<h3><a href="#" title="">Verear qualisque ex minimum...</a></h3>
-						</li>
+						@if (topics != null)
+						{
+							foreach (var topic in topics)
+							{
+								<li>
+									<label class="container_check">
+										@topic.Topic.Name <small>@topic.blogCount</small>
+										<input type="checkbox" name="categories" value="@topic.Topic.Id">
+										<span class="checkmark"></span>
+									</label>
+								</li>
+							}
+						}
 					</ul>
 				</div>
-				<!-- /widget -->
-				<div class="widget">
-					<div class="widget-title">
-						<h4>Categories</h4>
-					</div>
-					<ul class="cats">
-						<li><a href="#">Food <span>(12)</span></a></li>
-						<li><a href="#">Places to visit <span>(21)</span></a></li>
-						<li><a href="#">New Places <span>(44)</span></a></li>
-						<li><a href="#">Suggestions and guides <span>(31)</span></a></li>
-					</ul>
-				</div>
-				<!-- /widget -->
-				<div class="widget">
-					<div class="widget-title">
-						<h4>Popular Tags</h4>
-					</div>
-					<div class="tags">
-						<a href="#">Food</a>
-						<a href="#">Bars</a>
-						<a href="#">Cooktails</a>
-						<a href="#">Shops</a>
-						<a href="#">Best Offers</a>
-						<a href="#">Transports</a>
-						<a href="#">Restaurants</a>
-					</div>
-				</div>
+			
 				<!-- /widget -->
 			</aside>
 			<!-- /aside -->
+		</div>
+		<div class="pagination__wrapper">
+			<ul class="pagination">
+			</ul>
 		</div>
 		<!-- /row -->
 	 </div> 
@@ -269,104 +104,205 @@
 
 @section Scripts{
 	<script src="~/js/sticky_sidebar.min.js"></script>
-	@* <script src="~/js/specific_listing.js"></script> *@
 	<script>
 		var currentPage = null;
 		var totalPage = null;
-		function getQueryParamString() {
-			var url = new URL(window.location.href);
-			return url.search || '';
-		}
+		document.addEventListener("DOMContentLoaded", function () {
+			const topicsCheckboxes = document.querySelectorAll("input[name=topics]");
+			const inputSearch = document.getElementById("search-input");
 
-		function fetchData() {
-			const queryParams = getQueryParamString();
-			const urlFetch = "/Blogs/allBlogs" + (queryParams.length > 0 ? queryParams : '');
-			$.ajax({
-				url: urlFetch,
-				method: "get",
-				dataType: "json",
-				success: function (response) {
-					currentPage = response.CurrentPage;
-					totalPage = response.TotalPages;
-					let html = ``;
-					response?.Result.forEach( blog => {
-						console.log(blog);
-						html += `<div class="col-md-6">
+			// Add a flag to prevent infinite loop
+			let updatingURL = false;
+
+			function updateURL() {
+				if (!updatingURL) {
+					updatingURL = true;
+					const checkedTopics = getCheckedValues(topicsCheckboxes);
+					
+
+					const queryParams = [];
+
+					if (checkedTopics.length > 0) {
+						queryParams.push(`topics=${checkedTopics.join(",")}`);
+					}
+					
+
+					queryParams.push(`sort=${sortSelect.value}`);
+					if (inputSearch.value.length > 0) {
+						queryParams.push(`query=${inputSearch.value}`);
+					}
+
+					const urlParams = new URLSearchParams(window.location.search);
+					const pageParam = urlParams.get("page");
+					if (pageParam) {
+						queryParams.push(`page=1`);
+					}
+
+					const url = window.location.href.split('?')[0];
+					const finalURL = queryParams.length > 0 ? `${url}?${queryParams.join("&")}` : url;
+
+					history.replaceState(null, null, finalURL);
+
+					// Now, update the checkboxes based on the URL parameters
+					updateFromURLParameters();
+					updatingURL = false; // Reset the flag
+					fetchData()
+				}
+			}
+
+			function getQueryParamString() {
+				var url = new URL(window.location.href);
+				return url.search || '';
+			}
+
+			function fetchData() {
+				const queryParams = getQueryParamString();
+				const urlFetch = "/Blog/getallblogs" + (queryParams.length > 0 ? queryParams : '');
+				$.ajax({
+					url: urlFetch,
+					method: "get",
+					dataType: "json",
+					success: function (response) {
+						currentPage = response.CurrentPage;
+						totalPage = response.TotalPages;
+						let html = ``;
+						response?.Result.forEach(blog => {
+							const time = new Date(blog.CreatedAt).toLocaleDateString();
+							html += `<div class="col-md-6">
 								<article class="blog">
 									<figure>
-										<a asp-controller="Blog" asp-action="Detail" asp-route-id="${blog.Id}">
-											<img src="~/img/blogs/${blog.Thumbnail.Name}" alt="">
+										<a href="/Blog/Detail/${blog.Id}">
+											<img src="/img/blogs/${blog.Thumbnail.Name}" alt="">
 											<div class="preview"><span>Read more</span></div>
 										</a>
 									</figure>
 									<div class="post_info">
-										<small>${blog.Topic.Name} - ${blog.CreatedAt}</small>
+										<small>${blog.Topic.Name} - ${time}</small>
 										<h2><a asp-controller="Blog" asp-action="Detail" asp-route-id="${blog.Id}">${blog.Name}</a></h2>
-										<p>Loading...</p>
+										<p>${blog.Slug}</p>
 										<ul>
 											<li>
-												<div class="thumb"><img src="~/img/avatar.jpg" alt=""></div> ${blog.CreateBy}
+												<div class="thumb"><img  alt=""></div> ${blog.User.FullName}
 											</li>
 										</ul>
 									</div>
 								</article>
 								<!-- /article -->
 							</div>`
-					})
-					document.getElementById("posts").innerHTML = html
-					if (response?.Result.length != 0) {
-						let pagiantonNode = ``;
-						for (let i = 1; i <= response?.TotalPages; i++) {
-							pagiantonNode += `<li>
-									<a href="#0" data-id="${i}" class="${i == response?.CurrentPage ? "active" : ""}">${i}</a>
-								</li>`;
+
+						})
+						document.getElementById("posts").innerHTML = html
+						if (response?.Result.length != 0) {
+							let pagiantonNode = ``;
+							for (let i = 1; i <= response?.TotalPages; i++) {
+								pagiantonNode += `<li>
+												<a href="#0" data-id="${i}" class="${i == response?.CurrentPage ? "active" : ""}">${i}</a>
+											</li>`;
+							}
+
+							let paginationHtml = `<li>
+													<a href="#0" class="prev-page" title="previous page">&#10094;</a>
+												</li>
+													${pagiantonNode}
+												<li>
+													<a href="#0" class="next-page" title="next page">&#10095;</a>
+												</li>`;
+							document.querySelector(".pagination").innerHTML = paginationHtml
+						} else if (response?.Result.length === 0) {
+							document.querySelector(".pagination").innerHTML = `<h2>Not found posts</h2><img class="img-fluid lazy loaded"  alt="Not found posts" data-was-processed="true">`
 						}
+					},
+					error: function (err) {
+						console.error(err.responseText);
+					},
+				});
+			}
 
-						let paginationHtml = `<li>
-										<a href="#0" class="prev-page" title="previous page">&#10094;</a>
-									</li>
-										${pagiantonNode}
-									<li>
-										<a href="#0" class="next-page" title="next page">&#10095;</a>
-									</li>`;
-						document.querySelector(".pagination").innerHTML = paginationHtml
-					} else if (response?.Result.length === 0) {
-						document.querySelector(".pagination").innerHTML = `<h2>Not found products</h2><img class="img-fluid lazy loaded" src="img/notfoundProduct.png" alt="Not found product" data-was-processed="true">`
+			$(document).on('click', '.pagination a', function (e) {
+				e.preventDefault();
+				if (this.classList.contains("prev-page")) {
+					if (currentPage == 1) return
+					else {
+						currentPage--;
+						updateUrlParameter('page', currentPage || '1');
+						// Gọi lại hàm fetchData với trang mới
+						fetchData();
 					}
-				},
-				error: function (err) {
-					console.error(err.responseText);
-				},
+				} else if (this.classList.contains("next-page")) {
+					if (currentPage == totalPage) return
+					else {
+						currentPage++;
+						updateUrlParameter('page', currentPage || '1');
+						// Gọi lại hàm fetchData với trang mới
+						fetchData();
+					}
+				} else {
+					// Lấy giá trị của id từ thuộc tính data-id
+					const pageId = $(this).data('id');
+
+					// Cập nhật tham số 'page' trong URL bằng giá trị id hoặc thêm nếu chưa có
+					updateUrlParameter('page', pageId || '1');
+					// Gọi lại hàm fetchData với trang mới
+					fetchData();
+				}
 			});
-		}
 
-		$(document).on('click', '.pagination a', function (e) {
-			e.preventDefault();
-			if (this.classList.contains("prev-page")) {
-				if (currentPage == 1) return
-				else {
-					currentPage--;
-					updateUrlParameter('page', currentPage || '1');
-					// Gọi lại hàm fetchData với trang mới
-					fetchData();
-				}
-			} else if (this.classList.contains("next-page")) {
-				if (currentPage == totalPage) return
-				else {
-					currentPage++;
-					updateUrlParameter('page', currentPage || '1');
-					// Gọi lại hàm fetchData với trang mới
-					fetchData();
-				}
-			} else {
-				// Lấy giá trị của id từ thuộc tính data-id
-				const pageId = $(this).data('id');
+			function updateUrlParameter(key, value) {
+				let url = window.location.href;
+				let newUrl;
 
-				// Cập nhật tham số 'page' trong URL bằng giá trị id hoặc thêm nếu chưa có
-				updateUrlParameter('page', pageId || '1');
-				// Gọi lại hàm fetchData với trang mới
+				// Kiểm tra xem tham số 'page' đã tồn tại trong URL chưa
+				if (url.includes(`${key}=`)) {
+					// Thay thế giá trị của tham số 'page'
+					newUrl = url.replace(new RegExp(`(${key}=\\d+)`), `${key}=${value}`);
+				} else {
+					// Thêm tham số 'page' vào URL
+					const separator = url.includes('?') ? '&' : '?';
+					newUrl = `${url}${separator}${key}=${value}`;
+				}
+
+				history.replaceState(null, null, newUrl);
+			}
+
+			function getCheckedValues(checkboxes) {
+				return Array.from(checkboxes)
+					.filter(checkbox => checkbox.checked)
+					.map(checkbox => checkbox.value);
+			}
+
+			function updateFromURLParameters() {
+				const urlParams = new URLSearchParams(window.location.search);
+				topicsCheckboxes.forEach(checkbox => {
+					checkbox.checked = urlParams.get("topics")?.split(",").includes(checkbox.value);
+				});
+				
+
+				
+				const inputSearchParam = urlParams.get("query");
+				if (inputSearchParam) inputSearch.value = inputSearchParam;
+
 				fetchData();
 			}
+
+			topicsCheckboxes.forEach(checkbox => {
+				checkbox.addEventListener("change", updateURL);
+			});
+
+
+			
+
+			inputSearch.addEventListener("change", updateURL);
+
+
+			// Call these functions to initialize the checkboxes and sort select based on URL parameters
+			updateFromURLParameters();
+
+			$("#reset").on("click", () => {
+				const urlWithoutSearch = window.location.href.split('?')[0];
+				history.replaceState(null, null, urlWithoutSearch);
+				fetchData();
+				updateFromURLParameters();
+			})
 		});
 	</script>
 }

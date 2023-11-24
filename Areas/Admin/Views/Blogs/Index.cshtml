@@ -225,7 +225,7 @@
 
                 if (result.value) {
                     try {
-                        let response = await $.post(`./blogs/Delete/${trid}`);
+                        let response = await $.post(`./Delete/${trid}`);
                         Swal.fire("Deleted!", "Successfully deleted the post.", "success");
                         $(this).closest('tr').remove();
                     } catch (error) {
