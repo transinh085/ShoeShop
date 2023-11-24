@@ -49,8 +49,6 @@ namespace ShoeShop.Data.Seeder
                     };
                     await userManager.CreateAsync(newAdminUser, "Coding@1234?");
                     await userManager.AddToRoleAsync(newAdminUser, UserRoles.Admin);
-
-                    
                 }
 
                 var appUser = await userManager.FindByEmailAsync("hgbao2k3@gmail.com");

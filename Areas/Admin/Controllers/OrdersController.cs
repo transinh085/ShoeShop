@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using ShoeShop.Data;
 using ShoeShop.Data.Enum;
+using ShoeShop.Hubs;
 
 namespace ShoeShop.Areas.Admin.Controllers
 {
@@ -9,11 +11,12 @@ namespace ShoeShop.Areas.Admin.Controllers
     public class OrdersController : Controller
     {
         public readonly AppDbContext _context;
+		
 
-        public OrdersController(AppDbContext context)
+		public OrdersController(AppDbContext context)
         {
             _context = context;
-        }
+		}
 
         public IActionResult Index()
         {

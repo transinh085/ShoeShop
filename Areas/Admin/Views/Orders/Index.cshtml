@@ -72,6 +72,7 @@
     <script src="~/admin/js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
     <script src="~/admin/js/plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="~/admin/js/plugins/datatables-bs5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="~/lib/signalr/dist/browser/signalr.js"></script>
     <script>
         Dashmix.helpersOnLoad(['jq-datepicker']);
 
@@ -150,7 +151,7 @@
                     { "targets": [1, 2, 3, 5, 7], "sortable": false },
                 ],
                 "columns": [
-                    { "data": "id", "name": "Id", "autoWidth": true, "className": "text-center" },
+                    { "data": "id", "name": "Id", "autoWidth": true, "className": "text-center fw-bold", render: (data) => `#${data}` },
                     { "data": "customer", "name": "Customer"},
                     { "data": "paymentMethod", "name": "Payment Method"},
                     { "data": "shippingMethod", "name": "Shipping Method"},
@@ -178,6 +179,18 @@
 
             $('#order-query, #order-start-time, #order-end-time, #order-status').on('change', function () {
                 table.draw();
+            });
+
+            var connection = new signalR.HubConnectionBuilder().withUrl("/orderHub").build();
+
+            connection.on("ReceiveOrderUpdate", function () {
+                table.draw();
+            });
+
+            connection.start().then(function () {
+                console.log("SignalR connected");
+            }).catch(function (err) {
+                console.error(err.toString());
             });
         });
 

@@ -38,11 +38,6 @@
     transition: margin 0.25s ease-out;
 }
 
-    #sidebar-wrapper .sidebar-heading {
-        padding: 0.875rem 1.25rem;
-        font-size: 1.2rem;
-    }
-
     #sidebar-wrapper .list-group {
         width: 15rem;
     }
@@ -61,19 +56,20 @@
 
 .list-group-item {
     border: none;
-    padding: 20px 30px;
+    padding: 10px 20px;
 }
 
 .list-group-item.active {
-    background-color: transparent;
+    background-color: #e9eceff0!important;
+    border-radius: 5px;
     color: var(--main-text-color);
-    font-weight: bold;
+    font-weight: 500;
     border: none;
 }
 
 .avatar-profile {
-    width: 60px;
-    height: 60px;
+    width: 40px;
+    height: 40px;
     object-fit: cover;
     border-radius: 50%;
 }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ShoeShop.Data;
+using ShoeShop.Hubs;
 using ShoeShop.Models;
 using ShoeShop.Services;
 using System.Text.Json.Serialization;
@@ -10,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
+builder.Services.AddSignalR();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
@@ -73,6 +74,8 @@ app.UseEndpoints(endpoints =>
 	endpoints.MapControllerRoute(
 	name: "default",
 	pattern: "{controller=Home}/{action=Index}/{id?}");
+
+	endpoints.MapHub<OrderHub>("/orderHub");
 });
 
 
