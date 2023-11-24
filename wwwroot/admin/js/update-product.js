@@ -49,8 +49,6 @@ const convertImagesToFiles = async (images) => {
     return files;
 };
 
-
-
 let files = [];
 let uploadContainer = document.querySelector(".upload-image-container");
 let uploadImgInput = document.querySelector(".upload-image-input");
@@ -122,13 +120,17 @@ $("#btn-add-variant").click(() => {
     }
 })
 
+const resetValidate = () => {
+    $("#form-variant").validate().resetForm();
+    $("#form-variant").find(".is-invalid").removeClass("is-invalid");
+}
+
 const resetDialogVariant = () => { 
     files = [];
     showImage(files);
     colorEl.val([]).trigger('change');
     sizeEl.val([]).trigger('change');
-    $("#form-variant").validate().resetForm();
-    $("#form-variant").find(".is-invalid").removeClass("is-invalid");
+    resetValidate();
 }
 
 const showVariant = () => {
@@ -180,13 +182,16 @@ $(".variants-container").on("click", ".btn-edit-variant", function (event) {
     $("#btn-update-variant").data("index", index);
     showModalVariant(variants[index]);
     $("#modal-variant").modal('show');
+    $(`#color-id option[value='${variants[index].colorId}']`).prop("disabled", false);
 });
 
 $(".variants-container").on("click", ".btn-delete-variant", function (event) {
-    const index = $(this).data("index");
-    variants.splice(index, 1);
-    showVariant();
-    showVariantSize();
+    if (confirm("Do you want delete this variant ?")) {
+        const index = $(this).data("index");
+        variants.splice(index, 1);
+        showVariant();
+        showVariantSize();
+    }
 });
 
 $(".variants-container").on("click", ".btn-up-variant", function (event) {
@@ -207,100 +212,120 @@ $(".variants-container").on("click", ".btn-down-variant", function (event) {
 
 
 $("#btn-save-product").click(() => {
-    const productData = {
-        Name: $('#product-name').val(),
-        Price: $('#product-price').val(),
-        Description: CKEDITOR.instances['js-ckeditor'].getData(),
-        Status: $('#product-status').prop("checked"),
-        Slug: $('#product-slug').val(),
-        Category: $('#category-id').val(),
-        Brand: $('#brand-id').val(),
-        Variants: variants 
-    };
+    if ($("#product-form").valid()) {
+        if (variants.length != 0) {
+            const productData = {
+                Id: productId,
+                Name: $('#product-name').val(),
+                Price: $('#product-price').val(),
+                PriceSale: $('#product-price-sale').val(),
+                Description: CKEDITOR.instances['js-ckeditor'].getData(),
+                IsFeatured: $('#is-featured').prop("checked"),
+                Status: $('#product-status').val() == 1,
+                Slug: $('#product-slug').val(),
+                Label: $('#product-label').val(),
+                Category: $('#category-id').val(),
+                Brand: $('#brand-id').val(),
+                Variants: variants
+            };
 
-    console.info(productData);
+            console.info(productData);
 
-    var formData = new FormData();
+            var formData = new FormData();
 
-    // Thêm các thuộc tính của sản phẩm vào FormData
-    formData.append('Name', productData.Name);
-    formData.append('Price', productData.Price);
-    formData.append('Description', productData.Description);
-    formData.append('Status', productData.Status);
-    formData.append('Slug', productData.Slug);
-    formData.append('Category', productData.Category);
-    formData.append('Brand', productData.Brand);
+            // Thêm các thuộc tính của sản phẩm vào FormData
+            formData.append('Id', productData.Id);
+            formData.append('Name', productData.Name);
+            formData.append('Price', productData.Price);
+            formData.append('PriceSale', productData.PriceSale);
+            formData.append('Description', productData.Description);
+            formData.append('Status', productData.Status);
+            formData.append('IsFeatured', productData.IsFeatured);
+            formData.append('Slug', productData.Slug);
+            formData.append('Label', productData.Label);
+            formData.append('Category', productData.Category);
+            formData.append('Brand', productData.Brand);
 
-    // Thêm các biến thể của sản phẩm
-    productData.Variants.forEach((variant, variantIndex) => {
-        formData.append(`Variants[${variantIndex}].ColorId`, variant.colorId);
-        formData.append(`Variants[${variantIndex}].ColorName`, variant.colorName);
+            // Thêm các biến thể của sản phẩm
+            productData.Variants.forEach((variant, variantIndex) => {
+                formData.append(`Variants[${variantIndex}].VariantId`, variant.variantId);
+                formData.append(`Variants[${variantIndex}].ColorId`, variant.colorId);
+                formData.append(`Variants[${variantIndex}].ColorName`, variant.colorName);
 
-        // Thêm các hình ảnh blob cho biến thể hiện tại
-        variant.images.forEach((imageBlob, imageIndex) => {
-            formData.append(`Variants[${variantIndex}].Images`, imageBlob, imageBlob.name);
-        });
+                // Thêm các hình ảnh blob cho biến thể hiện tại
+                variant.images.forEach((imageBlob, imageIndex) => {
+                    formData.append(`Variants[${variantIndex}].Images`, imageBlob, imageBlob.name);
+                });
 
-        // Thêm các kích thước cho biến thể hiện tại
-        variant.sizes.forEach((size, sizeIndex) => {
-            formData.append(`Variants[${variantIndex}].Sizes[${sizeIndex}].SizeId`, size.sizeId);
-            formData.append(`Variants[${variantIndex}].Sizes[${sizeIndex}].Stock`, size.stock);
-            formData.append(`Variants[${variantIndex}].Sizes[${sizeIndex}].Active`, size.active);
-        });
-    });
+                // Thêm các kích thước cho biến thể hiện tại
+                variant.sizes.forEach((size, sizeIndex) => {
+                    formData.append(`Variants[${variantIndex}].Sizes[${sizeIndex}].SizeId`, size.sizeId);
+                    formData.append(`Variants[${variantIndex}].Sizes[${sizeIndex}].Stock`, size.stock);
+                    formData.append(`Variants[${variantIndex}].Sizes[${sizeIndex}].Active`, size.active);
+                });
+            });
 
-    console.log(formData);
+            console.log(formData);
 
-    $.ajax({
-        type: 'POST',
-        url: '/Admin/Products/Create',
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function (response) {
-            console.log(response);
-        },
-        error: function (error) {
-            console.error(error);
+            $.ajax({
+                type: 'POST',
+                url: '/api/products/update',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    Dashmix.helpers('jq-notify', { type: 'success', icon: 'fa fa-check me-1', message: 'Create product successfully !' });
+                    setTimeout(() => {
+                        location.href = "/admin/products";
+                    }, 2000);
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
+        } else {
+            Dashmix.helpers('jq-notify', { type: 'danger', icon: 'fa fa-times me-1', message: 'Variants empty !' });
         }
-    });
+    }
 })
 
 const showModalVariant = (variant) => {
-    const { colorId, sizes, images, thumbnail } = variant;
+    const { colorId, sizes, images, thumbnail, variantId } = variant;
     const sizeArr = sizes.map(item => item.sizeId)
     files = images;
     showImage();
     $(`.preview-image-item img[data-id='${thumbnail}']`).addClass('active');
+    $("#variant-id").val(variantId);
     colorEl.val(colorId).trigger('change');
     sizeEl.val(sizeArr).trigger('change');
+    resetValidate();
 }
 
 $("#btn-update-variant").click(function () {
-    const index = $(this).data("index");
-    variants[index] = getObjVariant();
-    showVariant();
-    showVariantSize();
-    $("#btn-add-variant").show();
-    $("#btn-update-variant").hide();
-    resetDialogVariant();
+    if ($("#form-variant").valid()) {
+        const index = $(this).data("index");
+        variants[index] = getObjVariant();
+        showVariant();
+        showVariantSize();
+        $("#btn-add-variant").show();
+        $("#btn-update-variant").hide();
+        $("#modal-variant").modal("hide");
+        resetDialogVariant();
+    }
 });
 
 const getObjVariant = () => {
-    const colorId = colorEl.val();
+    const colorId = parseInt(colorEl.val());
+    const variantId = parseInt($("#variant-id").val());
     const colorName = $("#color-id option:selected").text();
     const sizes = sizeEl.val().map(sizeId => {
         const sizeName = $(`#size-id option[value='${sizeId}']`).text();
-
-        console.info(`.input-stock[data-size='${sizeId}'][data-color='${colorId}']`);
-        console.info($(`.input-stock[data-size='${sizeId}'][data-color='${colorId}']`).val());
-
         const stock = $(`.input-stock[data-size='${sizeId}'][data-color='${colorId}']`).val() ?? '';
         return { sizeId, sizeName, stock, active: true };
     });
     const images = files;
     const thumbnail = $(".preview-image-item img.active").data("id");
-    const variant = { colorId, colorName, sizes, images, thumbnail };
+    const variant = { variantId, colorId, colorName, sizes, images, thumbnail };
     return variant;
 }
 
@@ -420,3 +445,19 @@ Dashmix.onLoad((() => class {
         this.initValidation()
     }
 }.init()));
+
+$('#modal-variant').on('shown.bs.modal', function () {
+    $('#size-id').select2({ closeOnSelect: false, dropdownParent: $('#modal-variant') });
+    disabledSelectColor();
+});
+
+$('#modal-variant').on('hidden.bs.modal', function () {
+    $("#variant-id").val(-1);
+});
+
+const disabledSelectColor = () => {
+    $(`#color-id option`).prop("disabled", false);
+    variants.forEach((item) => {
+        $(`#color-id option[value='${item.colorId}']`).prop("disabled", true);
+    })
+}

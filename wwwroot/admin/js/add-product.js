@@ -132,6 +132,7 @@ $(".variants-container").on("click", ".btn-edit-variant", function (event) {
     $("#btn-update-variant").data("index", index);
     showModalVariant(variants[index]);
     $("#modal-variant").modal('show');
+    $(`#color-id option[value='${variants[index].colorId}']`).prop("disabled", false);
 });
 
 $(".variants-container").on("click", ".btn-delete-variant", function (event) {
@@ -159,75 +160,77 @@ $(".variants-container").on("click", ".btn-down-variant", function (event) {
 
 
 $("#btn-save-product").click(() => {
-    if (variants.length != 0) {
-        const productData = {
-            Name: $('#product-name').val(),
-            Price: $('#product-price').val(),
-            PriceSale: $('#product-price-sale').val(),
-            Description: CKEDITOR.instances['js-ckeditor'].getData(),
-            IsFeatured: $('#is-featured').prop("checked"),
-            Status: $('#product-status').val() == 1,
-            Slug: $('#product-slug').val(),
-            Label: $('#product-label').val(),
-            Category: $('#category-id').val(),
-            Brand: $('#brand-id').val(),
-            Variants: variants
-        };
+    if ($("#product-form").valid()) {
+        if (variants.length != 0) {
+            const productData = {
+                Name: $('#product-name').val(),
+                Price: $('#product-price').val(),
+                PriceSale: $('#product-price-sale').val(),
+                Description: CKEDITOR.instances['js-ckeditor'].getData(),
+                IsFeatured: $('#is-featured').prop("checked"),
+                Status: $('#product-status').val() == 1,
+                Slug: $('#product-slug').val(),
+                Label: $('#product-label').val(),
+                Category: $('#category-id').val(),
+                Brand: $('#brand-id').val(),
+                Variants: variants
+            };
 
-        console.info(productData);
+            console.info(productData);
 
-        var formData = new FormData();
+            var formData = new FormData();
 
-        // Thêm các thuộc tính của sản phẩm vào FormData
-        formData.append('Name', productData.Name);
-        formData.append('Price', productData.Price);
-        formData.append('PriceSale', productData.PriceSale);
-        formData.append('Description', productData.Description);
-        formData.append('Status', productData.Status);
-        formData.append('IsFeatured', productData.IsFeatured);
-        formData.append('Slug', productData.Slug);
-        formData.append('Label', productData.Label);
-        formData.append('Category', productData.Category);
-        formData.append('Brand', productData.Brand);
+            // Thêm các thuộc tính của sản phẩm vào FormData
+            formData.append('Name', productData.Name);
+            formData.append('Price', productData.Price);
+            formData.append('PriceSale', productData.PriceSale);
+            formData.append('Description', productData.Description);
+            formData.append('Status', productData.Status);
+            formData.append('IsFeatured', productData.IsFeatured);
+            formData.append('Slug', productData.Slug);
+            formData.append('Label', productData.Label);
+            formData.append('Category', productData.Category);
+            formData.append('Brand', productData.Brand);
 
-        // Thêm các biến thể của sản phẩm
-        productData.Variants.forEach((variant, variantIndex) => {
-            formData.append(`Variants[${variantIndex}].ColorId`, variant.colorId);
-            formData.append(`Variants[${variantIndex}].ColorName`, variant.colorName);
+            // Thêm các biến thể của sản phẩm
+            productData.Variants.forEach((variant, variantIndex) => {
+                formData.append(`Variants[${variantIndex}].ColorId`, variant.colorId);
+                formData.append(`Variants[${variantIndex}].ColorName`, variant.colorName);
 
-            // Thêm các hình ảnh blob cho biến thể hiện tại
-            variant.images.forEach((imageBlob, imageIndex) => {
-                formData.append(`Variants[${variantIndex}].Images`, imageBlob, imageBlob.name);
+                // Thêm các hình ảnh blob cho biến thể hiện tại
+                variant.images.forEach((imageBlob, imageIndex) => {
+                    formData.append(`Variants[${variantIndex}].Images`, imageBlob, imageBlob.name);
+                });
+
+                // Thêm các kích thước cho biến thể hiện tại
+                variant.sizes.forEach((size, sizeIndex) => {
+                    formData.append(`Variants[${variantIndex}].Sizes[${sizeIndex}].SizeId`, size.sizeId);
+                    formData.append(`Variants[${variantIndex}].Sizes[${sizeIndex}].Stock`, size.stock);
+                    formData.append(`Variants[${variantIndex}].Sizes[${sizeIndex}].Active`, size.active);
+                });
             });
 
-            // Thêm các kích thước cho biến thể hiện tại
-            variant.sizes.forEach((size, sizeIndex) => {
-                formData.append(`Variants[${variantIndex}].Sizes[${sizeIndex}].SizeId`, size.sizeId);
-                formData.append(`Variants[${variantIndex}].Sizes[${sizeIndex}].Stock`, size.stock);
-                formData.append(`Variants[${variantIndex}].Sizes[${sizeIndex}].Active`, size.active);
+            console.log(formData);
+
+            $.ajax({
+                type: 'POST',
+                url: '/Admin/Products/Create',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    Dashmix.helpers('jq-notify', { type: 'success', icon: 'fa fa-check me-1', message: 'Create product successfully !' });
+                    setTimeout(() => {
+                        location.href = "/admin/products";
+                    }, 2000);
+                },
+                error: function (error) {
+                    console.error(error);
+                }
             });
-        });
-
-        console.log(formData);
-
-        $.ajax({
-            type: 'POST',
-            url: '/Admin/Products/Create',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function (response) {
-                Dashmix.helpers('jq-notify', { type: 'success', icon: 'fa fa-check me-1', message: 'Create product successfully !' });
-                setTimeout(() => {
-                    location.href = "/admin/products";
-                }, 2000);
-            },
-            error: function (error) {
-                console.error(error);
-            }
-        });
-    } else {
-        Dashmix.helpers('jq-notify', { type: 'danger', icon: 'fa fa-times me-1', message: 'Variants empty !' });
+        } else {
+            Dashmix.helpers('jq-notify', { type: 'danger', icon: 'fa fa-times me-1', message: 'Variants empty !' });
+        }
     }
 })
 
@@ -420,3 +423,14 @@ $("#product-name").blur(function () {
     $("#product-slug").val(slugify(name));
 });
 
+$('#modal-variant').on('shown.bs.modal', function () {
+    $('#size-id').select2({ closeOnSelect: false, dropdownParent: $('#modal-variant') });
+    disabledSelectColor();
+});
+
+const disabledSelectColor = () => {
+    $(`#color-id option`).prop("disabled", false);
+    variants.forEach((item) => {
+        $(`#color-id option[value='${item.colorId}']`).prop("disabled", true);
+    })
+}

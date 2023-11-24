@@ -113,7 +113,7 @@
                     {
                         "render": function (data, type, row) {
                             return `<div class="btn-group">
-                                                    <a href="/admin/colors/edit/${row.id}" class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled" data-bs-toggle="tooltip" aria-label="Edit" data-bs-original-title="Edit">
+                                                    <a href="/admin/ShippingMethods/edit/${row.id}" class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled" data-bs-toggle="tooltip" aria-label="Edit" data-bs-original-title="Edit">
                                                         <i class="fa fa-pencil-alt"></i>
                                                     </a>
                                                     <button type="button" data-id="${row.id}" class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled btn-delete" data-bs-toggle="tooltip" aria-label="Delete" data-bs-original-title="Delete">
@@ -131,7 +131,7 @@
             let trid = $(this).data("id");
             let result = await Swal.fire({
                 title: "Are you sure?",
-                text: "Would you like to delete this category?",
+                text: "Would you like to delete this shipping method?",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonText: "Yes, I'm sure",
