@@ -167,22 +167,19 @@
 						totalPage = response.TotalPages;
 						let html = ``;
 						response?.Result.forEach(blog => {
-							const maxWords = 5;
-							const words = blog.Content.split(' ');
-							const shortenedContent = words.slice(0, maxWords).join(' ');
-							console.log(shortenedContent);
+							const time = new Date(blog.CreatedAt).toLocaleDateString();
 							html += `<div class="col-md-6">
 								<article class="blog">
 									<figure>
-										<a asp-controller="Blog" asp-action="Detail" asp-route-id="${blog.Id}">
+										<a href="/Blog/Detail/${blog.Id}">
 											<img src="/img/blogs/${blog.Thumbnail.Name}" alt="">
 											<div class="preview"><span>Read more</span></div>
 										</a>
 									</figure>
 									<div class="post_info">
-										<small>${blog.Topic.Name} - ${blog.CreatedAt}</small>
+										<small>${blog.Topic.Name} - ${time}</small>
 										<h2><a asp-controller="Blog" asp-action="Detail" asp-route-id="${blog.Id}">${blog.Name}</a></h2>
-										<p>${shortenedContent}</p>
+										<p>${blog.Slug}</p>
 										<ul>
 											<li>
 												<div class="thumb"><img  alt=""></div> ${blog.User.FullName}

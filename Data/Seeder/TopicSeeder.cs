@@ -22,6 +22,10 @@ namespace ShoeShop.Data.Seeder
                         new Topic
                         {
                             Name = "Product"
+                        },
+                        new Topic
+                        {
+                            Name = "Sale"
                         }
                     });
                     context.SaveChanges();
