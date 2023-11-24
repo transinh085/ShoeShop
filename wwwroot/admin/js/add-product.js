@@ -318,7 +318,24 @@ Dashmix.onLoad((() => class {
         Dashmix.helpers("jq-validation"),
         jQuery.validator.addMethod("checkFiles", function (value, element) {
             return files.length > 0;
-         }, "Please upload at least one file");
+        }, "Please upload at least one file");
+
+        $.validator.addMethod("checkSlug",
+            function (value, element) {
+                var result = false;
+                $.ajax({
+                    type: "POST",
+                    async: false,
+                    url: "/admin/products/checkslug", // script to validate in server side
+                    data: { slug: $("#product-slug").val() },
+                    success: function (data) {
+                        result = data.isUnique;
+                    }
+                });
+                return result;
+            },
+            "This slug is already in use !"
+        );
 
         jQuery("#form-variant").validate({
             ignore: [],
@@ -351,7 +368,8 @@ Dashmix.onLoad((() => class {
                     number: !0
                 },
                 "product-slug": {
-                    required: !0
+                    required: !0,
+                    checkSlug: !0
                 },
                 "brand-id": {
                     required: !0
@@ -363,7 +381,10 @@ Dashmix.onLoad((() => class {
             messages: {
                 "product-name": "Please enter a name!",
                 "product-price": "Please enter a price!",
-                "product-slug": "Please enter a slug!",
+                "product-slug": {
+                    required: "Please enter a slug!",
+                    checkSlug: "This slug is already in use"
+                },
                 "brand-id": "Please select a value!",
                 "category-id": "Please select values!",
             }
