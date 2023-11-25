@@ -9,23 +9,13 @@ namespace ShoeShop.Models
         public string? Name { get; set; }
         public Image? Thumbnail { get; set; }
         public DateTime? CreatedAt { get; set; } = DateTime.Now;
-
+        public DateTime? publicDate { get; set; }
         public AppUser? User { get; set; }
-        public int TopicID {  get; set; }
+        public int TopicID { get; set; }
         public Topic? Topic { get; set; }
-        public string? Content {get; set; }
+        public string? Content { get; set; }
+        public bool IsPublic { get; set; }=false;
         public bool IsDetele { get; set; } = false;
 
-        public IFormFile CreateDefaultFormFile(Image Thumbnail)
-        {
-            if (Thumbnail != null)
-            {
-                IFormFile a = new FormFile(new MemoryStream(), 0, 0, Thumbnail.Name, Thumbnail.Name);
-                return a;
-            }
-            else
-                return null;
-            
-        }
     }
 }

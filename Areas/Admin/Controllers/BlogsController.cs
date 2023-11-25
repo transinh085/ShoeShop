@@ -78,11 +78,6 @@ namespace ShoeShop.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromForm] BlogViewModel post)
         {
-            //if (await _context.Blogs.AddAsync(p => p.Slug == post.Slug))
-            //{
-            //    ModelState.AddModelError("Slug", "Nhập Slug khác");
-            //    return View(blog);
-            //}
 
             var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -108,6 +103,7 @@ namespace ShoeShop.Areas.Admin.Controllers
                 User = author,
                 TopicID = post.TopicId,
                 Content = post.Content,
+                IsPublic = post.IsPublic,
                 IsDetele = false
             };
 
@@ -144,7 +140,8 @@ namespace ShoeShop.Areas.Admin.Controllers
                 User = blog.User,
                 CreatedAt = blog.CreatedAt,
                 TopicId = blog.TopicID,
-                Content = blog.Content
+                Content = blog.Content,
+                IsPublic = blog.IsPublic,
             };
             return View(post);
             //return RedirectToAction("Edit","Blogs");
@@ -155,7 +152,7 @@ namespace ShoeShop.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Slug,Content,Image,TopicID")] BlogViewModel bl)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Slug,Content,Image,TopicID,IsPublic")] BlogViewModel bl)
         //public async Task<IActionResult> Edit(int id, [FromForm]Blog blog) 
         {
             if (id != bl.Id)
@@ -177,6 +174,7 @@ namespace ShoeShop.Areas.Admin.Controllers
                     bl.Image.CopyTo(fileStream);
                 }
             }
+            bool ispublic = bl.IsPublic;
             if (ModelState.IsValid)
             {
                 try
@@ -191,7 +189,11 @@ namespace ShoeShop.Areas.Admin.Controllers
                         blog.Thumbnail = img;
                     }
                     blog.TopicID = bl.TopicId;
-
+                    blog.IsPublic = ispublic;
+                    if (blog.IsPublic == true)
+                    {
+                        blog.publicDate = DateTime.Now;
+                    }
                     _context.Update(blog);
                     await _context.SaveChangesAsync();
                 }
