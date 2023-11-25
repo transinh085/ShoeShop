@@ -40,27 +40,8 @@ namespace ShoeShop.Areas.Admin.Controllers
                 .Include(b => b.Thumbnail)
                 .Include(b => b.User)
                 .ToListAsync();
-            ViewBag.Topics = await _context.Topics.ToListAsync();
+            ViewBag.Topics = await _context.Topics.Where(p => !p.IsDelete).ToListAsync();
             return View(posts);
-        }
-
-        // GET: Admin/Blogs/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.Blogs == null)
-            {
-                return NotFound();
-            }
-
-            var blog = await _context.Blogs
-                .Include(b => b.Topic)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (blog == null)
-            {
-                return NotFound();
-            }
-
-            return View(blog);
         }
 
         // GET: Admin/Blogs/Create
@@ -97,11 +78,11 @@ namespace ShoeShop.Areas.Admin.Controllers
                 Slug = post.Slug,
                 Name = post.Name,
                 Thumbnail = img,
+                Description = post.Description,
                 User = author,
                 TopicID = post.TopicId,
                 Content = post.Content,
-                IsPublic = post.IsPublic,
-                IsDetele = false
+                IsPublic = post.IsPublic
             };
 
             _context.Add(bl);
@@ -112,105 +93,64 @@ namespace ShoeShop.Areas.Admin.Controllers
         // GET: Admin/Blogs/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Blogs == null)
-            {
-                return NotFound();
-            }
+            if (id == null || _context.Blogs == null) return NotFound();
 
-            var blog = await _context.Blogs .Include(b => b.Thumbnail)
-                                            .Include(b => b.User)
-                                            .FirstOrDefaultAsync(b => b.Id == id); ;
-            //.FindAsync(id)
-            if (blog == null)
-            {
-                return NotFound();
-            }
+            var blog = await _context.Blogs.Include(b => b.Thumbnail).FirstOrDefaultAsync(b => b.Id == id);
+            if (blog == null) return NotFound();
 
-                ViewData["TopicID"] = new SelectList(_context.Topics, "Id", "Name", blog.TopicID);
-
-            BlogViewModel post = new BlogViewModel()
-            {
-                Id = blog.Id,
-                Thumbnail = blog.Thumbnail,
-                Name = blog.Name,
-                Slug = blog.Slug,
-                User = blog.User,
-                CreatedAt = blog.CreatedAt,
-                TopicId = blog.TopicID,
-                Content = blog.Content,
-                IsPublic = blog.IsPublic,
-            };
-            return View(post);
-            //return RedirectToAction("Edit","Blogs");
+            ViewBag.Topics = await _context.Topics.Where(p => !p.IsDelete).ToListAsync();
+            ViewBag.Post = blog;
+            return View();
         }
 
         // POST: Admin/Blogs/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Slug,Content,Image,TopicID,IsPublic")] BlogViewModel bl)
-        //public async Task<IActionResult> Edit(int id, [FromForm]Blog blog) 
+        public async Task<IActionResult> Update(int id, [FromForm] BlogViewModel updatedPost)
         {
-            if (id != bl.Id)
-            {
-                return NotFound();
-            }
-            string uniqueFileName = Guid.NewGuid().ToString() + "_" + bl.Image.FileName;
-            string filePath = Path.Combine("wwwroot/img/blogs", uniqueFileName);
+            Blog existingPost = await _context.Blogs
+                .Include(b => b.Thumbnail)
+                .FirstOrDefaultAsync(b => b.Id == id);
 
-            var img = new Image();
-            if (bl.Image.FileName != "")
+            if (existingPost == null) return NotFound("Blog post not found.");
+
+            if (updatedPost.Image != null)
             {
-                img = new Image
+                string existingImagePath = Path.Combine("wwwroot/img/blogs", existingPost.Thumbnail.Name);
+                if (System.IO.File.Exists(existingImagePath))
+                {
+                    System.IO.File.Delete(existingImagePath);
+                }
+
+                _context.Images.Remove(existingPost.Thumbnail);
+            }
+
+            existingPost.Slug = updatedPost.Slug;
+            existingPost.Name = updatedPost.Name;
+            existingPost.Description = updatedPost.Description;
+            existingPost.TopicID = updatedPost.TopicId;
+            existingPost.Content = updatedPost.Content;
+            existingPost.IsPublic = updatedPost.IsPublic;
+
+            if (updatedPost.Image != null)
+            {
+                string uniqueFileName = $"{Guid.NewGuid()}_{updatedPost.Image.FileName}";
+                string filePath = Path.Combine("wwwroot/img/blogs", uniqueFileName);
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await updatedPost.Image.CopyToAsync(fileStream);
+                }
+
+                existingPost.Thumbnail = new Image
                 {
                     Name = uniqueFileName
                 };
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    bl.Image.CopyTo(fileStream);
-                }
             }
-            bool ispublic = bl.IsPublic;
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    var blog = await _context.Blogs.FindAsync(id);
 
-                    blog.Name = bl.Name;
-                    blog.Slug = bl.Slug;
-                    blog.Content = bl.Content;
-                    if (img != null)
-                    {
-                        blog.Thumbnail = img;
-                    }
-                    blog.TopicID = bl.TopicId;
-                    blog.IsPublic = ispublic;
-                    if (blog.IsPublic == true)
-                    {
-                        blog.publicDate = DateTime.Now;
-                    }
-                    _context.Update(blog);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!BlogExists(id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                    return RedirectToAction(nameof(Index)); // Redirect to the list of blogs after successful edit
-                }
+            await _context.SaveChangesAsync();
+            return Json(new { message = "Updated post successful" });
+        }
 
-                return View(bl);
-            }
-        
 
         // POST: Admin/Blogs/Delete/5
         [HttpPost, ActionName("Delete")]

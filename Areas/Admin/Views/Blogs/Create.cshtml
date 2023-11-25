@@ -1,6 +1,4 @@
-﻿@model ShoeShop.ViewModels.BlogViewModel;
-
-@{
+﻿@{
     ViewData["Title"] = "Create";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
@@ -16,32 +14,104 @@
     <script>
         Dashmix.onLoad(function () {
             CKEDITOR.config.height = '400';
-            Dashmix.helpers(['js-ckeditor', 'jq-select2']);
+            Dashmix.helpers(['jq-select2', 'js-ckeditor']);
         });
+
+
         $(document).ready(function () {
-            $('#blog-form').submit(function (e) {
+            $('#btn-save').click(function (e) {
                 e.preventDefault();
+                if ($('#blog-form').valid()) {
+                    var jsonData = {
+                        IsPublic: $('#is-public').prop('checked'),
+                        Slug: $('#post-slug').val(),
+                        TopicId: $('#topic-id').val(),
+                        Description: $('#post-desc').val(),
+                        Image: $('#post-image')[0].files[0],
+                        Name: $('#post-title').val(),
+                        Content: CKEDITOR.instances['js-ckeditor'].getData()
+                    };
 
-                var formData = new FormData($(this)[0]);
-
-                formData.append('Content', CKEDITOR.instances['js-ckeditor'].getData());
-
-                $.ajax({
-                    url: '/Admin/Blogs/Create',
-                    type: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function (data) {
-                        window.location.href = '/Admin/Blogs/Index';
-                    },
-                    error: function (xhr, status, error) {
-                        console.error(error);
+                    var formData = new FormData();
+                    for (var key in jsonData) {
+                        formData.append(key, jsonData[key]);
                     }
-                });
+
+                    $.ajax({
+                        url: '/Admin/Blogs/Create',
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function (data) {
+                            window.location.href = '/Admin/Blogs/Index';
+                        },
+                        error: function (xhr, status, error) {
+                            console.error(error);
+                        }
+                    });
+                }
             });
+
+            $('#blog-form').validate({
+                rules: {
+                    "post-title": {
+                        required: true
+                    },
+                    "topic-id": {
+                        required: true
+                    },
+                    "post-slug": {
+                        required: true
+                    },
+                    "post-desc": {
+                        required: true
+                    },
+                    "post-image": {
+                        required: true,
+                        accept: "image/*"
+                    }
+                },
+                messages: {
+                    "post-title": {
+                        required: "Please enter a title"
+                    },
+                    "topic-id": {
+                        required: "Please choose a topic"
+                    },
+                    "post-desc": {
+                        required: "Please enter a description"
+                    },
+                    "post-image": {
+                        required: "Please select an image",
+                        accept: "Please choose a valid image file"
+                    }
+                }
+            });
+
+            jQuery(".js-select2").on("change", (e => {
+                jQuery(e.currentTarget).valid()
+            }));
         });
-        document.getElementById('thumbnail').addEventListener('change', function (e) {
+
+
+        const slugify = (str) => {
+            return String(str)
+                .normalize('NFKD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .trim()
+                .toLowerCase()
+                .replace(/[^a-z0-9 -]/g, '')
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-');
+        }
+
+        $("#post-title").blur(function () {
+            const name = $(this).val();
+            $("#post-slug").val(slugify(name));
+        });
+
+        document.getElementById('post-image').addEventListener('change', function (e) {
             var previewImage = document.getElementById('imagePreview');
             var fileInput = e.target;
 
@@ -73,16 +143,16 @@
                 <div class="mb-0">
                     <div class="block-content">
                         <div class="form-check form-switch mb-2 d-flex justify-content-between ps-0">
-                            <label asp-for="IsPublic" class="form-label"></label>
-                            <input asp-for="IsPublic" class="form-check-input" type="checkbox"/>
+                            <label for="is-public" class="form-label">Public</label>
+                            <input id="is-public" name="is-public" class="form-check-input" type="checkbox" />
                         </div>
                         <div class="mb-4">
-                            <label class="form-label" asp-for="Slug">Slug</label>
-                            <input class="form-control" asp-for="Slug">
+                            <label class="form-label" for="post-slug">Slug</label>
+                            <input class="form-control" id="post-slug" name="post-slug">
                         </div>
                         <div class="mb-4">
-                            <label class="form-label" asp-for="TopicId">Topic</label>
-                            <select class="js-select2 form-select" id="topic-id" asp-for="TopicId" style="width: 100%;" data-placeholder="Choose topic..">
+                            <label class="form-label" for="topic-id">Topic</label>
+                            <select class="js-select2 form-select" id="topic-id" name="topic-id" style="width: 100%;" data-placeholder="Choose topic..">
                                 <option></option>
                                 @foreach (var topic in ViewBag.Topics)
                                 {
@@ -91,12 +161,12 @@
                             </select>
                         </div>
                         <div class="mb-4">
-                            <label class="form-label" asp-for="Description">Description</label>
-                            <textarea class="form-control" asp-for="Description" rows="2"></textarea>
+                            <label class="form-label" for="post-desc">Description</label>
+                            <textarea class="form-control" id="post-desc" name="post-desc" rows="2"></textarea>
                         </div>
                         <div class="mb-4">
-                            <label class="form-label" asp-for="Image">Image</label>
-                            <input type="file" id="thumbnail" asp-for="Image" class="form-control" accept="image/*" />
+                            <label class="form-label" for="post-image">Image</label>
+                            <input type="file" id="post-image" name="post-image" class="form-control" accept="image/*" />
                             <img id="imagePreview" class="img-thumbnail mt-2" style="display:none" />
                         </div>
                     </div>
@@ -111,15 +181,14 @@
             <div class="block block-rounded">
                 <div class="block-content">
                     <div class="d-flex gap-2 mb-4">
-                        <input asp-for="Name" type="text" class="form-control" placeholder="Add Title..">
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <div class="flex-fill">
+                            <input type="text" class="form-control" id="post-title" name="post-title" placeholder="Add Title..">
+                        </div>
+                        <button type="submit" class="btn btn-primary h-100" id="btn-save">Save</button>
                     </div>
                     <div class="mb-4">
                         <textarea id="js-ckeditor" name="ckeditor"></textarea>
                     </div>
-
-
-
                 </div>
             </div>
         </div>
