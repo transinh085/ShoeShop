@@ -24,7 +24,7 @@
 	const renderSize = (index) => {
 		let html = '';
 		variants[index].sizes.forEach((size, index) => {
-			html += `<option value="${index}" ${size.stock == 0 ? 'disabled' : ''}>${size.sizeName}</option>`;
+			html += `<option value="${index}" ${size.stock == 0 ? 'disabled' : ''}>${size.sizeName} ${size.stock == 0 ? `<span>(hết hàng)</span>` : ``}</option>`;
 		})
 		$("#select-size").html(html);
 		$("#select-size").niceSelect('update');

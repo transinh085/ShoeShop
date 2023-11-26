@@ -42,8 +42,17 @@ namespace ShoeShop.Controllers
             return Problem("Entity set 'AppDbContext.Blog'  is null.");
         }
 
-		public IActionResult Detail(int id)
+		public async Task<IActionResult> Detail(int id)
 		{
+			if (id == null || _context.Blogs == null) return NotFound();
+
+			var blog = await _context.Blogs
+				.Include(b => b.Topic)
+				.Include(b => b.Thumbnail)
+                .Include(b => b.User)
+				.FirstOrDefaultAsync(m => m.Id == id);
+			if (blog == null) return NotFound();
+            ViewBag.Blog = blog;
 			return View();
 		}
 
@@ -57,7 +66,7 @@ namespace ShoeShop.Controllers
         )
         {
             var queryableBlogs = _context.Blogs
-                .Where(b => !b.IsDetele)
+                .Where(b => !b.IsDetele && b.IsPublic)
                 .Include(blog => blog.Topic)
                 .Include(blog => blog.Thumbnail)
                 .Include(blog => blog.User)

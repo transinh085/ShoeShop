@@ -17,7 +17,7 @@
 			<div class="breadcrumbs">
 				<ul>
 					<li><a href="#">Home</a></li>
-					<li><a href="#">Category</a></li>
+					<li><a href="#">topic</a></li>
 					<li>Page active</li>
 				</ul>
 			</div>
@@ -26,35 +26,19 @@
 		<!-- /page_header -->
 		<div class="row">
 			<div class="col-lg-9">
-				<div class="widget search_blog d-block d-sm-block d-md-block d-lg-none">
+				@* <div class="widget search_blog d-block d-sm-block d-md-block d-lg-none">
 					<div class="form-group">
 						<input type="text" name="search" id="search" class="form-control" placeholder="Search..">
 						<button type="submit"><i class="ti-search"></i></button>
 					</div>
-				</div>
+				</div> *@
 				<!-- /widget -->
 				 <div class="row" id="posts">
 					<!-- /col -->
 				</div>
 				<!-- /row -->
 
-				<div class="pagination__wrapper no_border add_bottom_30">
-					<ul class="pagination">
-						<li><a href="#0" class="prev" title="previous page">&#10094;</a></li>
-							<a href="#0" class="active">1</a>
-						</li>
-						<li>
-							<a href="#0">2</a>
-						</li>
-						<li>
-							<a href="#0">3</a>
-						</li>
-						<li>
-							<a href="#0">4</a>
-						</li>
-						<li><a href="#0" class="next" title="next page">&#10095;</a></li>
-					</ul>
-				</div>
+
 				<!-- /pagination -->
 
 			</div>
@@ -68,35 +52,42 @@
 					</div>
 				</div>
 				<!-- /widget -->
-				<div class="widget">
-					<div class="widget-title">
-						<h4>Topics of Post</h4>
-					</div>
-					<ul class="comments-list">
-						@if (topics != null)
-						{
-							foreach (var topic in topics)
+				<div class="filter_type version_2">
+					<h4><a href="#topics" data-bs-toggle="collapse" class="opened">Topics</a></h4>
+					<div class="collapse show" id="topics">
+						<ul>
+							@if (topics != null)
 							{
-								<li>
-									<label class="container_check">
-										@topic.Topic.Name <small>@topic.blogCount</small>
-										<input type="checkbox" name="categories" value="@topic.Topic.Id">
-										<span class="checkmark"></span>
-									</label>
-								</li>
+								foreach (var topic in topics)
+								{
+									<li>
+										<label class="container_check">
+											@topic.Topic.Name <small>@topic.blogCount</small>
+											<input type="checkbox" name="topics" value="@topic.Topic.Id">
+											<span class="checkmark"></span>
+										</label>
+									</li>
+								}
 							}
-						}
-					</ul>
+						</ul>
+					</div>
+					<!-- /filter_type -->
+				</div>
 				</div>
 			
 				<!-- /widget -->
 			</aside>
 			<!-- /aside -->
 		</div>
+	<div class="col-lg-9">
+		<div class="row small-gutters" id="products">
+		</div>
+		<!-- /row -->
 		<div class="pagination__wrapper">
 			<ul class="pagination">
 			</ul>
 		</div>
+	</div>
 		<!-- /row -->
 	 </div> 
 	<!-- /container -->
@@ -110,6 +101,7 @@
 		document.addEventListener("DOMContentLoaded", function () {
 			const topicsCheckboxes = document.querySelectorAll("input[name=topics]");
 			const inputSearch = document.getElementById("search-input");
+
 
 			// Add a flag to prevent infinite loop
 			let updatingURL = false;
@@ -127,7 +119,7 @@
 					}
 					
 
-					queryParams.push(`sort=${sortSelect.value}`);
+					//queryParams.push(`sort=${sortSelect.value}`);
 					if (inputSearch.value.length > 0) {
 						queryParams.push(`query=${inputSearch.value}`);
 					}
@@ -170,19 +162,21 @@
 							const time = new Date(blog.CreatedAt).toLocaleDateString();
 							html += `<div class="col-md-6">
 								<article class="blog">
-									<figure>
-										<a href="/Blog/Detail/${blog.Id}">
-											<img src="/img/blogs/${blog.Thumbnail.Name}" alt="">
+											<figure >
+												<a href="/Blog/Detail/${blog.Id}" >
+													<img src="/img/blogs/${blog.Thumbnail.Name}" alt=""">
 											<div class="preview"><span>Read more</span></div>
 										</a>
 									</figure>
 									<div class="post_info">
-										<small>${blog.Topic.Name} - ${time}</small>
+												<small><a href="/Blog/Detail/${blog.Id}">${blog.Topic.Name} - ${time}</a></small>
 										<h2><a asp-controller="Blog" asp-action="Detail" asp-route-id="${blog.Id}">${blog.Name}</a></h2>
-										<p>${blog.Slug}</p>
+										<p>${blog.Description}</p>
 										<ul>
 											<li>
-												<div class="thumb"><img  alt=""></div> ${blog.User.FullName}
+														<div class="thumb" style="width=40px; height:40px; display:inline-block;"><img  src="${blog.User.ProfileImageUrl}"alt=""></div>${blog.User.FullName}
+											</li>
+											<li>
 											</li>
 										</ul>
 									</div>
@@ -209,7 +203,7 @@
 												</li>`;
 							document.querySelector(".pagination").innerHTML = paginationHtml
 						} else if (response?.Result.length === 0) {
-							document.querySelector(".pagination").innerHTML = `<h2>Not found posts</h2><img class="img-fluid lazy loaded"  alt="Not found posts" data-was-processed="true">`
+							document.getElementById("posts").innerHTML = `<h2>Not found posts</h2><img class="img-fluid lazy loaded" src="img/not-found-post.png" alt="Not found posts" data-was-processed="true">`
 						}
 					},
 					error: function (err) {

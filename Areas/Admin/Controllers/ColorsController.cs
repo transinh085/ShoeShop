@@ -63,24 +63,6 @@ namespace ShoeShop.Areas.Admin.Controllers
             }
         }
 
-        // GET: Admin/Colors/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.Colors == null)
-            {
-                return NotFound();
-            }
-
-            var color = await _context.Colors
-				.FirstOrDefaultAsync(m => m.Id == id);
-            if (color == null)
-            {
-                return NotFound();
-            }
-
-            return View(color);
-        }
-
         // GET: Admin/Colors/Create
         public IActionResult Create()
         {
