@@ -5,6 +5,7 @@
 
 @{
     var currentUser = await UserManager.GetUserAsync(User);
+    var imageUser = string.IsNullOrEmpty(currentUser.Image) ? "/img/users/avatar.jpg" : "/img/users/"+currentUser.Image;
 }
 
 @{
@@ -31,7 +32,7 @@
                         @if (SignInManager.IsSignedIn(User))
                         {
                             <div class="d-flex align-items-center gap-2">
-                                <img alt="Image" src="@currentUser.ProfileImageUrl" class="avatar-profile">
+                                <img alt="Image" src="@imageUser" class="avatar-profile">
                                 <div>
                                     <p class="mb-0 fs-6">@currentUser.FullName</p>
                                     <p class="mb-0 text-secondary" style="font-size: 14px">@currentUser.Email</p>
@@ -59,9 +60,9 @@
                     </nav>
 
                     <div class="container-fluid px-4">
-                        <div class="row">
+                        <div class="row mb-4">
                             <div class="col-12 bg-white rounded shadow-sm p-2">
-                                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                <ul class="nav nav-pills mb-1" id="pills-tab" role="tablist">
                                     <li class="nav-item" role="presentation">
                                         <button class="nav-link active" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Profile</button>
                                     </li>
@@ -69,31 +70,73 @@
                                         <button class="nav-link" id="change-password-tab" data-bs-toggle="pill" data-bs-target="#change-password" type="button" role="tab" aria-controls="change-password" aria-selected="false">Change password</button>
                                     </li>
                                 </ul>
-                                <div class="tab-content pt-4" id="pills-tabContent">
+                                <div class="tab-content py-4" id="pills-tabContent">
                                     <div class="tab-pane fade show active" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
-                                        <div class="d-flex justify-content-center image-container" style="position: relative;">
-                                            <label for="input-file" id="image-label" style="cursor: pointer">
-                                                <img alt="avatar" src="@currentUser.ProfileImageUrl" class="pic-avatar" id="profile-pic">
-                                                <div class="edit-icon">
-                                                    <i class="fas fa-edit"></i>
+                                        <form id="userForm" onsubmit="return false;">
+                                            <div class="d-flex justify-content-center image-container" style="position: relative">
+                                                <label for="input-file" id="image-label" style="cursor: pointer">
+                                                    <img alt="avatar" src="@imageUser" class="pic-avatar" id="profile-pic">
+                                                    <div class="edit-icon">
+                                                        <i class="fas fa-edit"></i>
+                                                    </div>
+                                                </label>
+                                                <input type="file" accept="image/jpeg, image/png, image/jpg, image/svg" name="ImageFile" id="input-file" style="display: none;">
+                                            </div>
+                                            <div class="row justify-content-center mt-3">
+                                                <div class="col-8">
+                                                    <div class="form-group">
+                                                        <label class="form-label" for="UserName">UserName</label>
+                                                        <input class="form-control mb-1" id="UserName" name="UserName" value="@currentUser.UserName" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="form-label" for="FullName">FullName</label>
+                                                        <input class="form-control mb-1" id="FullName" name="FullName" value="@currentUser.FullName" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="form-label" for="Email">Email</label>
+                                                        <input class="form-control mb-1" id="Email" name="Email" value="@currentUser.Email" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="form-label" for="Phone">Phone</label>
+                                                        <input class="form-control mb-1" id="Phone" name="Phone" value="@currentUser.PhoneNumber" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="form-label" for="Gender">Gender</label>
+                                                        <select class="form-select" name="Gender" id="Gender">
+                                                            <option value="1">Male</option>
+                                                            <option value="2">Female</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="d-flex justify-content-end">
+                                                        <button type="submit" class="btn btn-success" id="update-info">Update</button>
+                                                    </div>
                                                 </div>
-                                            </label>
-                                            <input type="file" accept="image/jpeg, image/png, image/jpg, image/svg" id="input-file" style="display: none;">
-                                        </div>
-                                        <div class="row justify-content-center mt-3">
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="tab-pane fade" id="change-password" role="tabpanel" aria-labelledby="change-password-tab">
+                                        <div class="row justify-content-center mt-1">
                                             <div class="col-8">
-                                                <div class="form-group">
-                                                    <label class="form-label" for="EmailAddress">Email Address</label>
-                                                    <input class="form-control mb-1" placeholder="abc@email.com" type="text" data-val="true" data-val-required="Email address is required" id="EmailAddress" name="EmailAddress" value="">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="form-label" for="EmailAddress">Email Address</label>
-                                                    <input class="form-control mb-1" placeholder="abc@email.com" type="text" data-val="true" data-val-required="Email address is required" id="EmailAddress" name="EmailAddress" value="">
-                                                </div>
+                                                <form id="form-change-password" onsubmit="return false;">
+                                                    <div class="form-group">
+                                                        <label class="form-label" for="password_old">Password Old</label>
+                                                        <input class="form-control mb-1" id="password_old" name="password_old">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="form-label" for="password">Password</label>
+                                                        <input class="form-control mb-1" id="password" type="password" name="password">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="form-label" for="confirm_password">Confirm Password</label>
+                                                        <input class="form-control mb-1" id="confirm_password" type="password" name="confirm_password">
+                                                    </div>
+                                                    <div class="d-flex justify-content-end">
+                                                        <button type="submit" id="btn-change-password" class="btn btn-success">Change</button>
+                                                    </div>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="tab-pane fade" id="change-password" role="tabpanel" aria-labelledby="change-password-tab">...</div>
                                 </div>
                             </div>
                         </div>
@@ -104,27 +147,192 @@
             <!-- /#page-content-wrapper -->
         </div>
 
-        <script>
-            var el = document.getElementById("wrapper");
-            var toggleButton = document.getElementById("menu-toggle");
-
-            toggleButton.onclick = function () {
-                el.classList.toggle("toggled");
-            };
-            
-            document.getElementById('input-file').addEventListener('change', function (event) {
-                // Lấy ra đối tượng input file và kiểm tra xem có file nào được chọn không
-                var input = event.target;
-                if (input.files && input.files[0]) {
-                    // Đọc file hình ảnh và cập nhật thuộc tính src của thẻ img
-                    var reader = new FileReader();
-                    reader.onload = function (e) {
-                        document.getElementById('profile-pic').src = e.target.result;
-                    };
-                    reader.readAsDataURL(input.files[0]);
-                }
-            });
-            
-        </script>
+       
 	</div>
 </main>
+
+                                                 @section Scripts{
+            <script>
+                var genderSelect = document.getElementById('Gender');
+                genderSelect.value = "@currentUser.Gender";
+                var fileAvatar = null;
+                var el = document.getElementById("wrapper");
+                var toggleButton = document.getElementById("menu-toggle");
+
+                toggleButton.onclick = function () {
+                    el.classList.toggle("toggled");
+                };
+
+                document.getElementById('input-file').addEventListener('change', function (event) {
+                    var input = event.target;
+                    if (input.files && input.files[0]) {
+                        var reader = new FileReader();
+                        reader.onload = function (e) {
+                            fileAvatar = input.files;
+                            document.getElementById('profile-pic').src = e.target.result;
+                        };
+                        reader.readAsDataURL(input.files[0]);
+                    }
+                });
+                $(document).ready(function () {
+                    $("#userForm").validate({
+                        rules: {
+                            UserName: {
+                                required: true,
+                                minlength: 3, // Độ dài tối thiểu
+                                maxlength: 20 // Độ dài tối đa
+                            },
+                            FullName: {
+                                required: true,
+                                minlength: 3,
+                                maxlength: 50
+                            },
+                            Email: {
+                                required: true,
+                                email: true
+                            },
+                            Phone: {
+                                required: true,
+                                digits: true,
+                                minlength: 10,
+                                maxlength: 15
+                            },
+                            Gender: {
+                                required: true
+                            }
+                        },
+                        messages: {
+                            UserName: {
+                                required: "Please enter a username",
+                                minlength: "Username must be at least 3 characters",
+                                maxlength: "Username must be at most 20 characters"
+                            },
+                            FullName: {
+                                required: "Please enter a full name",
+                                minlength: "Full name must be at least 3 characters",
+                                maxlength: "Full name must be at most 50 characters"
+                            },
+                            Email: {
+                                required: "Please enter an email",
+                                email: "Please enter a valid email address"
+                            },
+                            Phone: {
+                                required: "Please enter a phone number",
+                                digits: "Please enter a valid phone number",
+                                minlength: "Phone number must be at least 10 digits",
+                                maxlength: "Phone number must be at most 15 digits"
+                            },
+                            Gender: {
+                                required: "Please select a gender"
+                            }
+                        }
+                    });
+
+                    $("#update-info").on('click', () => {
+                        if ($("#userForm").valid()) {
+                            submitForm();
+                        }
+                    });
+
+                    function submitForm() {
+                        let value = {
+                            UserName: $("#UserName").val(),
+                            FullName: $("#FullName").val(),
+                            Email: $("#Email").val(),
+                            Phone: $("#Phone").val(),
+                            Gender: $("#Gender").val(),
+                            ImageFile: null
+                        }
+
+                        if (fileAvatar) {
+                            value.ImageFile = fileAvatar[0];
+                        }
+
+                        let formData = new FormData();
+                        for (let key in value) {
+                            formData.append(key, value[key]);
+                        }
+
+                        $.ajax({
+                            type: "POST",
+                            url: "/Account/UpdateProfile",
+                            processData: false,
+                            contentType: false,
+                            data: formData,
+                            success: function (response) {
+                                console.log("Success:", response);
+                                alert("Cập nhật thông tin thành công");
+                                location.reload();
+                            },
+                            error: function (error) {
+                                console.log('error', error.responseJSON.errors);
+                                $("#userForm").validate().showErrors({
+                                    [error.responseJSON.errors[0].key]: error.responseJSON.errors[0].value
+                                });
+                            }
+                        });
+                    }
+
+            $.validator.addMethod("complexPassword", function (value, element) {
+                // Kiểm tra xem mật khẩu có ít nhất một chữ thường, một chữ hoa và một ký tự đặc biệt hay không
+                return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\W)/.test(value);
+            }, "Password must contain at least one lowercase letter, one uppercase letter, and one special character.");
+
+            $("#form-change-password").validate({
+                rules: {
+                    password_old: "required",
+                    password: {
+                        required: true,
+                        minlength: 6,
+                        complexPassword: true
+                    },
+                    confirm_password: {
+                        required: true,
+                        equalTo: "#password"
+                    }
+                },
+                messages: {
+                    password_old: "Please enter your old password",
+                    password: {
+                        required: "Please enter a password",
+                        minlength: "Your password must be at least 6 characters long"
+                    },
+                    confirm_password: {
+                        required: "Please enter the same password as above",
+                        equalTo: "Passwords do not match"
+                    }
+                }
+            });
+
+            // Handle button click for changing password
+            $("#btn-change-password").click(function () {
+                if ($("#form-change-password").valid()) {
+                    var data = {
+                        newPassword: $("#password").val(),
+                        confirmPassword: $("#confirm_password").val(),
+                        oldPassword: $("#password_old").val()
+                    };
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/Account/ChangePassword",
+                        contentType: "application/json",
+                        data: JSON.stringify(data),
+                        success: function (response) {
+                            // Xử lý kết quả thành công
+                            console.log("Success:", response);
+                            alert("Thay đổi mật khẩu thành công");
+                            location.reload();
+                        },
+                        error: function (error) {
+                            console.log('error', error.responseJSON.errors);
+                            $("#form-change-password").validate().showErrors({
+                                password_old: error.responseJSON.errors[0].value
+                            });
+                        }
+                    });
+                }
+            });
+});
+</script>
+}

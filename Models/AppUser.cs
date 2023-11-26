@@ -10,6 +10,7 @@ namespace ShoeShop.Models
         public int? Gender { get; set; }
         public DateTime? BirthDay { get; set; }
         public string? ProfileImageUrl { get; set; }
+        public string? Image { get; set; }
 
         public DateTime? JoinTime { get; set; } = DateTime.Now;
 

@@ -17,9 +17,7 @@ uploadImgInput.addEventListener("change", (e) => {
       files.push(fileInput[i]);
     }
    }
-
    uploadImgInput.value = '';
-
   showImage();
 });
 

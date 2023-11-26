@@ -343,47 +343,7 @@
 		<!--/feat-->
 </main>
 
-@section Scripts {
-	<script src="~/js/product-detail.js"></script>
-	<script>
-		$(document).ready(function () {
-			$("#form-review").validate({
-				rules: {
-					review: {
-						required: true
-					}
-				},
-				messages: {
-					review: {
-						required: "Please enter your review"
-					}
-				},
-				submitHandler: function (form) {
-					var overallRating = $("input[name='rating-input']:checked").val();
-					var reviewText = $("textarea[name='review']").val();
-					var productId = $("#product-id").val();
 
-					$.ajax({
-						type: "POST",
-						url: "/Product/AddReview",
-						data: {
-							ProductId: productId,
-							Description: reviewText,
-							Rating: overallRating
-						},
-						success: function (response) {
-							console.log(response);
-							location.reload();
-						},
-						error: function (error) {
-							console.error("Error in POST request", error);
-						}
-					});
-				}
-			});
-		});
-	</script>
-}
 
 @if (checkReview != 0)
 {
@@ -426,4 +386,46 @@
 			</div>
 		</div>
 	</div>
+}
+
+@section Scripts {
+	<script src="~/js/product-detail.js"></script>
+	<script>
+		$(document).ready(function () {
+			$("#form-review").validate({
+				rules: {
+					review: {
+						required: true
+					}
+				},
+				messages: {
+					review: {
+						required: "Please enter your review"
+					}
+				},
+				submitHandler: function (form) {
+					var overallRating = $("input[name='rating-input']:checked").val();
+					var reviewText = $("textarea[name='review']").val();
+					var productId = $("#product-id").val();
+
+					$.ajax({
+						type: "POST",
+						url: "/Product/AddReview",
+						data: {
+							ProductId: productId,
+							Description: reviewText,
+							Rating: overallRating
+						},
+						success: function (response) {
+							console.log(response);
+							location.reload();
+						},
+						error: function (error) {
+							console.error("Error in POST request", error);
+						}
+					});
+				}
+			});
+		});
+	</script>
 }

@@ -214,6 +214,9 @@ namespace ShoeShop.Migrations
                     b.Property<int?>("Gender")
                         .HasColumnType("int");
 
+                    b.Property<string>("Image")
+                        .HasColumnType("longtext");
+
                     b.Property<bool?>("IsDeleted")
                         .HasColumnType("tinyint(1)");
 
@@ -280,19 +283,20 @@ namespace ShoeShop.Migrations
                     b.Property<string>("Content")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("CreateBy")
-                        .HasColumnType("longtext");
-
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<bool>("IsDetele")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<bool>("IsPublic")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
 
                     b.Property<string>("Slug")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<int?>("ThumbnailId")
@@ -303,6 +307,9 @@ namespace ShoeShop.Migrations
 
                     b.Property<string>("UserId")
                         .HasColumnType("varchar(255)");
+
+                    b.Property<DateTime?>("publicDate")
+                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
