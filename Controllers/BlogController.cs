@@ -66,7 +66,7 @@ namespace ShoeShop.Controllers
         )
         {
             var queryableBlogs = _context.Blogs
-                .Where(b => !b.IsDetele)
+                .Where(b => !b.IsDetele && b.IsPublic)
                 .Include(blog => blog.Topic)
                 .Include(blog => blog.Thumbnail)
                 .Include(blog => blog.User)
