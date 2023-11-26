@@ -1,0 +1,97 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+
+@{
+    var currentUser = await UserManager.GetUserAsync(User);
+    var imageUser = string.IsNullOrEmpty(currentUser.Image) ? "/img/users/avatar.jpg" : "/img/users/" + currentUser.Image;
+}
+
+@{
+    ViewData["Title"] = "Address";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/profile.css">
+    <link rel="stylesheet" href="~/admin/js/plugins/sweetalert2/sweetalert2.min.css">
+    <link rel="stylesheet" href="~/admin/js/plugins/datatables-bs5/css/dataTables.bootstrap5.min.css">
+}
+
+<main style="background-color: #efefef">
+    <div class="container magrin_30">
+        <nav aria-label="breadcrumb" class="pt-3">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Orders</li>
+            </ol>
+        </nav>
+        <div class="row">
+            <div class="d-flex" id="wrapper">
+                <!-- Sidebar -->
+                <div id="sidebar-wrapper">
+                    <div class="p-2">
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <div class="d-flex align-items-center gap-2">
+                                <img alt="Image" src="@imageUser" class="avatar-profile">
+                                <div>
+                                    <p class="mb-0 fs-6">@currentUser.FullName</p>
+                                    <p class="mb-0 text-secondary" style="font-size: 14px">@currentUser.Email</p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="list-group list-group-flush my-1">
+                        <a href="/account/profile" class="list-group-item list-group-item-action d-flex align-items-center gap-1 bg-transparent">
+                            <i class="fa-solid fa-user fs-6 me-2"></i><span>Account information</span>
+                        </a>
+                        <a href="/account/orders" class="list-group-item list-group-item-action d-flex align-items-center gap-1 bg-transparent">
+                            <i class="fas fa-shopping-cart fs-6 me-2"></i><span>Order management</span>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action d-flex align-items-center gap-1 bg-transparent active">
+                            <i class="fas fa-address-card fs-6 me-2"></i><span>Address</span>
+                        </a>
+                    </div>
+                </div>
+                <!-- /#sidebar-wrapper -->
+                <!-- Page Content -->
+                <div id="page-content-wrapper">
+                    <nav class="navbar navbar-expand-lg navbar-light bg-transparent pb-4 px-4">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-align-left primary-text fs-4 me-3" id="menu-toggle"></i>
+                            <h5 class="m-0">Address</h5>
+                        </div>
+                    </nav>
+                    <div class="container-fluid px-4">
+                        <div class="row mb-4">
+                            <div class="col-12 bg-white rounded shadow-sm p-2">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-vcenter fs-sm" id="orders-table">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center" style="width: 100px;">ID</th>
+                                                <th>Payment Method</th>
+                                                <th>Shipping Method</th>
+                                                <th class="text-center">Total</th>
+                                                <th>Status</th>
+                                                <th>Submitted</th>
+                                                <th class="text-center">Actions</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /#page-content-wrapper -->
+        </div>
+    </div>
+</main>
+@section Scripts {
+    <script src="~/admin/js/plugins/sweetalert2/sweetalert2.min.js"></script>
+    <script src="~/admin/js/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/admin/js/plugins/datatables-bs5/js/dataTables.bootstrap5.min.js"></script>
+}

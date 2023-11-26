@@ -76,7 +76,7 @@ namespace ShoeShop.Data.Seeder
                     {
                         FullName = "Hoàng Gia Bảo",
                         UserName = "hgbaodev",
-                        Email = "hgbaodev",
+                        Email = "hgbaodev@gmail.com",
                         EmailConfirmed = true,
                         PhoneNumber = "0123456789",
                         ProfileImageUrl = "https://avatars.githubusercontent.com/u/120194990?v=4",

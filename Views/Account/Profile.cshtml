@@ -44,8 +44,11 @@
                         <a href="#" class="list-group-item list-group-item-action d-flex align-items-center gap-1 bg-transparent active">
                             <i class="fa-solid fa-user fs-6 me-2"></i><span>Account information</span>
                         </a>
-                        <a href="#" class="list-group-item list-group-item-action d-flex align-items-center gap-1 bg-transparent">
+                        <a href="/account/orders" class="list-group-item list-group-item-action d-flex align-items-center gap-1 bg-transparent">
                             <i class="fas fa-shopping-cart fs-6 me-2"></i><span>Order management</span>
+                        </a>
+                        <a href="/account/address" class="list-group-item list-group-item-action d-flex align-items-center gap-1 bg-transparent">
+                            <i class="fas fa-address-card fs-6 me-2"></i><span>Address</span>
                         </a>
                     </div>
                 </div>
@@ -260,12 +263,10 @@
                             contentType: false,
                             data: formData,
                             success: function (response) {
-                                console.log("Success:", response);
                                 alert("Cập nhật thông tin thành công");
                                 location.reload();
                             },
                             error: function (error) {
-                                console.log('error', error.responseJSON.errors);
                                 $("#userForm").validate().showErrors({
                                     [error.responseJSON.errors[0].key]: error.responseJSON.errors[0].value
                                 });
@@ -319,13 +320,10 @@
                         contentType: "application/json",
                         data: JSON.stringify(data),
                         success: function (response) {
-                            // Xử lý kết quả thành công
-                            console.log("Success:", response);
                             alert("Thay đổi mật khẩu thành công");
                             location.reload();
                         },
                         error: function (error) {
-                            console.log('error', error.responseJSON.errors);
                             $("#form-change-password").validate().showErrors({
                                 password_old: error.responseJSON.errors[0].value
                             });
