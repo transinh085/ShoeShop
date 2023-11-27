@@ -17,7 +17,7 @@
 			<div class="breadcrumbs">
 				<ul>
 					<li><a href="#">Home</a></li>
-					<li><a href="#">topic</a></li>
+					<li><a href="#">Topic</a></li>
 					<li>Page active</li>
 				</ul>
 			</div>
@@ -163,14 +163,14 @@
 							html += `<div class="col-md-6">
 								<article class="blog">
 											<figure >
-												<a href="/Blog/Detail/${blog.Id}" >
+												<a href="/blogs/${blog.Slug}" >
 													<img src="/img/blogs/${blog.Thumbnail.Name}" alt=""">
 											<div class="preview"><span>Read more</span></div>
 										</a>
 									</figure>
 									<div class="post_info">
-												<small><a href="/Blog/Detail/${blog.Id}">${blog.Topic.Name} - ${time}</a></small>
-										<h2><a asp-controller="Blog" asp-action="Detail" asp-route-id="${blog.Id}">${blog.Name}</a></h2>
+												<small>${blog.Topic.Name} - ${time}</small>
+												<h2><a href="/blogs/${blog.Slug}">${blog.Name}</a></h2>
 										<p>${blog.Description}</p>
 										<ul>
 											<li>
