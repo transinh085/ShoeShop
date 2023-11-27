@@ -42,22 +42,38 @@ namespace ShoeShop.Controllers
             return Problem("Entity set 'AppDbContext.Blog'  is null.");
         }
 
-		public async Task<IActionResult> Detail(int id)
-		{
-			if (id == null || _context.Blogs == null) return NotFound();
+		//public async Task<IActionResult> Detail(int id)
+		//{
+		//	if (id == null || _context.Blogs == null) return NotFound();
 
-			var blog = await _context.Blogs
-				.Include(b => b.Topic)
+		//	var blog = await _context.Blogs
+		//		.Include(b => b.Topic)
+		//		.Include(b => b.Thumbnail)
+		//              .Include(b => b.User)
+		//		.FirstOrDefaultAsync(m => m.Id == id);
+		//	if (blog == null) return NotFound();
+		//          ViewBag.Blog = blog;
+		//	return View();
+		//}
+
+		[Route("/blogs/{slug}")]
+        public async Task<IActionResult> Detail(string slug)
+        {
+			if (_context.Blogs == null) return NotFound();
+			var blog = await _context.Blogs.FirstOrDefaultAsync(p => p.Slug == slug);
+			if (blog == null || blog.IsDetele) return NotFound();
+			ViewBag.Blog = blog;
+			ViewBag.Related = await _context.Blogs
 				.Include(b => b.Thumbnail)
-                .Include(b => b.User)
-				.FirstOrDefaultAsync(m => m.Id == id);
-			if (blog == null) return NotFound();
-            ViewBag.Blog = blog;
+                .Include(b => b.Topic)
+				.Include (b => b.User)
+				.OrderByDescending(blog => blog.CreatedAt)
+				.Take(8).ToListAsync();
 			return View();
 		}
 
 
-        [HttpGet,ActionName("getallblogs")]
+		[HttpGet,ActionName("getallblogs")]
         public IActionResult GetAllBlogs(
         int page = 1,
         int pageSize = 9,
