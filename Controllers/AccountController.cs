@@ -6,6 +6,7 @@ using ShoeShop.Data;
 using ShoeShop.Data.Enum;
 using ShoeShop.Models;
 using ShoeShop.ViewModels;
+using System.Security.Claims;
 
 namespace ShoeShop.Controllers
 {
@@ -269,6 +270,57 @@ namespace ShoeShop.Controllers
         public IActionResult Address()
         {
             return View();
+        }
+
+        public async Task<IActionResult> getAddresses()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var addresses = await _context.Addresses.Where(a => a.AppUserId == userId && !a.IsDelete).ToListAsync();
+            return Ok(addresses);
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> deleteAddress(int id)
+        {
+            if (_context.Colors == null) return Problem("Entity set 'AppDbContext.Color'  is null.");
+
+            var color = await _context.Addresses.FindAsync(id);
+            if (color != null) color.IsDelete = true;
+
+            await _context.SaveChangesAsync();
+            return Ok(new { message = "Delete successfully" });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddAddress(string fullName, string email, string phone, string specificAddress, bool isDefault)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    var newAddress = new Address
+                    {
+                        FullName = fullName,
+                        Email = email,
+                        Phone = phone,
+                        SpecificAddress = specificAddress,
+                        AppUserId = userId,
+                        IsDefault = isDefault,
+                    };
+
+                    _context.Addresses.Add(newAddress);
+                    await _context.SaveChangesAsync();
+                    return Ok(new { message = "Address added successfully" });
+                }
+
+                // Nếu ModelState không hợp lệ, trả về lỗi BadRequest
+                return BadRequest(new { message = "Invalid data in the request" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Internal Server Error", error = ex.Message });
+            }
         }
 
     }

@@ -15,7 +15,6 @@
 @section Styles {
     <link rel="stylesheet" href="~/css/profile.css">
     <link rel="stylesheet" href="~/admin/js/plugins/sweetalert2/sweetalert2.min.css">
-    <link rel="stylesheet" href="~/admin/js/plugins/datatables-bs5/css/dataTables.bootstrap5.min.css">
 }
 
 <main style="background-color: #efefef">
@@ -57,31 +56,15 @@
                 <!-- /#sidebar-wrapper -->
                 <!-- Page Content -->
                 <div id="page-content-wrapper">
-                    <nav class="navbar navbar-expand-lg navbar-light bg-transparent pb-4 px-4">
+                    <nav class="navbar navbar-expand-lg navbar-light bg-transparent pb-4 px-4 justify-content-between">
                         <div class="d-flex align-items-center">
                             <i class="fas fa-align-left primary-text fs-4 me-3" id="menu-toggle"></i>
                             <h5 class="m-0">Address</h5>
                         </div>
+                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-solid fa-plus me-2"></i> Add</button>
                     </nav>
                     <div class="container-fluid px-4">
-                        <div class="row mb-4">
-                            <div class="col-12 bg-white rounded shadow-sm p-2">
-                                <div class="table-responsive">
-                                    <table class="table table-striped table-vcenter fs-sm" id="orders-table">
-                                        <thead>
-                                            <tr>
-                                                <th class="text-center" style="width: 100px;">ID</th>
-                                                <th>Payment Method</th>
-                                                <th>Shipping Method</th>
-                                                <th class="text-center">Total</th>
-                                                <th>Status</th>
-                                                <th>Submitted</th>
-                                                <th class="text-center">Actions</th>
-                                            </tr>
-                                        </thead>
-                                    </table>
-                                </div>
-                            </div>
+                        <div class="row mb-4 bg-white rounded shadow-sm pt-3" id="list-address">
                         </div>
                     </div>
                 </div>
@@ -90,8 +73,147 @@
         </div>
     </div>
 </main>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="addAddressForm">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Address</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="fullName" class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="fullName" name="fullName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Phone</label>
+                        <input type="tel" class="form-control" id="phone" name="phone" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Address</label>
+                        <input type="text" class="form-control" id="address" name="address" required>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="default-address">
+                        <label class="form-check-label" for="default-address">
+                            Default address
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @section Scripts {
     <script src="~/admin/js/plugins/sweetalert2/sweetalert2.min.js"></script>
-    <script src="~/admin/js/plugins/datatables/jquery.dataTables.min.js"></script>
-    <script src="~/admin/js/plugins/datatables-bs5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="~/admin/js/plugins/jquery-validation/jquery.validate.min.js"></script>
+    <script src="~/admin/js/plugins/jquery-validation/additional-methods.js"></script>
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: '/account/getAddresses',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    $.each(data, function (index, address) {
+                        var addressItemHtml = `
+                                <div class="col-12">
+                                    <div class="address-item alert alert-success d-flex justify-content-between" data-id="${address.id}">
+                                        <div>
+                                            <p class="fw-bold mb-0">${address.fullName} <span class="badge rounded-pill bg-success ms-2">${address.isDefault ? 'Default' : ''}</span></p>
+                                            <p class="mb-0">Address: ${address.specificAddress}</p>
+                                            <p class="mb-0">Phone: ${address.phone}</p>
+                                            <p class="mb-0">Email: ${address.email}</p>
+                                        </div>
+                                        <div>
+                                            <button class="btn btn-success btn-sm">Edit</button>
+                                            <button class="btn btn-danger btn-sm btn-delete">Delete</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        $('#list-address').append(addressItemHtml);
+                    });
+                },
+                error: function (error) {
+                    console.error('Error fetching addresses:', error);
+                }
+            });
+
+            $("#addAddressForm").validate({
+                rules: {
+                    fullName: {
+                        required: true
+                    },
+                    email: {
+                        required: true,
+                        email: true
+                    },
+                    phone: {
+                        required: true,
+                    },
+                    address: {
+                        required: true
+                    }
+                },
+                messages: {
+                    fullName: "Please enter your full name",
+                    email: {
+                        required: "Please enter your email address",
+                        email: "Please enter a valid email address"
+                    },
+                    phone: "Please enter your phone number",
+                    address: "Please enter your address"
+                },
+                submitHandler: function (form) {
+                    
+                    // Đóng modal
+                    $('#addAddressModal').modal('hide');
+                }
+            });
+
+        });
+        $(document).on("click", ".btn-delete", async function () {
+            let addressId = $(this).closest('.address-item').data("id");
+            let result = await Swal.fire({
+                title: "Are you sure?",
+                text: "Would you like to delete this address?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, I'm sure!",
+                cancelButtonText: "Cancel"
+            });
+
+            if (result.value) {
+                try {
+                    let response = await $.ajax({
+                        url: `/account/deleteAddress/${addressId}`,
+                        type: 'DELETE',
+                        dataType: 'json',
+                    });
+
+                    if (response) {
+                        Swal.fire("Deleted!", "Successfully deleted the address.", "success");
+                        $(this).closest('.address-item').remove();
+                    } else {
+                        Swal.fire("Error !", "Deletion of the address was not successful.", "error");
+                    }
+                } catch (error) {
+                    console.error("Error:", error);
+                    Swal.fire("Error !", "Deletion of the address was not successful.", "error");
+                }
+            }
+        });
+
+    </script>
 }

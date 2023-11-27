@@ -5652,11 +5652,11 @@ input.qty2:focus {
   background-color: #004dda;
 }
 
-.modal-content {
+/*.modal-content {
   border: none !important;
   border-radius: 0 !important;
   padding: 25px;
-}
+}*/
 
 /* Jquery select */
 .nice-select {
@@ -6267,6 +6267,7 @@ a.social_bt.google:before {
   display: block;
   float: left;
   padding: 5px;
+  text-align: center
 }
 .pagination li:first-child {
   border: none;
