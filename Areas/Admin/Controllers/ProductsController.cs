@@ -408,6 +408,13 @@ namespace ShoeShop.Areas.Admin.Controllers
         {
             var product = await _context.Products.FirstOrDefaultAsync(v => v.Slug == slug);
             return Json(new { IsUnique = product == null });
-        } 
+        }
+        [HttpPost]
+        public async Task<IActionResult> CheckSlugUpdate(int id, string slug)
+        {
+            var product = await _context.Products.Where(p => p.Id != id)
+                .FirstOrDefaultAsync(v => v.Slug == slug);
+            return Json(new { IsUnique = product == null });
+        }
     }
 }

@@ -350,7 +350,7 @@ Dashmix.onLoad((() => class {
                 $.ajax({
                     type: "POST",
                     async: false,
-                    url: "/admin/products/checkslug", // script to validate in server side
+                    url: "/admin/products/checkslug",
                     data: { slug: $("#product-slug").val() },
                     success: function (data) {
                         result = data.isUnique;
