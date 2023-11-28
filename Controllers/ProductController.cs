@@ -113,20 +113,24 @@ namespace ShoeShop.Controllers
 			if (product == null || product.IsDetele) return NotFound();
 			var currentUser = await _userManager.GetUserAsync(User);
 
-			if (currentUser == null)
-			{
-				ViewBag.CheckReview = 0;
-			}
-			else
-			{
-				var checkByProduct = _context.Orders.Count(
-					o => o.OrderStatus == OrderStatus.Confirmed &&
-					o.AppUserId == currentUser.Id &&
-					o.Details.Any(detail => detail.VariantSize.Variant.Product.Id == product.Id)
-				);
-				ViewBag.CheckReview = checkByProduct;
-			}
-			ViewBag.Reviews = await _context.Reviews
+            if (currentUser == null)
+            {
+                ViewBag.CheckReview = 0;
+            }
+            else
+            {
+                var countReviewProduct = _context.Reviews
+                    .Count(review => review.ProductId == product.Id && review.AppUserId == currentUser.Id);
+
+                var checkByProduct = _context.Orders
+                    .Count(o => o.OrderStatus == OrderStatus.Confirmed &&
+                                o.AppUserId == currentUser.Id &&
+                                o.Details.Any(detail => detail.VariantSize.Variant.Product.Id == product.Id));
+
+                ViewBag.CheckReview = (countReviewProduct < checkByProduct) ? 1 : 0;
+            }
+
+            ViewBag.Reviews = await _context.Reviews
 			.Where(review => review.ProductId == product.Id)
 			.OrderByDescending(review => review.CreatedAt)
 			.Include(review => review.AppUser)
