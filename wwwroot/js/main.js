@@ -282,13 +282,13 @@
 	});
 	
 	/* Footer reveal */
-	if ($(window).width() >= 1024) {
-		$('footer.revealed').footerReveal({
-		shadow: false,
-		opacity:0.6,
-		zIndex: 1
-	});
-	};
+	//if ($(window).width() >= 1024) {
+	//	$('footer.revealed').footerReveal({
+	//	shadow: false,
+	//	opacity:0.6,
+	//	zIndex: 1
+	//});
+	//};
 
 	// Scroll to top
 	var pxShow = 800; // height on which the button will show
