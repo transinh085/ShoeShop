@@ -61,7 +61,7 @@
                             <i class="fas fa-align-left primary-text fs-4 me-3" id="menu-toggle"></i>
                             <h5 class="m-0">Address</h5>
                         </div>
-                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-solid fa-plus me-2"></i> Add</button>
+                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addAddressModal"><i class="fa-solid fa-plus me-2"></i> Add</button>
                     </nav>
                     <div class="container-fluid px-4">
                         <div class="row mb-4 bg-white rounded shadow-sm pt-3" id="list-address">
@@ -74,12 +74,12 @@
     </div>
 </main>
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="addAddressModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form id="addAddressForm">
+            <form id="addAddressForm" onsubmit="return false;">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Address</h5>
+                    <h5 class="modal-title" id="addAddressModalLabel">Address</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -108,7 +108,48 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <button type="submit" class="btn btn-primary" id="btn-save">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editAddressModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="editAddressForm" onsubmit="return false;">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editAddressModalLabel">Edit Address</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="editFullName" class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="editFullName" name="editFullName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="editEmail" name="editEmail" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editPhone" class="form-label">Phone</label>
+                        <input type="tel" class="form-control" id="editPhone" name="editPhone" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editAddress" class="form-label">Address</label>
+                        <input type="text" class="form-control" id="editAddress" name="editAddress" required>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="editIsDefault">
+                        <label class="form-check-label" for="editIsDefault">
+                            Default address
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" id="btn-save">Save changes</button>
                 </div>
             </form>
         </div>
@@ -120,37 +161,48 @@
     <script src="~/admin/js/plugins/jquery-validation/additional-methods.js"></script>
     <script>
         $(document).ready(function () {
+            // Mảng chứa danh sách địa chỉ
+            var addressesArray = [];
+
+            // Function để render lại địa chỉ
+            function renderAddress(addresses) {
+                let addressItemHtml = '';
+                addresses.forEach(address => {
+                    addressItemHtml += `
+                            <div class="col-12">
+                                <div class="address-item alert alert-success d-flex justify-content-between" data-id="${address.id}">
+                                    <div>
+                                        <p class="fw-bold mb-0">${address.fullName} <span class="badge rounded-pill bg-success ms-2">${address.isDefault ? 'Default' : ''}</span></p>
+                                        <p class="mb-0">Address: ${address.specificAddress}</p>
+                                        <p class="mb-0">Phone: ${address.phone}</p>
+                                        <p class="mb-0">Email: ${address.email}</p>
+                                    </div>
+                                    <div>
+                                        <button class="btn btn-success btn-sm btn-edit">Edit</button>
+                                        <button class="btn btn-danger btn-sm btn-delete">Delete</button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                })
+                $('#list-address').html(addressItemHtml);
+            }
+
+            // AJAX để lấy danh sách địa chỉ khi trang được load
             $.ajax({
                 url: '/account/getAddresses',
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {
-                    $.each(data, function (index, address) {
-                        var addressItemHtml = `
-                                <div class="col-12">
-                                    <div class="address-item alert alert-success d-flex justify-content-between" data-id="${address.id}">
-                                        <div>
-                                            <p class="fw-bold mb-0">${address.fullName} <span class="badge rounded-pill bg-success ms-2">${address.isDefault ? 'Default' : ''}</span></p>
-                                            <p class="mb-0">Address: ${address.specificAddress}</p>
-                                            <p class="mb-0">Phone: ${address.phone}</p>
-                                            <p class="mb-0">Email: ${address.email}</p>
-                                        </div>
-                                        <div>
-                                            <button class="btn btn-success btn-sm">Edit</button>
-                                            <button class="btn btn-danger btn-sm btn-delete">Delete</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
-                        $('#list-address').append(addressItemHtml);
-                    });
+                    addressesArray = data;
+                    renderAddress(addressesArray);
                 },
                 error: function (error) {
                     console.error('Error fetching addresses:', error);
                 }
             });
 
-            $("#addAddressForm").validate({
+            $("#addAddressForm, #editAddressForm").validate({
                 rules: {
                     fullName: {
                         required: true
@@ -174,46 +226,141 @@
                     },
                     phone: "Please enter your phone number",
                     address: "Please enter your address"
-                },
-                submitHandler: function (form) {
-                    
-                    // Đóng modal
-                    $('#addAddressModal').modal('hide');
                 }
             });
 
-        });
-        $(document).on("click", ".btn-delete", async function () {
-            let addressId = $(this).closest('.address-item').data("id");
-            let result = await Swal.fire({
-                title: "Are you sure?",
-                text: "Would you like to delete this address?",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonText: "Yes, I'm sure!",
-                cancelButtonText: "Cancel"
+            // Sự kiện submit của form
+            $("#addAddressForm").submit(function (event) {
+                event.preventDefault();
+                if ($("#addAddressForm").valid()) {
+                    var formData = {
+                        fullName: $("#fullName").val(),
+                        email: $("#email").val(),
+                        phone: $("#phone").val(),
+                        specificAddress: $("#address").val(),
+                        isDefault: $("#default-address").prop("checked")
+                    };
+
+                    // Gửi AJAX request để thêm địa chỉ mới
+                    $.ajax({
+                        type: "POST",
+                        url: "/account/addAddress",
+                        contentType: "application/json",
+                        data: JSON.stringify(formData),
+                        success: function (data) {
+                            console.log(data);
+                            $('#addAddressModal').modal('hide');
+
+                            formData.id = data.id; // Giả sử server trả về ID mới thêm
+                            addressesArray.push(formData);
+                            renderAddress(addressesArray);
+                        },
+                        error: function (error) {
+                            console.error("Error:", error);
+                        }
+                    });
+                }
             });
 
-            if (result.value) {
-                try {
-                    let response = await $.ajax({
-                        url: `/account/deleteAddress/${addressId}`,
-                        type: 'DELETE',
-                        dataType: 'json',
-                    });
+            $(document).on("click", ".btn-edit", function () {
+                selectedAddressId = $(this).closest('.address-item').data("id");
 
-                    if (response) {
-                        Swal.fire("Deleted!", "Successfully deleted the address.", "success");
-                        $(this).closest('.address-item').remove();
-                    } else {
+                // Tìm địa chỉ trong mảng theo ID
+                var selectedAddress = addressesArray.find(address => address.id === selectedAddressId);
+
+                // Hiển thị thông tin địa chỉ trong form chỉnh sửa
+                $("#editFullName").val(selectedAddress.fullName);
+                $("#editEmail").val(selectedAddress.email);
+                $("#editPhone").val(selectedAddress.phone);
+                $("#editAddress").val(selectedAddress.specificAddress);
+                $("#editIsDefault").prop("checked", selectedAddress.isDefault);
+                $("#editIsDefault").prop("disabled", selectedAddress.isDefault);
+                // Hiển thị modal để chỉnh sửa
+                $('#editAddressModal').modal('show');
+            });
+
+            // Sự kiện submit của form chỉnh sửa
+            $("#editAddressForm").submit(function (event) {
+                event.preventDefault();
+                if ($("#editAddressForm").valid()) {
+                    // Lấy dữ liệu từ form chỉnh sửa
+                    var editedAddress = {
+                        id: selectedAddressId,
+                        fullName: $("#editFullName").val(),
+                        email: $("#editEmail").val(),
+                        phone: $("#editPhone").val(),
+                        specificAddress: $("#editAddress").val(),
+                        isDefault: $("#editIsDefault").prop("checked")
+                    };
+
+                    $.ajax({
+                        type: "PUT",
+                        url: `/account/editAddress/${selectedAddressId}`,
+                        contentType: "application/json",
+                        data: JSON.stringify(editedAddress),
+                        success: function () {
+                            if (editedAddress.isDefault) {
+                                var defaultAddress = addressesArray.findIndex(address => address.isDefault == true);
+                                addressesArray[defaultAddress].isDefault = false;
+                            }
+                            var index = addressesArray.findIndex(address => address.id === selectedAddressId);
+                            addressesArray[index] = editedAddress;
+
+                            renderAddress(addressesArray)
+
+                            $('#editAddressModal').modal('hide');
+                        },
+                        error: function (error) {
+                            console.error("Error:", error);
+                        }
+                    });
+                }
+            });
+
+            $("#addAddressModal, #editAddressModal").on("hidden.bs.modal", function () {
+                $(this).find("form")[0].reset();
+                $(this).find("form").validate().resetForm();
+                $(".form-control.error").removeClass("error");
+            });
+
+
+            // Sự kiện click cho nút Delete
+            $(document).on("click", ".btn-delete", async function () {
+                let addressId = $(this).closest('.address-item').data("id");
+                let result = await Swal.fire({
+                    title: "Are you sure?",
+                    text: "Would you like to delete this address?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes, I'm sure!",
+                    cancelButtonText: "Cancel"
+                });
+
+                if (result.value) {
+                    try {
+                        let response = await $.ajax({
+                            url: `/account/deleteAddress/${addressId}`,
+                            type: 'DELETE',
+                            dataType: 'json',
+                        });
+
+                        if (response) {
+                            Swal.fire("Deleted!", "Successfully deleted the address.", "success");
+
+                            // Xóa địa chỉ khỏi mảng và render lại
+                            addressesArray = addressesArray.filter(address => address.id !== addressId);
+                            $(this).closest('.address-item').remove();
+                        } else {
+                            Swal.fire("Error !", "Deletion of the address was not successful.", "error");
+                        }
+                    } catch (error) {
+                        console.error("Error:", error);
                         Swal.fire("Error !", "Deletion of the address was not successful.", "error");
                     }
-                } catch (error) {
-                    console.error("Error:", error);
-                    Swal.fire("Error !", "Deletion of the address was not successful.", "error");
                 }
-            }
+            });
         });
+
 
     </script>
 }

@@ -68,7 +68,7 @@ namespace ShoeShop.Controllers
             ViewBag.ShippingMethod = await _context.ShippingMethods.Where(p => p.IsDelete == false).ToListAsync();
             if(currentUser != null )
             {
-                ViewBag.Addresses = _context.Addresses.Where(a => a.AppUserId == currentUser.Id).ToList();
+                ViewBag.Addresses = _context.Addresses.Where(a => a.AppUserId == currentUser.Id && !a.IsDelete).ToList();
             }
             return View();
 		}

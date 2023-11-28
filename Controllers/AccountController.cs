@@ -292,30 +292,30 @@ namespace ShoeShop.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddAddress(string fullName, string email, string phone, string specificAddress, bool isDefault)
+        public async Task<IActionResult> AddAddress([FromBody] AddressViewModel addressViewModel)
         {
             try
             {
-                if (ModelState.IsValid)
+                if(addressViewModel.IsDefault)
                 {
-                    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                    var newAddress = new Address
-                    {
-                        FullName = fullName,
-                        Email = email,
-                        Phone = phone,
-                        SpecificAddress = specificAddress,
-                        AppUserId = userId,
-                        IsDefault = isDefault,
-                    };
-
-                    _context.Addresses.Add(newAddress);
-                    await _context.SaveChangesAsync();
-                    return Ok(new { message = "Address added successfully" });
+                    var defaultAddress = _context.Addresses.Where(a => a.IsDefault).FirstOrDefault();
+                    if (defaultAddress != null) defaultAddress.IsDefault = false;
                 }
 
-                // Nếu ModelState không hợp lệ, trả về lỗi BadRequest
-                return BadRequest(new { message = "Invalid data in the request" });
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var newAddress = new Address
+                {
+                    FullName = addressViewModel.FullName,
+                    Email = addressViewModel.Email,
+                    Phone = addressViewModel.Phone,
+                    SpecificAddress = addressViewModel.SpecificAddress,
+                    AppUserId = userId,
+                    IsDefault = addressViewModel.IsDefault,
+                };
+
+                _context.Addresses.Add(newAddress);
+                await _context.SaveChangesAsync();
+                return Ok(newAddress);
             }
             catch (Exception ex)
             {
@@ -323,5 +323,46 @@ namespace ShoeShop.Controllers
             }
         }
 
+
+        [HttpPut]
+        public async Task<IActionResult> EditAddress(int id, [FromBody] AddressViewModel addressViewModel)
+        {
+            try
+            {
+                // Lấy địa chỉ cần chỉnh sửa từ cơ sở dữ liệu
+                var addressToUpdate = await _context.Addresses.FindAsync(id);
+
+                if (addressToUpdate == null)
+                {
+                    return NotFound(new { message = "Address not found" });
+                }
+
+                // Nếu địa chỉ đang được chỉnh sửa là địa chỉ mặc định, hãy tìm địa chỉ mặc định hiện tại và cập nhật nó
+                if (addressViewModel.IsDefault)
+                {
+                    var currentDefaultAddress = await _context.Addresses.FirstOrDefaultAsync(a => a.IsDefault);
+
+                    if (currentDefaultAddress != null && currentDefaultAddress.Id != id)
+                    {
+                        currentDefaultAddress.IsDefault = false;
+                    }
+                }
+
+                // Cập nhật thông tin của địa chỉ
+                addressToUpdate.FullName = addressViewModel.FullName;
+                addressToUpdate.Email = addressViewModel.Email;
+                addressToUpdate.Phone = addressViewModel.Phone;
+                addressToUpdate.SpecificAddress = addressViewModel.SpecificAddress;
+                addressToUpdate.IsDefault = addressViewModel.IsDefault;
+
+                await _context.SaveChangesAsync();
+
+                return Ok(addressToUpdate);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Internal Server Error", error = ex.Message });
+            }
+        }
     }
 }
