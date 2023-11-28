@@ -245,100 +245,10 @@ namespace ShoeShop.Data.Seeder
 						}
 					}
 				};
-				//Product 5
-				ProductSeedViewModel product5 = new ProductSeedViewModel
-				{
-					Name = "Giày Thể Thao Nam Biti’s Hunter HSM002900",
-					Slug = "hsm002900",
-					Description = "Mặc dù không quá cầu kỳ trong thời trang như phụ nữ nhưng phái mạnh cũng có một số phụ kiện thiết yếu trong tủ đồ của mình. " +
-					"Một item không thể thiếu của các chàng đó chính là đôi giày thể thao. Mẫu giày thể thao nam Biti’s Hunter HSM002900 có kiểu dáng rất hiện đại, trẻ trung, " +
-					"phù hợp cho đi chơi, dã ngoại và các hoạt động thể dục cho những tín đồ thời trang năng động. " +
-					"Mẫu giày cá tính này sẽ giúp các chàng trai khẳng định rõ nét phong cách cá nhân của chính mình.",
-					Price = 120,
-					PriceSale = 90,
-					Label = 1,
-					Category = 1,
-					Brand = 1,
-					Status = true,
-					Variants = new List<VariantViewModel>
-					{
-						new VariantViewModel
-						{
-							ColorId = 1,
-							Images = new List<string>
-							{
-								"hsm002900kem__2.webp",
-								"hsm002900kem__5.webp",
-								"hsm002900kem__8.webp",
-								"hsm002900kem__9.webp",
-								"hsm002900kem__10.webp"
-							},
-							Thumbnail = 2,
-							Sizes = new List<SizeViewModel>
-							{
-								new SizeViewModel
-								{
-									SizeId = 1,
-									Active = true,
-									Stock = 2
-								},
-								new SizeViewModel
-								{
-									SizeId = 2,
-									Active = true,
-									Stock = 3
-								},
-								new SizeViewModel
-								{
-									SizeId = 3,
-									Active = true,
-									Stock = 5
-								},
-							},
-						},
-						new VariantViewModel
-						{
-							ColorId = 4,
-							Images = new List<string>
-							{
-								"hsm002900xnh__1.jpg",
-								"hsm002900xnh__2.webp",
-								"hsm002900xnh__4.webp",
-								"hsm002900xnh__5.webp",
-								"hsm002900xnh__6.webp",
-								"hsm002900xnh__9.webp",
-							},
-							Thumbnail = 2,
-							Sizes = new List<SizeViewModel>
-							{
-								new SizeViewModel
-								{
-									SizeId = 1,
-									Active = true,
-									Stock = 2
-								},
-								new SizeViewModel
-								{
-									SizeId = 2,
-									Active = true,
-									Stock = 3
-								},
-								new SizeViewModel
-								{
-									SizeId = 3,
-									Active = true,
-									Stock = 5
-								},
-							},
-						}
-					}
-				};
-
 				Create(context, product1);
-				//Create(context, product2);
+				Create(context, product2);
 				Create(context, product3);
 				Create(context, product4);
-				Create(context, product5);
 			}
 		}
 
