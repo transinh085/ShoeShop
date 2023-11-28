@@ -4,7 +4,6 @@
 
 	$.get(`/Admin/Products/GetVariant/${productId}`, function (data) {
 		variants = data;
-		console.log(variants)
 		showVariant();
 	})
 
@@ -83,7 +82,6 @@
 	}
 
 	const initCarousel = () => {
-
 		var changeSlide = 4; 
 		var slide = changeSlide;
 		if ($(window).width() < 600) {
@@ -95,7 +93,6 @@
 		} else {
 			var slide = changeSlide;
 		}
-
 		$(".main").owlCarousel({
 			nav: true,
 			items: 1

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using ShoeShop.Data;
 using ShoeShop.Models;
+using ShoeShop.ViewModels;
 
 namespace ShoeShop.Controllers
 {
@@ -18,18 +19,24 @@ namespace ShoeShop.Controllers
 			return View();
 		}
 
-		public async Task<IActionResult> SubmitContact(string name, string email, string message)
+		public async Task<IActionResult> SubmitContact([Bind("Name, Email, Message")] ContactViewModel model)
 		{
-			Contact contact = new Contact()
+			if (ModelState.IsValid)
 			{
-				Name = name,
-				Email = email,
-				Message = message,
-			};
-			_context.Add(contact);
-			await _context.SaveChangesAsync();
-			
+				Contact contact = new Contact()
+				{
+					Name = model.Name,
+					Email = model.Email,
+					Message = model.Message,
+				};
+				_context.Add(contact);
+				await _context.SaveChangesAsync();
+
+				return RedirectToAction("Index");
+			}
+
 			return RedirectToAction("Index");
 		}
+
 	}
 }
