@@ -82,6 +82,7 @@ app.UseEndpoints(endpoints =>
 	pattern: "{controller=Home}/{action=Index}/{id?}");
 
 	endpoints.MapHub<OrderHub>("/orderHub");
+    endpoints.MapHub<CommentHub>("/commentHub");
 });
 
 
