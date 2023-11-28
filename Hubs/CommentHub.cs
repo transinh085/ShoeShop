@@ -21,6 +21,7 @@ namespace ShoeShop.Hubs
 					.OrderByDescending(re => re.CreatedAt)
 					.Select(re => new
 					{
+						CommentId = re.Id,
 						CommentName = re.AppUser.FullName,
 						CommentText = re.Description,
 						CommentRating = re.Rating,

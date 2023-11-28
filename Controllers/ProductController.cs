@@ -119,16 +119,9 @@ namespace ShoeShop.Controllers
             }
             else
             {
-                var countReviewProduct = _context.Reviews
-                    .Count(review => review.ProductId == product.Id && review.AppUserId == currentUser.Id);
-
-                var checkByProduct = _context.Orders
-                    .Count(o => o.OrderStatus == OrderStatus.Confirmed &&
-                                o.AppUserId == currentUser.Id &&
-                                o.Details.Any(detail => detail.VariantSize.Variant.Product.Id == product.Id));
-
-				ViewBag.CheckReview = (countReviewProduct < checkByProduct) ? 1 : 0;
-
+                
+				ViewBag.CheckReview = 1;
+				//ViewBag.CheckReview = (countReviewProduct < checkByProduct) ? 1 : 0;
 			}
 
             ViewBag.Reviews = await _context.Reviews
@@ -175,6 +168,7 @@ namespace ShoeShop.Controllers
 			return View();
 		}
 
+
 		public async Task<IActionResult> getDetailStar(int id)
 		{
 			if (_context.Products == null) return NotFound();
@@ -218,6 +212,7 @@ namespace ShoeShop.Controllers
 				.Take(8).ToListAsync();
 			var productDetailResponse = new
 			{
+				TotalRating = ViewBag.TotalRating,
 				CountView = ViewBag.CountView,
 				AverageRating = ViewBag.AverageRating,
 				ReviewStats = ViewBag.ReviewStats
