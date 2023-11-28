@@ -367,6 +367,7 @@ const showVariantSize = () => {
     variants.forEach(variant => {
         variant.sizes.forEach(function (item, index) {
             const { sizeId, sizeName, stock, active } = item;
+            console.log(item);
             html += `<tr class="row-size" data-id="${sizeId}" data-name="${sizeName}">
             <th scope="row">${++index}</th>
             <td>${variant.colorName + ' / ' + sizeName}</td>
@@ -375,7 +376,7 @@ const showVariantSize = () => {
             </td>
             <td class="form-check form-switch mb-0">
                 <div class="form-check form-switch">
-                    <input data-size="${sizeId}" data-color="${variant.colorId}" class="form-check-input input-active" type="checkbox" checked="${active}">
+                    <input data-size="${sizeId}" data-color="${variant.colorId}" class="form-check-input input-active" type="checkbox" ${active == true ? "checked" : ""}>
                 </div>
             </td></tr>`;
         });
