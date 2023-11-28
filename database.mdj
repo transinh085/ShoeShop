@@ -2694,7 +2694,7 @@
 											"top": 909,
 											"width": 238.0380859375,
 											"height": 13,
-											"text": "order_details"
+											"text": "OrderDetails"
 										},
 										{
 											"_type": "ERDColumnCompartmentView",
@@ -7049,7 +7049,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGLbIkoBN4wE+c="
 							},
-							"name": "order_details",
+							"name": "OrderDetails",
 							"columns": [
 								{
 									"_type": "ERDColumn",
