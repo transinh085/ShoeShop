@@ -11,12 +11,15 @@ namespace ShoeShop.Areas.Admin.Controllers
     public class OrdersController : Controller
     {
         public readonly AppDbContext _context;
-		
+        IHubContext<OrderHub> _orderHubContext;
 
-		public OrdersController(AppDbContext context)
+
+        public OrdersController(AppDbContext context, IHubContext<OrderHub> orderHubContext)
         {
             _context = context;
-		}
+            _orderHubContext = orderHubContext;
+
+        }
 
         public IActionResult Index()
         {
@@ -150,6 +153,7 @@ namespace ShoeShop.Areas.Admin.Controllers
             {
                 order.OrderStatus = OrderStatus.Confirmed;
                 _context.SaveChangesAsync();
+                await _orderHubContext.Clients.All.SendAsync("ReceiveOrderUpdate");
                 return Json(new { status = "Confirmed" });
             }
             return Json(new { status = "Not found order id" });

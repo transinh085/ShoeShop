@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using ShoeShop.Data;
 using ShoeShop.Data.Enum;
+using ShoeShop.Hubs;
 using ShoeShop.Models;
 using ShoeShop.ViewModels;
 using System.Security.Claims;
@@ -16,13 +18,15 @@ namespace ShoeShop.Controllers
         private readonly AppDbContext _context;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly UserManager<AppUser> _userManager;
+        private readonly IHubContext<OrderHub> _orderHubContext;
 
         public AccountController(UserManager<AppUser> userManager,
-            SignInManager<AppUser> signInManager, AppDbContext context)
+            SignInManager<AppUser> signInManager, AppDbContext context, IHubContext<OrderHub> orderHubContext)
         {
             _context = context;
             _signInManager = signInManager;
             _userManager = userManager;
+            _orderHubContext = orderHubContext;
         }
 
         public IActionResult Profile()
@@ -122,7 +126,7 @@ namespace ShoeShop.Controllers
             return View();
         }
 
-        public async Task<IActionResult> GetOrders(string query, string dateStart, string dateEnd)
+        public async Task<IActionResult> GetOrders(string query, int status)
         {
             try
             {
@@ -168,13 +172,11 @@ namespace ShoeShop.Controllers
                     orderData = orderData.Where(o => o.Id.ToString().Contains(query));
                 }
 
-                if (!string.IsNullOrEmpty(dateStart) && !string.IsNullOrEmpty(dateEnd))
+                if (status != -2)
                 {
-                    var startDate = DateTime.Parse(dateStart);
-                    var endDate = DateTime.Parse(dateEnd).AddDays(1);
-                    orderData = orderData.Where(o => o.CreatedAt >= startDate && o.CreatedAt < endDate);
+                    var orderStatusFilter = (OrderStatus)status;
+                    orderData = orderData.Where(o => o.OrderStatus == orderStatusFilter);
                 }
-
 
                 var recordsTotal = await orderData.CountAsync();
                 var data = await orderData.Skip(skip).Take(pageSize).ToListAsync();
@@ -261,6 +263,8 @@ namespace ShoeShop.Controllers
             {
                 order.OrderStatus = OrderStatus.Canceled;
                 _context.SaveChangesAsync();
+                await _orderHubContext.Clients.All.SendAsync("ReceiveOrderUpdate");
+
                 return Json(new { status = "Canceled" });
             }
             return Json(new { status = "Not found order id" });
@@ -272,7 +276,7 @@ namespace ShoeShop.Controllers
             return View();
         }
 
-        public async Task<IActionResult> getAddresses()
+        public async Task<IActionResult> GetAddresses()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var addresses = await _context.Addresses.Where(a => a.AppUserId == userId && !a.IsDelete).ToListAsync();
@@ -280,7 +284,7 @@ namespace ShoeShop.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> deleteAddress(int id)
+        public async Task<IActionResult> DeleteAddress(int id)
         {
             if (_context.Colors == null) return Problem("Entity set 'AppDbContext.Color'  is null.");
 

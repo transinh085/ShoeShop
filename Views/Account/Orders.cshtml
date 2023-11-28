@@ -65,10 +65,18 @@
                     </nav>
                     <div class="container-fluid px-4">
                         <div class="row mb-4">
-                            <div class="col-12 bg-white rounded shadow-sm p-4">
-                                <div class="d-flex justify-content-end mb-2">
-                                    <div class="col-12">
-                                        <div class="input-group flex-nowrap">
+                            <div class="col-12 bg-white rounded shadow-sm p-4 pb-2">
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <select id="order-status" class="form-select" aria-label="Filters">
+                                            <option value="-2" selected>All</option>
+                                            <option value="-1">Canceled</option>
+                                            <option value="0">Unconfirmed</option>
+                                            <option value="1">Confirmed</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-9">
+                                        <div class="input-group">
                                             <span class="input-group-text" id="addon-wrapping"><i class="fa fa-fw fa-search"></i></span>
                                             <input type="text" class="form-control" id="order-query" name="order-query" placeholder="Search all orders..">
                                         </div>
@@ -102,6 +110,7 @@
     <script src="~/admin/js/plugins/sweetalert2/sweetalert2.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+    <script src="~/lib/signalr/dist/browser/signalr.js"></script>
     <script>
         const formatDateTime = (apiDateString) => {
             const dateObject = new Date(apiDateString);
@@ -169,23 +178,18 @@
                     "datatype": "json",
                     "data": function (d) {
                         d.query = $('#order-query').val();
-                        d.dateStart = $('#order-start-time').val();
-                        d.dateEnd = $('#order-end-time').val();
                         d.status = $('#order-status').val();
                     }
                 },
                 "columnDefs": [
-                    { "targets": [2, 3, 5, 6], "sortable": false },
+                    { "targets": [1, 2, 4, 6], "sortable": false },
                 ],
                 "columns": [
                     {
-                        "data": null,
+                        "data": "id",
                         "name": "Id",
-                        "autoWidth": true,
                         "className": "text-center fw-bold",
-                        "render": function (data, type, row, meta) {
-                            return meta.row + 1;
-                        }
+                        "render": (data) => `#${data}`
                     },
                     { "data": "paymentMethod", "name": "Payment Method" },
                     { "data": "shippingMethod", "name": "Shipping Method" },
@@ -207,10 +211,21 @@
                 responsive: !0
             });
 
-            $('#order-query, #order-start-time, #order-end-time, #order-status').on('change', function () {
+            $('#order-query, #order-status').on('change', function () {
                 table.draw();
             });
 
+            var connection = new signalR.HubConnectionBuilder().withUrl("/orderHub").build();
+
+            connection.on("ReceiveOrderUpdate", function () {
+                table.draw();
+            });
+
+            connection.start().then(function () {
+                console.log("SignalR connected");
+            }).catch(function (err) {
+                console.error(err.toString());
+            });
         });
 
         $(document).on("click", ".btn-delete", async function () {

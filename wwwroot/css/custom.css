@@ -74,3 +74,7 @@ textarea.error:focus {
     border-radius: 50%
 }
 
+.table-vcenter th,
+.table-vcenter td {
+    vertical-align: middle;
+}
