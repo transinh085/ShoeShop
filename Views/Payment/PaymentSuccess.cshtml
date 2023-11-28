@@ -62,7 +62,7 @@
                         </tr>
                         <tr>
                             <td>Description:</td>
-                            <td class="fw-bold text-primary">@order.Description</td>
+                            <td class="fw-bold text-primary">@(order.Description != "" ? order.Description : "No description")</td>
                         </tr>
                         <tr>
                             <td>Payment method:</td>

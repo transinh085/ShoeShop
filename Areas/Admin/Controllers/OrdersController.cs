@@ -148,11 +148,21 @@ namespace ShoeShop.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Confirm(int id)
         {
-            var order = await _context.Orders.FindAsync(id);
+            var order = await _context.Orders
+                .Include(o => o.Details)
+                .ThenInclude(d => d.VariantSize)
+                .FirstOrDefaultAsync(o => o.Id == id);
             if(order != null)
             {
                 order.OrderStatus = OrderStatus.Confirmed;
-                _context.SaveChangesAsync();
+
+                order.Details.ForEach(d =>
+                {
+                    d.VariantSize.Quantity = d.VariantSize.Quantity - d.Quantity;
+                });
+
+                await _context.SaveChangesAsync();
+
                 await _orderHubContext.Clients.All.SendAsync("ReceiveOrderUpdate");
                 return Json(new { status = "Confirmed" });
             }

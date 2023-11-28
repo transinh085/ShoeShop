@@ -18,6 +18,7 @@
 		$(".variant-container").html(html);
 		renderSize(0);
 		renderImage(0);
+		setStock(0,0)
 	}
 
 	const renderSize = (index) => {
@@ -50,7 +51,19 @@
 		const index = $(this).data("id");
 		renderSize(index);
 		renderImage(index);
+		setStock(index, 0)
 	});
+
+	$("#select-size").change(function (e) {
+		let variantIndex = $(".variant-color.active").data("id");
+		let sizeIndex = $(this).val();
+		setStock(variantIndex, sizeIndex);
+	});
+
+	const setStock = (variantIndex, sizeIndex) => {
+		const stock = variants[variantIndex].sizes[sizeIndex].stock;
+		$(".color-stock").text(stock);
+	}
 
 	$('.btn_add_to_cart a').on('click', function () {
 		const size_index = $("#select-size").val();

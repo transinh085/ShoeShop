@@ -291,7 +291,7 @@ namespace ShoeShop.Areas.Admin.Controllers
                                 variantSize.SizeId = sizeViewModel.SizeId;
                                 variantSize.Quantity = sizeViewModel.Stock;
                                 variantSize.IsActive = sizeViewModel.Active;
-                                _context.Update(variantSize);
+								_context.Update(variantSize);
                             }
                             else
                             {
