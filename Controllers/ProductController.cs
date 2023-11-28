@@ -127,8 +127,7 @@ namespace ShoeShop.Controllers
                                 o.AppUserId == currentUser.Id &&
                                 o.Details.Any(detail => detail.VariantSize.Variant.Product.Id == product.Id));
 
-				//ViewBag.CheckReview = (countReviewProduct < checkByProduct) ? 1 : 0;
-				ViewBag.CheckReview = 1;
+				ViewBag.CheckReview = (countReviewProduct < checkByProduct) ? 1 : 0;
 
 			}
 
