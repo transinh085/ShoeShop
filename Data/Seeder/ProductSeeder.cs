@@ -104,7 +104,6 @@ namespace ShoeShop.Data.Seeder
 						}
 					}
 				};
-				Create(context,product1);
 
 				//Product 3
 				ProductSeedViewModel product3 = new ProductSeedViewModel
@@ -246,7 +245,6 @@ namespace ShoeShop.Data.Seeder
 					}
 				};
 				Create(context, product1);
-				Create(context, product2);
 				Create(context, product3);
 				Create(context, product4);
 			}
