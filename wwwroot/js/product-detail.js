@@ -78,15 +78,28 @@
 		const size_index = $("#select-size").val();
 		const color_index = $('.variant-color.active').data("id");
 
-		const stock = variants[color_index].sizes[size_index].stock;
+		const variant = variants[color_index].sizes[size_index];
+		const stock = variant.stock;
 		const quantity = parseInt($('#quantity_1').val());
+		const cartItem = getCartStorage().find(item => item.variantSizeId == variant.variantSizeId);
 
-		if (quantity > stock) {
-			Swal.fire({
-				icon: "error",
-				title: "Oops...",
-				text: "The product does not have enough inventory"
-			});
+		const cartQuantity = cartItem ? cartItem.quantity : 0;
+
+		if (quantity + cartQuantity > stock) {
+			if (quantity > stock) {
+				Swal.fire({
+					icon: "error",
+					title: "Oops...",
+					text: "The product does not have enough inventory"
+				});
+			} else {
+				Swal.fire({
+					icon: "error",
+					title: "Oops...",
+					text: "The product already exists in the shopping cart"
+				});
+			}
+			
 		} else {
 			const obj = {
 				title: $('h1').text(),

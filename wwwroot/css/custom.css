@@ -3,6 +3,7 @@
 /*============================================================================================*/
 .field-validation-error {
     width: 100%;
+    display: inline-block;
     margin-top: .375rem;
     font-size: .875rem;
     color: #e04f1a !important;

@@ -421,7 +421,7 @@ const renderCart = () => {
 	if (cartData.length > 0) {
 		cartData.forEach(item => {
 			html += `<li>
-					<a href="/product/${item.productSlug}">
+					<a href="/products/${item.productSlug}">
 						<figure><img src="/img/products/${item.thumbnail}" alt="" width="80" height="80"></figure>
 						<strong>
 							<span>${item.quantity} x ${item.title}</span>

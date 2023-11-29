@@ -293,8 +293,6 @@ $("#btn-save-product").click(() => {
                 });
             });
 
-            console.log(formData);
-
             $.ajax({
                 type: 'POST',
                 url: '/api/products/update',
@@ -374,16 +372,18 @@ const showVariantSize = () => {
             <td>
                 <input data-size="${sizeId}" data-color="${variant.colorId}" type="number" class="form-control form-control-sm w-50 input-stock" value="${stock}">
             </td>
-            <td class="form-check form-switch mb-0">
-                <div class="form-check form-switch">
-                    <input data-size="${sizeId}" data-color="${variant.colorId}" class="form-check-input input-active" type="checkbox" ${active == true ? "checked" : ""}>
-                </div>
-            </td></tr>`;
+            </tr>`;
         });
     })
 
     $("#table-variant").html(html);
 };
+
+//<td class="form-check form-switch mb-0">
+//    <div class="form-check form-switch">
+//        <input data-size="${sizeId}" data-color="${variant.colorId}" class="form-check-input input-active" type="checkbox" ${active == true ? "checked" : ""}>
+//    </div>
+//</td>
 
 $(document).on('input', '.input-stock', function () {
     const sizeId = $(this).data('size');
