@@ -76,7 +76,7 @@ namespace ShoeShop.Controllers
 		[HttpGet,ActionName("getallblogs")]
         public IActionResult GetAllBlogs(
         int page = 1,
-        int pageSize = 9,
+        int pageSize = 2,
         string query = "",
         string topics = ""
         )
