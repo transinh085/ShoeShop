@@ -5,7 +5,7 @@
 
 @{
 	var currentUser = await UserManager.GetUserAsync(User);
-    var imageUser = string.IsNullOrEmpty(currentUser.Image) ? "/img/users/avatar.jpg" : "/img/users/"+currentUser.Image;
+	var imageUser = string.IsNullOrEmpty(currentUser?.Image) ? "/img/users/avatar.jpg" : "/img/users/" + currentUser.Image;
 }
 
 

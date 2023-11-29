@@ -7,8 +7,7 @@
 
 @section Styles {
     <link rel="stylesheet" href="~/admin/js/plugins/sweetalert2/sweetalert2.min.css">
-    <link rel="stylesheet" href="~/admin/js/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css">
-    <link rel="stylesheet" href="~/admin/js/plugins/flatpickr/flatpickr.min.css">
+    <link rel="stylesheet" href="~/admin/js/plugins/datatables-bs5/css/dataTables.bootstrap5.min.css">
 }
 
 <!-- Hero -->
@@ -34,20 +33,10 @@
             <h3 class="block-title">List Contacts</h3>
         </div>
         <div class="block-content">
-            @* <div class="row mb-3">
-                <form asp-controller="Contacts" asp-action="Index">
-                <div class="input-group">
-                    <input type="text" class="form-control form-control-alt" id="searchInput" name="searchInput" placeholder="TÌm kiếm...">
-                    <button type="submit" class="input-group-text bg-body border-0 btn-search" value="Search">
-                        <i class="fa fa-search"></i>
-                    </button>
-                </div>
-                </form>
-            </div> *@
             <div class="block-content pb-4">
-                <table class="table table-bordered table-striped table-vcenter" id="contact-table">
+                <table class="table table-striped table-vcenter" id="contact-table">
                     <thead>
-                        <tr class="bg-body-dark">
+                        <tr>
                             <th class="d-none d-sm-table-cell text-center" style="width: 40px;">#</th>
                             <th class="d-none d-sm-table-cell">Name</th>
                             <th class="d-none d-sm-table-cell">Email</th>
@@ -56,47 +45,6 @@
                             <th class="text-center" style="width: 80px;">Actions</th>
                         </tr>
                     </thead>
-                    @* <tbody>
-                        @for(int i = Model.Count()-1; i>=0;i--){
-                            var item = Model.ElementAt(i);
-                            if (item.IsDeleted == false)
-                            {
-                            <tr>
-                                <td>
-                                        @if(item.IsSeen == false)
-                                        {
-                                            <a >
-                                                <i class="fa fa-bell"></i>
-                                            </a>
-                                        }
-                                    </td>
-                                <th>
-                                    @Html.DisplayFor(modelItem => item.Name)
-                                </th>
-                                <th>
-                                    @Html.DisplayFor(modelItem => item.Email)
-                                </th>
-                                <th>
-                                    @Html.DisplayFor(modelItem => item.Message)
-                                </th>
-                                <th>
-                                     @Html.DisplayFor(modelItem => item.CreatedAt)
-                                </th>
-                                
-                                <th class="text-center">
-                                        <div class="btn-group">
-                                            <a asp-route-id="@item.Id" asp-action="Details" class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled" data-bs-toggle="tooltip">
-                                                <i class="fa  fa-eye"></i>
-                                    </a>
-                                    <button data-id="@item.Id" type="button" class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled btn-delete" data-bs-toggle="tooltip" aria-label="Delete" data-bs-original-title="Delete">
-                                    <i class="fa fa-times"></i>
-                                    </button>
-                                    </div>
-                                </th>
-                            </tr>
-                        }
-                        }
-                    </tbody> *@
                 </table>
                 
             </div>
@@ -109,20 +57,8 @@
 
 @section Scripts {
     <script src="~/admin/js/plugins/sweetalert2/sweetalert2.min.js"></script>
-    <script src="~/admin/js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
-    <script src="~/admin/js/plugins/flatpickr/flatpickr.min.js"></script>
-    <script src="~/admin/js/plugins/jquery-validation/jquery.validate.min.js"></script>
-    <script src="~/admin/js/plugins/jquery-validation/additional-methods.js"></script>
-    <script src="~/admin/js/plugins/bootstrap-notify/bootstrap-notify.min.js"></script>
-    <script>Dashmix.helpersOnLoad(['js-flatpickr', 'jq-datepicker', 'jq-notify']);</script>
     <script src="~/admin/js/plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="~/admin/js/plugins/datatables-bs5/js/dataTables.bootstrap5.min.js"></script>
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-    <script src="~/admin/js/pagination.js"></script>
-    <script src="~/admin/js/customer.js"></script>
-    <script src="~/admin/js/plugins/sweetalert2/sweetalert2.min.js"></script>
     <script>
         $(document).on("click", ".btn-delete", async function () {
             let trid = $(this).data("id");
