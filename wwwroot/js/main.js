@@ -249,11 +249,7 @@
 	var $topPnlSearch = $('.top_panel_search');
 	var $topPnlCart = $('.top_panel_cart');
 	var $pnlMsk = $('.layer');
-	
-	$('.btn_add_to_cart a').on('click', function(){
-		$topPnlCart.addClass('show');
-		$pnlMsk.addClass('layer-is-visible');
-	});
+
 	$('a.search_panel').on('click', function(){
 		$topPnlSearch.addClass('show');
 		$pnlMsk.addClass('layer-is-visible');
@@ -369,7 +365,6 @@ const addCart = (product) => {
 	let cart = getCartStorage();
 	const { variantSizeId, quantity } = product;
 	let index = cart.findIndex(item => item.variantSizeId == variantSizeId);
-	console.info(index);
 	if (index == -1) {
 		cart.push(product);
 	} else {
@@ -406,7 +401,6 @@ const getTotalProduct = () => {
 
 const loadCart = () => {
 	const arrVariantSizeId = getCartStorage().map(item => item.variantSizeId);
-	console.info(arrVariantSizeId);
 	$.ajax({
 		url: '/Product/GetCart',
 		type: 'POST',
