@@ -3,18 +3,19 @@
 /*============================================================================================*/
 .field-validation-error {
     width: 100%;
+    display: inline-block;
     margin-top: .375rem;
     font-size: .875rem;
     color: #e04f1a !important;
 }
 
 
-.input-validation-error {
+.form-control.error,.input-validation-error {
     border-color: #fae5dd !important;
     background-color: #fae5dd !important;
 }
 
-.input-validation-error:focus {
+.form-control.error:focus,.input-validation-error:focus {
     border-color: #e04f1a;
     box-shadow: 0 0 0 0.25rem rgba(224, 79, 26, 0.25);
 }
@@ -74,3 +75,7 @@ textarea.error:focus {
     border-radius: 50%
 }
 
+.table-vcenter th,
+.table-vcenter td {
+    vertical-align: middle;
+}

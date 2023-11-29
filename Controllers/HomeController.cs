@@ -37,6 +37,13 @@ namespace ShoeShop.Controllers
 				.OrderByDescending(p => p.CreatedAt)
 				.Take(8)
 				.ToListAsync();
+
+            ViewBag.SuggestPost = await _context.Blogs.Include(p => p.Thumbnail)
+                .Where (p => !p.IsDetele && p.IsPublic)
+				.Include(b => b.Topic)
+				.Include(b => b.User)
+				.OrderByDescending(blog => blog.CreatedAt)
+				.Take(4).ToListAsync();
 			return View();
         }
 
@@ -68,7 +75,7 @@ namespace ShoeShop.Controllers
             ViewBag.ShippingMethod = await _context.ShippingMethods.Where(p => p.IsDelete == false).ToListAsync();
             if(currentUser != null )
             {
-                ViewBag.Addresses = _context.Addresses.Where(a => a.AppUserId == currentUser.Id).ToList();
+                ViewBag.Addresses = _context.Addresses.Where(a => a.AppUserId == currentUser.Id && !a.IsDelete).ToList();
             }
             return View();
 		}

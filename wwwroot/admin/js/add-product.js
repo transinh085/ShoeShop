@@ -17,25 +17,46 @@ uploadImgInput.addEventListener("change", (e) => {
       files.push(fileInput[i]);
     }
    }
-
    uploadImgInput.value = '';
-
   showImage();
 });
 
 const showImage = () => {
-  checkUI();
-  let images = "";
-    console.info(files);
-  files.forEach(function (file, index) {
-      images += `<div class="preview-image-item" onClick=(setThumbnail(event))>
+    checkUI();
+    let images = "";
+    files.forEach(function (file, index) {
+        images += `<div class="preview-image-item" draggable="true" onClick=(setThumbnail(event)) ondragstart="handleDragStart(event, ${index})" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
                      <img src="${URL.createObjectURL(file)}" alt="image" data-id="${index}"/>
-                        <span class="btn-delete-image" onClick="handleDelete(event,${index}, this.parentElement)>
-                            <i class="fa fa-fw fa-times"></i>
-                        </span>
-                  </div>`;
-  });
-  hasImage.innerHTML = images;
+                     <span class="btn-delete-image" onClick="handleDelete(event, ${index}, this.parentElement)"><i class="fa fa-fw fa-times"></i></span>
+               </div>`;
+    });
+    hasImage.innerHTML = images;
+};
+
+let draggedIndex = null;
+
+const handleDragStart = (event, index) => {
+    draggedIndex = index;
+    event.dataTransfer.effectAllowed = 'move';
+    event.dataTransfer.setData('text/html', event.target.innerHTML);
+};
+
+const handleDragOver = (event) => {
+    event.preventDefault();
+};
+
+const handleDrop = (event) => {
+    event.preventDefault();
+    const dropIndex = parseInt(event.target.getAttribute('data-id'), 10);
+    if (!isNaN(dropIndex) && draggedIndex !== null) {
+        // Swap the positions in the files array
+        const temp = files[dropIndex];
+        files[dropIndex] = files[draggedIndex];
+        files[draggedIndex] = temp;
+
+        // Redraw the images
+        showImage();
+    }
 };
 
 const handleDelete = (event, index, parentElement) => {
@@ -132,6 +153,7 @@ $(".variants-container").on("click", ".btn-edit-variant", function (event) {
     $("#btn-update-variant").data("index", index);
     showModalVariant(variants[index]);
     $("#modal-variant").modal('show');
+    $(`#color-id option[value='${variants[index].colorId}']`).prop("disabled", false);
 });
 
 $(".variants-container").on("click", ".btn-delete-variant", function (event) {
@@ -159,75 +181,77 @@ $(".variants-container").on("click", ".btn-down-variant", function (event) {
 
 
 $("#btn-save-product").click(() => {
-    if (variants.length != 0) {
-        const productData = {
-            Name: $('#product-name').val(),
-            Price: $('#product-price').val(),
-            PriceSale: $('#product-price-sale').val(),
-            Description: CKEDITOR.instances['js-ckeditor'].getData(),
-            IsFeatured: $('#is-featured').prop("checked"),
-            Status: $('#product-status').val() == 1,
-            Slug: $('#product-slug').val(),
-            Label: $('#product-label').val(),
-            Category: $('#category-id').val(),
-            Brand: $('#brand-id').val(),
-            Variants: variants
-        };
+    if ($("#product-form").valid()) {
+        if (variants.length != 0) {
+            const productData = {
+                Name: $('#product-name').val(),
+                Price: $('#product-price').val(),
+                PriceSale: $('#product-price-sale').val(),
+                Description: CKEDITOR.instances['js-ckeditor'].getData(),
+                IsFeatured: $('#is-featured').prop("checked"),
+                Status: $('#product-status').val() == 1,
+                Slug: $('#product-slug').val(),
+                Label: $('#product-label').val(),
+                Category: $('#category-id').val(),
+                Brand: $('#brand-id').val(),
+                Variants: variants
+            };
 
-        console.info(productData);
+            console.info(productData);
 
-        var formData = new FormData();
+            var formData = new FormData();
 
-        // Thêm các thuộc tính của sản phẩm vào FormData
-        formData.append('Name', productData.Name);
-        formData.append('Price', productData.Price);
-        formData.append('PriceSale', productData.PriceSale);
-        formData.append('Description', productData.Description);
-        formData.append('Status', productData.Status);
-        formData.append('IsFeatured', productData.IsFeatured);
-        formData.append('Slug', productData.Slug);
-        formData.append('Label', productData.Label);
-        formData.append('Category', productData.Category);
-        formData.append('Brand', productData.Brand);
+            // Thêm các thuộc tính của sản phẩm vào FormData
+            formData.append('Name', productData.Name);
+            formData.append('Price', productData.Price);
+            formData.append('PriceSale', productData.PriceSale);
+            formData.append('Description', productData.Description);
+            formData.append('Status', productData.Status);
+            formData.append('IsFeatured', productData.IsFeatured);
+            formData.append('Slug', productData.Slug);
+            formData.append('Label', productData.Label);
+            formData.append('Category', productData.Category);
+            formData.append('Brand', productData.Brand);
 
-        // Thêm các biến thể của sản phẩm
-        productData.Variants.forEach((variant, variantIndex) => {
-            formData.append(`Variants[${variantIndex}].ColorId`, variant.colorId);
-            formData.append(`Variants[${variantIndex}].ColorName`, variant.colorName);
+            // Thêm các biến thể của sản phẩm
+            productData.Variants.forEach((variant, variantIndex) => {
+                formData.append(`Variants[${variantIndex}].ColorId`, variant.colorId);
+                formData.append(`Variants[${variantIndex}].Thumbnail`, variant.thumbnail);
 
-            // Thêm các hình ảnh blob cho biến thể hiện tại
-            variant.images.forEach((imageBlob, imageIndex) => {
-                formData.append(`Variants[${variantIndex}].Images`, imageBlob, imageBlob.name);
+                // Thêm các hình ảnh blob cho biến thể hiện tại
+                variant.images.forEach((imageBlob, imageIndex) => {
+                    formData.append(`Variants[${variantIndex}].Images`, imageBlob, imageBlob.name);
+                });
+
+                // Thêm các kích thước cho biến thể hiện tại
+                variant.sizes.forEach((size, sizeIndex) => {
+                    formData.append(`Variants[${variantIndex}].Sizes[${sizeIndex}].SizeId`, size.sizeId);
+                    formData.append(`Variants[${variantIndex}].Sizes[${sizeIndex}].Stock`, size.stock);
+                    formData.append(`Variants[${variantIndex}].Sizes[${sizeIndex}].Active`, size.active);
+                });
             });
 
-            // Thêm các kích thước cho biến thể hiện tại
-            variant.sizes.forEach((size, sizeIndex) => {
-                formData.append(`Variants[${variantIndex}].Sizes[${sizeIndex}].SizeId`, size.sizeId);
-                formData.append(`Variants[${variantIndex}].Sizes[${sizeIndex}].Stock`, size.stock);
-                formData.append(`Variants[${variantIndex}].Sizes[${sizeIndex}].Active`, size.active);
+            console.log(formData);
+
+            $.ajax({
+                type: 'POST',
+                url: '/Admin/Products/Create',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    Dashmix.helpers('jq-notify', { type: 'success', icon: 'fa fa-check me-1', message: 'Create product successfully !' });
+                    setTimeout(() => {
+                        location.href = "/admin/products";
+                    }, 2000);
+                },
+                error: function (error) {
+                    console.error(error);
+                }
             });
-        });
-
-        console.log(formData);
-
-        $.ajax({
-            type: 'POST',
-            url: '/Admin/Products/Create',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function (response) {
-                Dashmix.helpers('jq-notify', { type: 'success', icon: 'fa fa-check me-1', message: 'Create product successfully !' });
-                setTimeout(() => {
-                    location.href = "/admin/products";
-                }, 2000);
-            },
-            error: function (error) {
-                console.error(error);
-            }
-        });
-    } else {
-        Dashmix.helpers('jq-notify', { type: 'danger', icon: 'fa fa-times me-1', message: 'Variants empty !' });
+        } else {
+            Dashmix.helpers('jq-notify', { type: 'danger', icon: 'fa fa-times me-1', message: 'Variants empty !' });
+        }
     }
 })
 
@@ -281,13 +305,15 @@ const showVariantSize = () => {
             <td>
                 <input data-size="${sizeId}" data-color="${variant.colorId}" type="number" class="form-control form-control-sm w-50 input-stock" value="${stock}">
             </td>
-            <td class="form-check form-switch mb-0">
-                <div class="form-check form-switch">
-                    <input data-size="${sizeId}" data-color="${variant.colorId}" class="form-check-input input-active" type="checkbox" checked="${active}">
-                </div>
-            </td></tr>`;
+            </tr>`;
         });
     })
+
+        //< td class="form-check form-switch mb-0" >
+        //    <div class="form-check form-switch">
+        //        <input data-size="${sizeId}" data-color="${variant.colorId}" class="form-check-input input-active" type="checkbox" checked="${active}">
+        //    </div>
+        //    </td >
 
     $("#table-variant").html(html);
 };
@@ -318,7 +344,24 @@ Dashmix.onLoad((() => class {
         Dashmix.helpers("jq-validation"),
         jQuery.validator.addMethod("checkFiles", function (value, element) {
             return files.length > 0;
-         }, "Please upload at least one file");
+        }, "Please upload at least one file");
+
+        $.validator.addMethod("checkSlug",
+            function (value, element) {
+                var result = false;
+                $.ajax({
+                    type: "POST",
+                    async: false,
+                    url: "/admin/products/checkslug",
+                    data: { slug: $("#product-slug").val() },
+                    success: function (data) {
+                        result = data.isUnique;
+                    }
+                });
+                return result;
+            },
+            "This slug is already in use !"
+        );
 
         jQuery("#form-variant").validate({
             ignore: [],
@@ -351,7 +394,8 @@ Dashmix.onLoad((() => class {
                     number: !0
                 },
                 "product-slug": {
-                    required: !0
+                    required: !0,
+                    checkSlug: !0
                 },
                 "brand-id": {
                     required: !0
@@ -363,7 +407,10 @@ Dashmix.onLoad((() => class {
             messages: {
                 "product-name": "Please enter a name!",
                 "product-price": "Please enter a price!",
-                "product-slug": "Please enter a slug!",
+                "product-slug": {
+                    required: "Please enter a slug!",
+                    checkSlug: "This slug is already in use"
+                },
                 "brand-id": "Please select a value!",
                 "category-id": "Please select values!",
             }
@@ -399,3 +446,14 @@ $("#product-name").blur(function () {
     $("#product-slug").val(slugify(name));
 });
 
+$('#modal-variant').on('shown.bs.modal', function () {
+    $('#size-id').select2({ closeOnSelect: false, dropdownParent: $('#modal-variant') });
+    disabledSelectColor();
+});
+
+const disabledSelectColor = () => {
+    $(`#color-id option`).prop("disabled", false);
+    variants.forEach((item) => {
+        $(`#color-id option[value='${item.colorId}']`).prop("disabled", true);
+    })
+}

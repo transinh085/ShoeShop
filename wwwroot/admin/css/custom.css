@@ -6,6 +6,11 @@
   color: #e04f1a !important;
 }
 
+label.error {
+    font-size: 0.875rem;
+    color: #e04f1a !important;
+}
+
 .input-validation-error,
 .form-control.error {
   border-color: #fae5dd !important;

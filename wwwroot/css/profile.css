@@ -38,11 +38,6 @@
     transition: margin 0.25s ease-out;
 }
 
-    #sidebar-wrapper .sidebar-heading {
-        padding: 0.875rem 1.25rem;
-        font-size: 1.2rem;
-    }
-
     #sidebar-wrapper .list-group {
         width: 15rem;
     }
@@ -61,21 +56,64 @@
 
 .list-group-item {
     border: none;
-    padding: 20px 30px;
+    padding: 10px 20px;
 }
 
 .list-group-item.active {
-    background-color: transparent;
+    background-color: #e9eceff0!important;
+    border-radius: 5px;
     color: var(--main-text-color);
-    font-weight: bold;
+    font-weight: 500;
     border: none;
 }
 
 .avatar-profile {
-    width: 60px;
-    height: 60px;
+    width: 40px;
+    height: 40px;
     object-fit: cover;
     border-radius: 50%;
+}
+
+.pic-avatar {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.pic-avatar {
+    transition: filter 0.4s;
+}
+
+.pic-avatar:hover {
+    filter: brightness(80%);
+}
+
+.edit-icon:hover {
+    filter: brightness(80%);
+}
+
+.edit-icon {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 18px;
+}
+
+.image-container:hover .edit-icon {
+    display: block;
+}
+
+.image-container:hover .pic-avatar {
+    filter: brightness(80%); /* Giảm độ sáng khi hover trên .image-container */
+}
+
+.image-container:hover .edit-icon {
+    display: block; /* Hiện icon khi hover */
+    filter: brightness(80%); /* Giảm độ sáng khi hover trên icon chỉnh sửa */
 }
 
 

@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using ShoeShop.Data;
 using ShoeShop.Data.Enum;
+using ShoeShop.Hubs;
 
 namespace ShoeShop.Areas.Admin.Controllers
 {
@@ -9,10 +11,14 @@ namespace ShoeShop.Areas.Admin.Controllers
     public class OrdersController : Controller
     {
         public readonly AppDbContext _context;
+        IHubContext<OrderHub> _orderHubContext;
 
-        public OrdersController(AppDbContext context)
+
+        public OrdersController(AppDbContext context, IHubContext<OrderHub> orderHubContext)
         {
             _context = context;
+            _orderHubContext = orderHubContext;
+
         }
 
         public IActionResult Index()
@@ -121,7 +127,8 @@ namespace ShoeShop.Areas.Admin.Controllers
                         Details = o.Details.Select(p => new
                         {
                             VariantSizeId = p.VariantSizeId,
-                            ProductId = p.VariantSize.Variant.Product.Id,
+                            ProductSlug = p.VariantSize.Variant.Product.Slug,
+							ProductId = p.VariantSize.Variant.Product.Id,
                             Name = p.VariantSize.Variant.Product.Name,
                             Size = p.VariantSize.Size.Name,
                             Color = p.VariantSize.Variant.Color.Name,
@@ -141,11 +148,22 @@ namespace ShoeShop.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Confirm(int id)
         {
-            var order = await _context.Orders.FindAsync(id);
+            var order = await _context.Orders
+                .Include(o => o.Details)
+                .ThenInclude(d => d.VariantSize)
+                .FirstOrDefaultAsync(o => o.Id == id);
             if(order != null)
             {
                 order.OrderStatus = OrderStatus.Confirmed;
-                _context.SaveChangesAsync();
+
+                order.Details.ForEach(d =>
+                {
+                    d.VariantSize.Quantity = d.VariantSize.Quantity - d.Quantity;
+                });
+
+                await _context.SaveChangesAsync();
+
+                await _orderHubContext.Clients.All.SendAsync("ReceiveOrderUpdate");
                 return Json(new { status = "Confirmed" });
             }
             return Json(new { status = "Not found order id" });

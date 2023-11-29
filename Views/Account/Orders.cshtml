@@ -1,0 +1,258 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+
+@{
+    var currentUser = await UserManager.GetUserAsync(User);
+    var imageUser = string.IsNullOrEmpty(currentUser.Image) ? "/img/users/avatar.jpg" : "/img/users/" + currentUser.Image;
+}
+
+@{
+    ViewData["Title"] = "Orders";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/profile.css">
+    <link rel="stylesheet" href="~/admin/js/plugins/sweetalert2/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+}
+
+<main style="background-color: #efefef">
+    <div class="container magrin_30">
+        <nav aria-label="breadcrumb" class="pt-3">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Orders</li>
+            </ol>
+        </nav>
+        <div class="row">
+            <div class="d-flex" id="wrapper">
+                <!-- Sidebar -->
+                <div id="sidebar-wrapper">
+                    <div class="p-2">
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <div class="d-flex align-items-center gap-2">
+                                <img alt="Image" src="@imageUser" class="avatar-profile">
+                                <div>
+                                    <p class="mb-0 fs-6">@currentUser.FullName</p>
+                                    <p class="mb-0 text-secondary" style="font-size: 14px">@currentUser.Email</p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="list-group list-group-flush my-1">
+                        <a href="/account/profile" class="list-group-item list-group-item-action d-flex align-items-center gap-1 bg-transparent">
+                            <i class="fa-solid fa-user fs-6 me-2"></i><span>Account information</span>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action d-flex align-items-center gap-1 bg-transparent active">
+                            <i class="fas fa-shopping-cart fs-6 me-2"></i><span>Order management</span>
+                        </a>
+                        <a href="/account/address" class="list-group-item list-group-item-action d-flex align-items-center gap-1 bg-transparent">
+                            <i class="fas fa-address-card fs-6 me-2"></i><span>Address</span>
+                        </a>
+                    </div>
+                </div>
+                <!-- /#sidebar-wrapper -->
+                <!-- Page Content -->
+                <div id="page-content-wrapper">
+                    <nav class="navbar navbar-expand-lg navbar-light bg-transparent pb-4 px-4">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-align-left primary-text fs-4 me-3" id="menu-toggle"></i>
+                            <h5 class="m-0">Orders</h5>
+                        </div>
+                    </nav>
+                    <div class="container-fluid px-4">
+                        <div class="row mb-4">
+                            <div class="col-12 bg-white rounded shadow-sm p-4 pb-2">
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <select id="order-status" class="form-select" aria-label="Filters">
+                                            <option value="-2" selected>All</option>
+                                            <option value="-1">Canceled</option>
+                                            <option value="0">Unconfirmed</option>
+                                            <option value="1">Confirmed</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-9">
+                                        <div class="input-group">
+                                            <span class="input-group-text" id="addon-wrapping"><i class="fa fa-fw fa-search"></i></span>
+                                            <input type="text" class="form-control" id="order-query" name="order-query" placeholder="Search all orders..">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-vcenter fs-sm" id="orders-table">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center" style="width: 100px;">ID</th>
+                                                <th>Payment Method</th>
+                                                <th>Shipping Method</th>
+                                                <th class="text-center">Total</th>
+                                                <th>Status</th>
+                                                <th>Submitted</th>
+                                                <th class="text-center">Actions</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /#page-content-wrapper -->
+        </div>
+    </div>
+</main>
+@section Scripts {
+    <script src="~/admin/js/plugins/sweetalert2/sweetalert2.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+    <script src="~/lib/signalr/dist/browser/signalr.js"></script>
+    <script>
+        const formatDateTime = (apiDateString) => {
+            const dateObject = new Date(apiDateString);
+
+            const hours = dateObject.getHours().toString().padStart(2, '0');
+            const minutes = dateObject.getMinutes().toString().padStart(2, '0');
+            const day = dateObject.getDate().toString().padStart(2, '0');
+            const month = (dateObject.getMonth() + 1).toString().padStart(2, '0'); // Tháng bắt đầu từ 0
+            const year = dateObject.getFullYear();
+
+            return `${hours}:${minutes} ${day}/${month}/${year}`;
+        }
+
+        const getBadge = (value) => {
+            let result = '';
+            switch (value) {
+                case -1:
+                    result = `<span class="badge rounded-pill bg-danger">Cancelled</span>`;
+                    break;
+                case 0:
+                    result = `<span class="badge rounded-pill bg-warning">Pending</span>`;
+                    break;
+                case 1:
+                    result = `<span class="badge rounded-pill bg-success">Confirmed</span>`;
+                    break;
+                default:
+                    result = `<span class="badge rounded-pill bg-secondary">Unknown</span>`;
+            }
+            return result;
+        };
+
+        $(document).ready(function () {
+            jQuery.extend(jQuery.fn.dataTable.ext.classes, {
+                sWrapper: "dataTables_wrapper dt-bootstrap5",
+                sFilterInput: "form-control",
+                sLengthSelect: "form-select"
+            });
+            jQuery.extend(!0, jQuery.fn.dataTable.defaults, {
+                language: {
+                    lengthMenu: "_MENU_",
+                    search: "_INPUT_",
+                    searchPlaceholder: "Search..",
+                    info: "Page <strong>_PAGE_</strong> of <strong>_PAGES_</strong>",
+                    paginate: {
+                        first: '<i class="fa fa-angle-double-left"></i>',
+                        previous: '<i class="fa fa-angle-left"></i>',
+                        next: '<i class="fa fa-angle-right"></i>',
+                        last: '<i class="fa fa-angle-double-right"></i>'
+                    }
+                }
+            });
+            var table = $("#orders-table").DataTable({
+                pageLength: 10,
+                lengthMenu: [
+                    [5, 10, 20],
+                    [5, 10, 20]
+                ],
+                "processing": true,
+                "serverSide": true,
+                "filter": false,
+                "lengthChange": false,
+                "ajax": {
+                    "url": "/account/getorders",
+                    "type": "POST",
+                    "datatype": "json",
+                    "data": function (d) {
+                        d.query = $('#order-query').val();
+                        d.status = $('#order-status').val();
+                    }
+                },
+                "columnDefs": [
+                    { "targets": [1, 2, 4, 6], "sortable": false },
+                ],
+                "columns": [
+                    {
+                        "data": "id",
+                        "name": "Id",
+                        "className": "text-center fw-bold",
+                        "render": (data) => `#${data}`
+                    },
+                    { "data": "paymentMethod", "name": "Payment Method" },
+                    { "data": "shippingMethod", "name": "Shipping Method" },
+                    { "data": "total", "name": "Total", "autoWidth": true, "className": "text-center fw-bold", render: (data) => `$${data}` },
+                    { "data": "orderStatus", "name": "Status", "autoWidth": true, "render": (data) => getBadge(data) },
+                    { "data": "createdAt", "name": "Submited", "autoWidth": true, "render": (data) => formatDateTime(data) },
+                    {
+                        "render": function (data, type, row) {
+                            return `<a href="/account/orders/detail/${row.id}" class="btn btn-sm btn-success text-white" >
+                                                          <i class="fa fa-fw fa-eye"></i>
+                                                        </a>`;
+                        }, "className": "text-center"
+                    },
+                ],
+                order: [
+                    [0, 'desc']
+                ],
+                autoWidth: !1,
+                responsive: !0
+            });
+
+            $('#order-query, #order-status').on('change', function () {
+                table.draw();
+            });
+
+            var connection = new signalR.HubConnectionBuilder().withUrl("/orderHub").build();
+
+            connection.on("ReceiveOrderUpdate", function () {
+                table.draw();
+            });
+
+            connection.start().then(function () {
+                console.log("SignalR connected");
+            }).catch(function (err) {
+                console.error(err.toString());
+            });
+        });
+
+        $(document).on("click", ".btn-delete", async function () {
+            let trid = $(this).data("id");
+            let result = await Swal.fire({
+                title: "Are you sure?",
+                text: "Would you like to delete this color?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, I'm sure!",
+                cancelButtonText: "Cancel"
+            });
+
+            if (result.value) {
+                try {
+                    let response = await $.post(`./Colors/Delete/${trid}`);
+                    if (response) {
+                        Swal.fire("Deleted!", "Successfully deleted the color.", "success");
+                        $(this).closest('tr').remove();
+                    } else {
+                        Swal.fire("Lỗi !", "Deletion of the color was not successful.", "error");
+                    }
+                } catch (error) {
+                    console.error("Error:", error);
+                    Swal.fire("Lỗi !", "Deletion of the color was not successful.", "error");
+                }
+            }
+        });
+    </script>
+}

@@ -249,11 +249,7 @@
 	var $topPnlSearch = $('.top_panel_search');
 	var $topPnlCart = $('.top_panel_cart');
 	var $pnlMsk = $('.layer');
-	
-	$('.btn_add_to_cart a').on('click', function(){
-		$topPnlCart.addClass('show');
-		$pnlMsk.addClass('layer-is-visible');
-	});
+
 	$('a.search_panel').on('click', function(){
 		$topPnlSearch.addClass('show');
 		$pnlMsk.addClass('layer-is-visible');
@@ -282,13 +278,13 @@
 	});
 	
 	/* Footer reveal */
-	if ($(window).width() >= 1024) {
-		$('footer.revealed').footerReveal({
-		shadow: false,
-		opacity:0.6,
-		zIndex: 1
-	});
-	};
+	//if ($(window).width() >= 1024) {
+	//	$('footer.revealed').footerReveal({
+	//	shadow: false,
+	//	opacity:0.6,
+	//	zIndex: 1
+	//});
+	//};
 
 	// Scroll to top
 	var pxShow = 800; // height on which the button will show
@@ -369,7 +365,6 @@ const addCart = (product) => {
 	let cart = getCartStorage();
 	const { variantSizeId, quantity } = product;
 	let index = cart.findIndex(item => item.variantSizeId == variantSizeId);
-	console.info(index);
 	if (index == -1) {
 		cart.push(product);
 	} else {
@@ -406,7 +401,6 @@ const getTotalProduct = () => {
 
 const loadCart = () => {
 	const arrVariantSizeId = getCartStorage().map(item => item.variantSizeId);
-	console.info(arrVariantSizeId);
 	$.ajax({
 		url: '/Product/GetCart',
 		type: 'POST',
@@ -427,7 +421,7 @@ const renderCart = () => {
 	if (cartData.length > 0) {
 		cartData.forEach(item => {
 			html += `<li>
-					<a href="/product/detail/${item.productId}">
+					<a href="/products/${item.productSlug}">
 						<figure><img src="/img/products/${item.thumbnail}" alt="" width="80" height="80"></figure>
 						<strong>
 							<span>${item.quantity} x ${item.title}</span>

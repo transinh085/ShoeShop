@@ -1,56 +1,165 @@
-﻿@{
+﻿@using ShoeShop.Data.Enum;
+@{
     ViewData["Title"] = "Dashboard";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
-<!-- Hero -->
-<div class="bg-body-light">
-    <div class="content content-full">
-        <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
-            <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">Page Title</h1>
-            <nav class="flex-shrink-0 my-2 my-sm-0 ms-sm-3" aria-label="breadcrumb">
-                <ol class="breadcrumb breadcrumb-alt">
-                    <li class="breadcrumb-item">
-                        <a href="javascript:void(0)">Dashboard</a>
-                    </li>
-                    <li class="breadcrumb-item">
-                        <a href="javascript:void(0)">Account</a>
-                    </li>
-                    <li class="breadcrumb-item active" aria-current="page">Current</li>
-                </ol>
-            </nav>
+@section Scripts {
+    <script src="~/admin/js/plugins/chart.js/chart.umd.js"></script>
+    <script src="~/admin/js/dashboard.js"></script>
+}
+
+<div class="content">
+    <!-- Quick Overview -->
+    <div class="row items-push">
+        <div class="col-6 col-lg-3">
+            <a class="block block-rounded block-link-shadow text-center h-100 mb-0" href="be_pages_ecom_orders.html">
+                <div class="block-content py-5">
+                    <div class="fs-3 fw-semibold text-primary mb-1">@ViewData["pendingOrder"]</div>
+                    <p class="fw-semibold fs-sm text-muted text-uppercase mb-0">
+                        Pending Orders
+                    </p>
+                </div>
+            </a>
+        </div>
+        <div class="col-6 col-lg-3">
+            <a class="block block-rounded block-link-shadow text-center h-100 mb-0" href="javascript:void(0)">
+                <div class="block-content py-5">
+                    <div class="fs-3 fw-semibold text-success mb-1">@ViewData["orderConfirm"]</div>
+                    <p class="fw-semibold fs-sm text-muted text-uppercase mb-0">
+                        Order confirmed
+                    </p>
+                </div>
+            </a>
+        </div>
+        <div class="col-6 col-lg-3">
+            <a class="block block-rounded block-link-shadow text-center h-100 mb-0" href="javascript:void(0)">
+                <div class="block-content py-5">
+                    <div class="fs-3 fw-semibold mb-1">@ViewData["orderToday"]</div>
+                    <p class="fw-semibold fs-sm text-muted text-uppercase mb-0">
+                        Orders Today
+                    </p>
+                </div>
+            </a>
+        </div>
+        <div class="col-6 col-lg-3">
+            <a class="block block-rounded block-link-shadow text-center h-100 mb-0" href="javascript:void(0)">
+                <div class="block-content py-5">
+                    <div class="fs-3 fw-semibold mb-1">$@ViewData["earningToday"]</div>
+                    <p class="fw-semibold fs-sm text-muted text-uppercase mb-0">
+                        Earnings Today
+                    </p>
+                </div>
+            </a>
         </div>
     </div>
-</div>
-<!-- END Hero -->
-<!-- Page Content -->
-<div class="content">
-    <div class="d-md-flex justify-content-md-between align-items-md-center py-3 pt-md-3 pb-md-0 text-center text-md-start">
-        <div>
-            <h1 class="h3 mb-1">
-                Dashboard
-            </h1>
-            <p class="fw-medium mb-0 text-muted">
-                Welcome, admin! You have <a class="fw-medium" href="javascript:void(0)">8 new notifications</a>.
-            </p>
-        </div>
-        <div class="mt-4 mt-md-0">
-            <a class="btn btn-sm btn-alt-primary" href="javascript:void(0)">
-                <i class="fa fa-cog"></i>
-            </a>
-            <div class="dropdown d-inline-block">
-                <button type="button" class="btn btn-sm btn-alt-primary px-3" id="dropdown-analytics-overview" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Last 30 days <i class="fa fa-fw fa-angle-down"></i>
+    <!-- END Quick Overview -->
+    <!-- Orders Overview -->
+    <div class="block block-rounded">
+        <div class="block-header block-header-default">
+            <h3 class="block-title">Orders Overview</h3>
+            <div class="block-options">
+                <button type="button" class="btn-block-option" data-toggle="block-option" data-action="state_toggle" data-action-mode="demo">
+                    <i class="si si-refresh"></i>
                 </button>
-                <div class="dropdown-menu dropdown-menu-end fs-sm" aria-labelledby="dropdown-analytics-overview">
-                    <a class="dropdown-item" href="javascript:void(0)">This Week</a>
-                    <a class="dropdown-item" href="javascript:void(0)">Previous Week</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="javascript:void(0)">This Month</a>
-                    <a class="dropdown-item" href="javascript:void(0)">Previous Month</a>
-                </div>
             </div>
         </div>
+        <div class="block-content block-content-full">
+            <canvas id="js-chartjs-overview" style="height: 420px;"></canvas>
+        </div>
     </div>
+    <!-- END Orders Overview -->
+    <!-- Top Products and Latest Orders -->
+    <div class="row">
+        <div class="col-xl-6">
+            <!-- Top Products -->
+            <div class="block block-rounded">
+                <div class="block-header block-header-default">
+                    <h3 class="block-title">Top Products</h3>
+                    <div class="block-options">
+                        <button type="button" class="btn-block-option" data-toggle="block-option" data-action="state_toggle" data-action-mode="demo">
+                            <i class="si si-refresh"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="block-content">
+                    <table class="table table-borderless table-striped table-vcenter fs-sm">
+                        <tbody>
+                            @foreach (var product in ViewBag.TopProduct)
+                            {
+                                <tr>
+                                    <td class="text-center" style="width: 100px;">
+                                        <a class="fw-semibold" href="/products/@product.Slug">PID.@product.Id</a>
+                                    </td>
+                                    <td>
+                                        <a class="fw-medium" href="/products/@product.Slug">@product.Name</a>
+                                    </td>
+                                    <td class="d-none d-sm-table-cell text-end text-nowrap">
+                                        <div class="text-warning">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- END Top Products -->
+        </div>
+        <div class="col-xl-6">
+            <!-- Latest Orders -->
+            <div class="block block-rounded">
+                <div class="block-header block-header-default">
+                    <h3 class="block-title">Latest Orders</h3>
+                    <div class="block-options">
+                        <button type="button" class="btn-block-option" data-toggle="block-option" data-action="state_toggle" data-action-mode="demo">
+                            <i class="si si-refresh"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="block-content">
+                    <table class="table table-borderless table-striped table-vcenter fs-sm">
+                        <tbody>
+                            @foreach (var order in ViewBag.LastestOrder)
+                            {
+                                <tr>
+                                    <td class="fw-semibold text-center" style="width: 100px;">
+                                        <a href="be_pages_ecom_order.html">#@order.Id</a>
+                                    </td>
+                                    <td class="d-none d-sm-table-cell">
+                                        <a class="fw-medium" href="#">@order.Customer</a>
+                                    </td>
+                                    <td>
+                                        @switch (order.OrderStatus)
+                                        {
+                                            case OrderStatus.Canceled:
+                                                <span class="badge bg-danger">Canceled</span>
+                                                break;
+                                            case OrderStatus.Unconfirmed:
+                                                <span class="badge bg-warning">Unconfirmed</span>
+                                                break;
+                                            case OrderStatus.Confirmed:
+                                                <span class="badge bg-success">Confirmed</span>
+                                                break;
+                                            default:
+                                                <span class="badge bg-secondary">Unknown</span>
+                                                break;
+                                        }
+                                    </td>
+                                    <td class="fw-semibold text-end">$@order.Total</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- END Latest Orders -->
+        </div>
+    </div>
+    <!-- END Top Products and Latest Orders -->
 </div>
-<!-- END Page Content -->

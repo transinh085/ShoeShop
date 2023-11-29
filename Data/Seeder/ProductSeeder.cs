@@ -104,127 +104,6 @@ namespace ShoeShop.Data.Seeder
 						}
 					}
 				};
-				Create(context,product1);
-
-				// Product 2
-				ProductSeedViewModel product2 = new ProductSeedViewModel
-				{
-					Name = "Giày Thể Thao Nam Biti’s Hunter Street",
-					Slug = "hsm003900",
-					Description = "Cùng nhau chào đón một thiết kế siêu mới và siêu hiện đại tới từ nhà Biti’s. Giày Thể Thao Nam Biti’s Hunter Street HSM003900 chính là một trong những lựa chọn hàng đầu của những con dân nghiện giày hiện nay. Cùng nhau tìm hiểu ngay dưới đây nhé!",
-					Price = 80,
-                    PriceSale = 50,
-                    Label = 2,
-                    Category = 2,
-					Brand = 2,
-					Status = true,
-					Variants = new List<VariantViewModel>
-					{
-						new VariantViewModel
-						{
-							ColorId = 7,
-							Images = new List<string>
-							{
-								"hsm003900c1.jpg",
-								"hsm003900c2.webp",
-								"hsm003900c3.webp",
-								"hsm003900c4.webp",
-								"hsm003900c5.jpg",
-							},
-							Thumbnail = 0,
-							Sizes = new List<SizeViewModel>
-							{
-								new SizeViewModel
-								{
-									SizeId = 1,
-									Active = false,
-									Stock = 10
-								},
-								new SizeViewModel
-								{
-									SizeId = 2,
-									Active = false,
-									Stock = 10
-								},
-								new SizeViewModel
-								{
-									SizeId = 3,
-									Active = true,
-									Stock = 10
-								},
-							},
-
-						},
-						new VariantViewModel
-						{
-							ColorId = 2,
-							Images = new List<string>
-							{
-								"hsm003900d1.jpg",
-								"hsm003900d2.jpg",
-								"hsm003900d3.jpg",
-								"hsm003900d4.jpg",
-								"hsm003900d5.jpg",
-							},
-							Thumbnail = 0,
-							Sizes = new List<SizeViewModel>
-							{
-								new SizeViewModel
-								{
-									SizeId = 1,
-									Active = true,
-									Stock = 10
-								},
-								new SizeViewModel
-								{
-									SizeId = 2,
-									Active = true,
-									Stock = 10
-								},
-								new SizeViewModel
-								{
-									SizeId = 3,
-									Active = true,
-									Stock = 10
-								},
-							}
-						},
-						new VariantViewModel
-						{
-							ColorId = 2,
-							Images = new List<string>
-							{
-								"hsm003900r1.jpg",
-								"hsm003900r2.webp",
-								"hsm003900r3.jpg",
-								"hsm003900r4.jpg",
-								"hsm003900r5.webp",
-							},
-							Thumbnail = 0,
-							Sizes = new List<SizeViewModel>
-							{
-								new SizeViewModel
-								{
-									SizeId = 1,
-									Active = true,
-									Stock = 10
-								},
-								new SizeViewModel
-								{
-									SizeId = 2,
-									Active = true,
-									Stock = 10
-								},
-								new SizeViewModel
-								{
-									SizeId = 3,
-									Active = true,
-									Stock = 10
-								},
-							}
-						}
-					}
-				};
 
 				//Product 3
 				ProductSeedViewModel product3 = new ProductSeedViewModel
@@ -366,7 +245,6 @@ namespace ShoeShop.Data.Seeder
 					}
 				};
 				Create(context, product1);
-				Create(context, product2);
 				Create(context, product3);
 				Create(context, product4);
 			}

@@ -13,6 +13,10 @@ using ShoeShop.ViewModels;
 using ShoeShop.Data.Seeder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore;
+using System.Collections;
+using System.IO;
+using Microsoft.AspNetCore.Http;
+using ShoeShop.Helpers;
 
 namespace ShoeShop.Areas.Admin.Controllers
 {
@@ -20,10 +24,12 @@ namespace ShoeShop.Areas.Admin.Controllers
     public class BlogsController : Controller
     {
         private readonly AppDbContext _context;
-       
-        public BlogsController(AppDbContext context)
+        private readonly UserManager<AppUser> _userManager;
+
+        public BlogsController(AppDbContext context, UserManager<AppUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Admin/Blogs
@@ -32,27 +38,10 @@ namespace ShoeShop.Areas.Admin.Controllers
             var posts = await _context.Blogs
                 .Include(b => b.Topic)
                 .Include(b => b.Thumbnail)
+                .Include(b => b.User)
                 .ToListAsync();
+            ViewBag.Topics = await _context.Topics.Where(p => !p.IsDelete).ToListAsync();
             return View(posts);
-        }
-
-        // GET: Admin/Blogs/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.Blogs == null)
-            {
-                return NotFound();
-            }
-
-            var blog = await _context.Blogs
-                .Include(b => b.Topic)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (blog == null)
-            {
-                return NotFound();
-            }
-
-            return View(blog);
         }
 
         // GET: Admin/Blogs/Create
@@ -64,17 +53,9 @@ namespace ShoeShop.Areas.Admin.Controllers
         }
 
         // POST: Admin/Blogs/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-
         [HttpPost]
-        public async Task<IActionResult> Create([FromForm]BlogViewModel post)
+        public async Task<IActionResult> Create([FromForm] BlogViewModel post)
         {
-            //if (await _context.Blogs.AddAsync(p => p.Slug == post.Slug))
-            //{
-            //    ModelState.AddModelError("Slug", "Nhập Slug khác");
-            //    return View(blog);
-            //}
 
             var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -91,16 +72,17 @@ namespace ShoeShop.Areas.Admin.Controllers
                 Name = uniqueFileName
             };
 
-
+            AppUser author = await _userManager.FindByIdAsync(user);
             Blog bl = new Blog
             {
                 Slug = post.Slug,
                 Name = post.Name,
                 Thumbnail = img,
-                CreateBy = user,
+                Description = post.Description,
+                User = author,
                 TopicID = post.TopicId,
                 Content = post.Content,
-                IsDetele = false
+                IsPublic = post.IsPublic
             };
 
             _context.Add(bl);
@@ -111,55 +93,64 @@ namespace ShoeShop.Areas.Admin.Controllers
         // GET: Admin/Blogs/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Blogs == null)
-            {
-                return NotFound();
-            }
+            if (id == null || _context.Blogs == null) return NotFound();
 
-            var blog = await _context.Blogs.FindAsync(id);
-            if (blog == null)
-            {
-                return NotFound();
-            }
-            ViewData["TopicID"] = new SelectList(_context.Topics, "Id", "Name", blog.TopicID);
-            return View(blog);
+            var blog = await _context.Blogs.Include(b => b.Thumbnail).FirstOrDefaultAsync(b => b.Id == id);
+            if (blog == null) return NotFound();
+
+            ViewBag.Topics = await _context.Topics.Where(p => !p.IsDelete).ToListAsync();
+            ViewBag.Post = blog;
+            return View();
         }
 
         // POST: Admin/Blogs/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Slug,Name,CreatedAt,CreateBy,TopicID,Content,IsDetele")] Blog blog)
+        public async Task<IActionResult> Update(int id, [FromForm] BlogViewModel updatedPost)
         {
-            if (id != blog.Id)
+            Blog existingPost = await _context.Blogs
+                .Include(b => b.Thumbnail)
+                .FirstOrDefaultAsync(b => b.Id == id);
+
+            if (existingPost == null) return NotFound("Blog post not found.");
+
+            if (updatedPost.Image != null)
             {
-                return NotFound();
+                string existingImagePath = Path.Combine("wwwroot/img/blogs", existingPost.Thumbnail.Name);
+                if (System.IO.File.Exists(existingImagePath))
+                {
+                    System.IO.File.Delete(existingImagePath);
+                }
+
+                _context.Images.Remove(existingPost.Thumbnail);
             }
 
-            if (ModelState.IsValid)
+            existingPost.Slug = updatedPost.Slug;
+            existingPost.Name = updatedPost.Name;
+            existingPost.Description = updatedPost.Description;
+            existingPost.TopicID = updatedPost.TopicId;
+            existingPost.Content = updatedPost.Content;
+            existingPost.IsPublic = updatedPost.IsPublic;
+
+            if (updatedPost.Image != null)
             {
-                try
+                string uniqueFileName = $"{Guid.NewGuid()}_{updatedPost.Image.FileName}";
+                string filePath = Path.Combine("wwwroot/img/blogs", uniqueFileName);
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {
-                    _context.Update(blog);
-                    await _context.SaveChangesAsync();
+                    await updatedPost.Image.CopyToAsync(fileStream);
                 }
-                catch (DbUpdateConcurrencyException)
+
+                existingPost.Thumbnail = new Image
                 {
-                    if (!BlogExists(blog.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                    Name = uniqueFileName
+                };
             }
-            ViewData["TopicID"] = new SelectList(_context.Topics, "Id", "Id", blog.TopicID);
-            return View(blog);
+
+            await _context.SaveChangesAsync();
+            return Json(new { message = "Updated post successful" });
         }
+
 
         // POST: Admin/Blogs/Delete/5
         [HttpPost, ActionName("Delete")]
@@ -175,29 +166,67 @@ namespace ShoeShop.Areas.Admin.Controllers
             return Ok(new { message = "Delete successfully" });
         }
 
-        //// POST: Admin/Blogs/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> DeleteConfirmed(int id)
-        //{
-        //    if (_context.Blogs == null)
-        //    {
-        //        return Problem("Entity set 'AppDbContext.Blog'  is null.");
-        //    }
-        //    var blog = await _context.Blogs.FindAsync(id);
-        //    if (blog != null)
-        //    {
-        //        _context.Blogs.Remove(blog);
-        //    }
-            
-        //    await _context.SaveChangesAsync();
-        //    return RedirectToAction(nameof(Index));
-        //}
 
         private bool BlogExists(int id)
         {
-          return (_context.Blogs?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Blogs?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetBlogs(string query, int[] topics)
+        {
+            var draw = int.Parse(Request.Form["draw"].FirstOrDefault());
+            var skip = int.Parse(Request.Form["start"].FirstOrDefault());
+            var pageSize = int.Parse(Request.Form["length"].FirstOrDefault());
+            var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+            var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+
+            var Blogs = _context.Blogs
+                .Include(b => b.Thumbnail)
+                .Include(b => b.User)
+                .Include(b => b.Topic)
+                .OrderByDescending(b => b.CreatedAt)
+                .Where(p => !p.IsDetele)
+                .AsQueryable();
+
+            switch (sortColumn.ToLower())
+            {
+                case "id":
+                    Blogs = sortColumnDirection.ToLower() == "asc" ? Blogs.OrderBy(o => o.Id) : Blogs.OrderByDescending(o => o.Id);
+                    break;
+                case "name":
+                    Blogs = sortColumnDirection.ToLower() == "asc" ? Blogs.OrderBy(o => o.Name) : Blogs.OrderByDescending(o => o.Name);
+                    break;
+                case "topic":
+                    Blogs = sortColumnDirection.ToLower() == "asc" ? Blogs.OrderBy(o => o.Topic.Name) : Blogs.OrderByDescending(o => o.Topic.Name);
+                    break;
+                case "user":
+                    Blogs = sortColumnDirection.ToLower() == "asc" ? Blogs.OrderBy(o => o.User.FullName) : Blogs.OrderByDescending(o => o.User.FullName);
+                    break;
+                default:
+                    Blogs = Blogs.OrderBy(o => o.Id);
+                    break;
+            }
+
+            if (!string.IsNullOrEmpty(query))
+            {
+                Blogs = Blogs.Where(m => m.Name.Contains(query));
+            }
+
+            if (topics.Length != 0)
+            {
+                Blogs = Blogs.Where(u => topics.Contains(u.TopicID));
+            }
+
+            var recordsTotal = Blogs.Count();
+            var data = Blogs.OrderByDescending(o => o.Id).Skip(skip).Take(pageSize).ToList();
+
+            var jsonData = new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data };
+            return Ok(jsonData);
         }
 
     }
 }
+
+
+

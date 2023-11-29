@@ -49,8 +49,6 @@ namespace ShoeShop.Data.Seeder
                     };
                     await userManager.CreateAsync(newAdminUser, "Coding@1234?");
                     await userManager.AddToRoleAsync(newAdminUser, UserRoles.Admin);
-
-                    
                 }
 
                 var appUser = await userManager.FindByEmailAsync("hgbao2k3@gmail.com");
@@ -78,7 +76,7 @@ namespace ShoeShop.Data.Seeder
                     {
                         FullName = "Hoàng Gia Bảo",
                         UserName = "hgbaodev",
-                        Email = "hgbaodev",
+                        Email = "hgbaodev@gmail.com",
                         EmailConfirmed = true,
                         PhoneNumber = "0123456789",
                         ProfileImageUrl = "https://avatars.githubusercontent.com/u/120194990?v=4",

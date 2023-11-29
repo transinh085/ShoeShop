@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using ShoeShop.Data;
 using PayPal.v1.Invoices;
 using System.Security.Claims;
+using Microsoft.AspNetCore.SignalR;
+using ShoeShop.Hubs;
 
 namespace ShoeShop.Controllers
 {
@@ -14,12 +16,14 @@ namespace ShoeShop.Controllers
     {
         private readonly IPayPalService _payPalService;
 		private readonly AppDbContext _context;
+		private readonly IHubContext<OrderHub> _orderHubContext;
 
-		public PaymentController(AppDbContext context, IPayPalService payPalService)
+		public PaymentController(AppDbContext context, IPayPalService payPalService, IHubContext<OrderHub> orderHubContext)
         {
 			_context = context;
             _payPalService = payPalService;
-        }
+			_orderHubContext = orderHubContext;
+		}
 
 		[HttpPost]
         public async Task<IActionResult> CreatePaymentUrl([FromBody] PaymentViewModel paymentInfo)
@@ -63,7 +67,8 @@ namespace ShoeShop.Controllers
             };
 
             _context.Add(order);
-            await _context.SaveChangesAsync();
+			await _context.SaveChangesAsync();
+            await _orderHubContext.Clients.All.SendAsync("ReceiveOrderUpdate");
 
             if (paymentInfo.PaymentMethodId == 0)
             {
@@ -99,6 +104,7 @@ namespace ShoeShop.Controllers
                         {
                             VariantSizeId = p.VariantSizeId,
                             ProductId = p.VariantSize.Variant.Product.Id,
+                            ProductSlug = p.VariantSize.Variant.Product.Slug,
                             Name = p.VariantSize.Variant.Product.Name,
                             Thumbnail = p.VariantSize.Variant.Product.Thumbnail.Name,
                             Size = p.VariantSize.Size.Name,
@@ -136,7 +142,7 @@ namespace ShoeShop.Controllers
             }
             else
             {
-                return RedirectToAction("FailureAction");
+                return RedirectToAction("PaymentSuccess");
             }
         }
     }

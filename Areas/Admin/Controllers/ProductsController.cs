@@ -228,6 +228,137 @@ namespace ShoeShop.Areas.Admin.Controllers
             return View();
         }
 
+
+        [HttpPost]
+        [Consumes("multipart/form-data")]
+        [Route("/api/products/update")]
+        public async Task<IActionResult> Edit([FromForm] UpdateProductViewModel productViewModel)
+        {
+            using (var transaction = await _context.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    Product product = await _context.Products.FindAsync(productViewModel.Id);
+                    if (product == null)
+                    {
+                        return NotFound(new { message = "Product not found." });
+                    }
+                    // Update product properties
+                    product.Name = productViewModel.Name;
+                    product.Price = productViewModel.Price;
+                    product.PriceSale = productViewModel.PriceSale;
+                    product.Description = productViewModel.Description;
+                    product.Status = productViewModel.Status;
+                    product.Label = productViewModel.Label;
+                    product.IsFeatured = productViewModel.IsFeatured;
+                    product.Slug = productViewModel.Slug;
+                    product.CategoryId = Convert.ToInt32(productViewModel.Category);
+                    product.BrandId = Convert.ToInt32(productViewModel.Brand);
+
+                    _context.Update(product);
+                    await _context.SaveChangesAsync();
+
+                    for (int i = 0; i < productViewModel.Variants.Count; i++)
+                    {
+                        UpdateVariantViewModel variantViewModel = productViewModel.Variants[i];
+                        Variant variant;
+                        if (variantViewModel.VariantId > 0)
+                        {
+                            variant = await _context.Variants.FindAsync(variantViewModel.VariantId);
+                            variant.ColorId = variantViewModel.ColorId;
+                            variant.Position = i + 1;
+                        }
+                        else
+                        {
+                            variant = new Variant()
+                            {
+                                ProductId = product.Id,
+                                ColorId = variantViewModel.ColorId,
+                                Position = i + 1
+                            };
+
+                            _context.Add(variant);
+                            await _context.SaveChangesAsync();
+                        }
+
+                        foreach (var sizeViewModel in variantViewModel.Sizes)
+                        {
+                            VariantSize variantSize = await _context.VariantSizes
+                                .FirstOrDefaultAsync(v => v.VariantId == variant.Id && v.SizeId == sizeViewModel.SizeId);
+
+                            if (variantSize != null)
+                            {
+                                variantSize.SizeId = sizeViewModel.SizeId;
+                                variantSize.Quantity = sizeViewModel.Stock;
+                                variantSize.IsActive = sizeViewModel.Active;
+								_context.Update(variantSize);
+                            }
+                            else
+                            {
+                                variantSize = new VariantSize()
+                                {
+                                    VariantId = variant.Id,
+                                    SizeId = sizeViewModel.SizeId,
+                                    Quantity = sizeViewModel.Stock,
+                                    IsActive = sizeViewModel.Active
+                                };
+                                _context.Add(variantSize);
+                            }
+                        }
+
+                        var existingImages = await _context.Images
+                            .Where(img => img.VariantId == variant.Id)
+                            .ToListAsync();
+                        foreach (var existingImage in existingImages)
+                        {
+                            var filePath = Path.Combine("wwwroot/img/products", existingImage.Name);
+                            if (System.IO.File.Exists(filePath))
+                            {
+                                System.IO.File.Delete(filePath);
+                            }
+                            _context.Images.Remove(existingImage);
+                        }
+
+                        int thumbI = 0;
+                        foreach (var image in variantViewModel.Images)
+                        {
+                            if (image.Length > 0)
+                            {
+                                string uniqueFileName = Guid.NewGuid().ToString() + "_" + image.FileName;
+                                string filePath = Path.Combine("wwwroot/img/products", uniqueFileName);
+
+                                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                                {
+                                    image.CopyTo(fileStream);
+                                }
+
+                                Image img = new Image()
+                                {
+                                    Name = uniqueFileName,
+                                    VariantId = variant.Id
+                                };
+
+                                _context.Add(img);
+                                if (thumbI == variantViewModel.Thumbnail) variant.Thumbnail = img;
+                                if (i == 0 && thumbI == variantViewModel.Thumbnail) product.Thumbnail = img;
+                            }
+                            thumbI++;
+                        }
+                    }
+
+                    await _context.SaveChangesAsync();
+                    transaction.Commit();
+
+                    return Ok(new { message = "Product updated successfully!" });
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    return BadRequest(new { message = "Failed to update product." + ex.Message });
+                }
+            }
+        }
+
         public async Task<IActionResult> GetVariant(int? id)
         {
             if (id == null || _context.Products == null)
@@ -239,6 +370,7 @@ namespace ShoeShop.Areas.Admin.Controllers
                 .Where(v => v.ProductId == id)
                 .Select(variant => new
                 {
+                    VariantId = variant.Id,
                     ColorId = variant.ColorId,
                     ColorName = variant.Color.Name,
                     Thumbnail = variant.Thumbnail.Name,
@@ -258,14 +390,6 @@ namespace ShoeShop.Areas.Admin.Controllers
             return Ok(variants);
         }
 
-        public async Task<IActionResult> Test()
-        {
-            var variants = await _context.Variants
-                .Select(v => v.Color.Name)
-                .ToListAsync();
-            return Ok(variants);
-        }
-
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -279,5 +403,18 @@ namespace ShoeShop.Areas.Admin.Controllers
             return Ok(new {message = "Delete successfully"});
         }
 
+        [HttpPost]
+        public async Task<IActionResult> CheckSlug(string slug)
+        {
+            var product = await _context.Products.FirstOrDefaultAsync(v => v.Slug == slug);
+            return Json(new { IsUnique = product == null });
+        }
+        [HttpPost]
+        public async Task<IActionResult> CheckSlugUpdate(int id, string slug)
+        {
+            var product = await _context.Products.Where(p => p.Id != id)
+                .FirstOrDefaultAsync(v => v.Slug == slug);
+            return Json(new { IsUnique = product == null });
+        }
     }
 }

@@ -29,7 +29,7 @@ namespace ShoeShop.Controllers
 			_signInManager = signInManager;
 			_userManager = userManager;
 		}
-
+        [Route("products")]
         public async Task<IActionResult> Index()
         {
 			if (_context.Products != null)
@@ -104,55 +104,59 @@ namespace ShoeShop.Controllers
 			return Problem("Entity set 'AppDbContext.Products'  is null.");
 		}
 
-		public async Task<IActionResult> Detail(int? id)
+		[Route("/products/{slug}")]
+		public async Task<IActionResult> Detail(string slug)
 		{
-            if (id == null || _context.Products == null) return NotFound();
+			if (_context.Products == null) return NotFound();
 
-            var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
-
-            if (product == null || product.IsDetele) return NotFound();
+			var product = await _context.Products.FirstOrDefaultAsync(p => p.Slug == slug);
+			if (product == null || product.IsDetele) return NotFound();
 			var currentUser = await _userManager.GetUserAsync(User);
 
-			if (currentUser == null)
-			{
-				ViewBag.CheckReview = 0;
+            if (currentUser == null)
+            {
+                ViewBag.CheckReview = 0;
+            }
+            else
+            {
+				var countReviewProduct = _context.Reviews
+				   .Count(review => review.ProductId == product.Id && review.AppUserId == currentUser.Id);
+
+				var checkByProduct = _context.Orders
+					.Count(o => o.OrderStatus == OrderStatus.Confirmed &&
+								o.AppUserId == currentUser.Id &&
+								o.Details.Any(detail => detail.VariantSize.Variant.Product.Id == product.Id));
+
+				ViewBag.CheckReview = (countReviewProduct < checkByProduct) ? 1 : 0;
 			}
-			else
-			{
-				var checkByProduct = _context.Orders.Count(
-					o => o.OrderStatus == OrderStatus.Confirmed &&
-					o.AppUserId == currentUser.Id &&
-					o.Details.Any(detail => detail.VariantSize.Variant.Product.Id == id)
-				);
-				ViewBag.CheckReview = checkByProduct;
-			}
-			ViewBag.Reviews = await _context.Reviews
-			.Where(review => review.ProductId == id)
+
+            ViewBag.Reviews = await _context.Reviews
+			.Where(review => review.ProductId == product.Id)
 			.OrderByDescending(review => review.CreatedAt)
 			.Include(review => review.AppUser)
 			.ToListAsync();
 
-			var countReview = ViewBag.CountView = _context.Reviews.Count(review => review.ProductId == id);
+			var countReview = ViewBag.CountView = _context.Reviews.Count(review => review.ProductId == product.Id);
 			ReviewStats reviewStats = new ReviewStats();
 			if (countReview != 0)
 			{
 				var totalRating = ViewBag.TotalRating = _context.Reviews
-					.Where(review => review.ProductId == id)
+					.Where(review => review.ProductId == product.Id)
 					.Sum(review => review.Rating);
 				ViewBag.AverageRating = (totalRating / (decimal)countReview).ToString("0.0");
-				reviewStats.OneStar = _context.Reviews.Count(review => review.ProductId == id && review.Rating == 1);
+				reviewStats.OneStar = _context.Reviews.Count(review => review.ProductId == product.Id && review.Rating == 1);
 				reviewStats.PercentOneStar = ((decimal)reviewStats.OneStar / countReview * 100).ToString("0") + "%";
 
-				reviewStats.TwoStar = _context.Reviews.Count(review => review.ProductId == id && review.Rating == 2);
+				reviewStats.TwoStar = _context.Reviews.Count(review => review.ProductId == product.Id && review.Rating == 2);
 				reviewStats.PercentTwoStar = ((decimal)reviewStats.TwoStar / countReview * 100).ToString("0") + "%";
 
-				reviewStats.ThreeStar = _context.Reviews.Count(review => review.ProductId == id && review.Rating == 3);
+				reviewStats.ThreeStar = _context.Reviews.Count(review => review.ProductId == product.Id && review.Rating == 3);
 				reviewStats.PercentThreeStar = ((decimal)reviewStats.ThreeStar / countReview * 100).ToString("0") + "%";
 
-				reviewStats.FourStar = _context.Reviews.Count(review => review.ProductId == id && review.Rating == 4);
+				reviewStats.FourStar = _context.Reviews.Count(review => review.ProductId == product.Id && review.Rating == 4);
 				reviewStats.PercentFourStar = ((decimal)reviewStats.FourStar / countReview * 100).ToString("0") + "%";
 
-				reviewStats.FiveStar = _context.Reviews.Count(review => review.ProductId == id && review.Rating == 5);
+				reviewStats.FiveStar = _context.Reviews.Count(review => review.ProductId == product.Id && review.Rating == 5);
 				reviewStats.PercentFiveStar = ((decimal)reviewStats.FiveStar / countReview * 100).ToString("0") + "%";
 			}
 			else
@@ -170,6 +174,61 @@ namespace ShoeShop.Controllers
 			return View();
 		}
 
+
+		public async Task<IActionResult> getDetailStar(int id)
+		{
+			if (_context.Products == null) return NotFound();
+
+			var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+
+			var countReview = ViewBag.CountView = _context.Reviews.Count(review => review.ProductId == product.Id);
+			ReviewStats reviewStats = new ReviewStats();
+			if (countReview != 0)
+			{
+				var totalRating = ViewBag.TotalRating = _context.Reviews
+					.Where(review => review.ProductId == product.Id)
+					.Sum(review => review.Rating);
+				ViewBag.AverageRating = (totalRating / (decimal)countReview).ToString("0.0");
+				reviewStats.OneStar = _context.Reviews.Count(review => review.ProductId == product.Id && review.Rating == 1);
+				reviewStats.PercentOneStar = ((decimal)reviewStats.OneStar / countReview * 100).ToString("0") + "%";
+
+				reviewStats.TwoStar = _context.Reviews.Count(review => review.ProductId == product.Id && review.Rating == 2);
+				reviewStats.PercentTwoStar = ((decimal)reviewStats.TwoStar / countReview * 100).ToString("0") + "%";
+
+				reviewStats.ThreeStar = _context.Reviews.Count(review => review.ProductId == product.Id && review.Rating == 3);
+				reviewStats.PercentThreeStar = ((decimal)reviewStats.ThreeStar / countReview * 100).ToString("0") + "%";
+
+				reviewStats.FourStar = _context.Reviews.Count(review => review.ProductId == product.Id && review.Rating == 4);
+				reviewStats.PercentFourStar = ((decimal)reviewStats.FourStar / countReview * 100).ToString("0") + "%";
+
+				reviewStats.FiveStar = _context.Reviews.Count(review => review.ProductId == product.Id && review.Rating == 5);
+				reviewStats.PercentFiveStar = ((decimal)reviewStats.FiveStar / countReview * 100).ToString("0") + "%";
+			}
+			else
+			{
+				ViewBag.AverageRating = 0;
+				ViewBag.TotalRating = 0;
+			};
+			ViewBag.ReviewStats = reviewStats;
+			ViewBag.Product = product;
+			ViewBag.Related = await _context.Products
+				.Include(product => product.Thumbnail)
+				.Where(p => p.CategoryId == product.CategoryId)
+				.OrderByDescending(product => product.CreatedAt)
+				.Take(8).ToListAsync();
+			var productDetailResponse = new
+			{
+				TotalRating = ViewBag.TotalRating,
+				CountView = ViewBag.CountView,
+				AverageRating = ViewBag.AverageRating,
+				ReviewStats = ViewBag.ReviewStats
+			};
+
+			return Ok(productDetailResponse);
+		}
+
+
+
 		[HttpPost]
 		public async Task<IActionResult> GetCart([FromBody]CartViewModel cart)
 		{
@@ -179,6 +238,7 @@ namespace ShoeShop.Controllers
 					{
 						VariantSizeId = v.Id,
 						ProductId = v.Variant.ProductId,
+						ProductSlug = v.Variant.Product.Slug,
 						SizeName = v.Size.Name,
 						ColorName = v.Variant.Color.Name,
 						Thumbnail = v.Variant.Thumbnail.Name,

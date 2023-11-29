@@ -1,16 +1,17 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using ShoeShop.Data;
+using ShoeShop.Hubs;
 using ShoeShop.Models;
 using ShoeShop.Services;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
-
+builder.Services.AddSignalR();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
@@ -39,6 +40,13 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 builder.Services.AddScoped<IPayPalService, PaypalService>();
 
+builder.Services.Configure<IdentityOptions>(opt =>
+{
+    opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(10);
+    opt.Lockout.MaxFailedAccessAttempts = 5;
+    opt.Lockout.AllowedForNewUsers = true;
+});
+
 var app = builder.Build();
 
 if (args.Length == 1 && args[0].ToLower() == "seed")
@@ -46,7 +54,6 @@ if (args.Length == 1 && args[0].ToLower() == "seed")
 	Seed.SeedData(app);
 }
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -73,6 +80,9 @@ app.UseEndpoints(endpoints =>
 	endpoints.MapControllerRoute(
 	name: "default",
 	pattern: "{controller=Home}/{action=Index}/{id?}");
+
+	endpoints.MapHub<OrderHub>("/orderHub");
+    endpoints.MapHub<CommentHub>("/commentHub");
 });
 
 
