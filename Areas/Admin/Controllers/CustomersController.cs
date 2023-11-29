@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ShoeShop.Data;
@@ -6,7 +7,8 @@ using ShoeShop.Models;
 
 namespace ShoeShop.Areas.Admin.Controllers
 {
-    [Area("Admin")]
+	[Authorize(Roles = UserRoles.Admin)]
+	[Area("Admin")]
     public class CustomersController : Controller
 	{
 		private readonly UserManager<AppUser> userManager;

@@ -5,6 +5,7 @@
 
 @{
 	var currentUser = await UserManager.GetUserAsync(User);
+    var imageUser = string.IsNullOrEmpty(currentUser.Image) ? "/img/users/avatar.jpg" : "/img/users/"+currentUser.Image;
 }
 
 
@@ -142,7 +143,7 @@
 											<a href="#" class="access_link"><span>Account</span></a>
 											<div class="dropdown-menu">
 												<div class="d-flex align-items-center gap-2">
-													<img alt="Image" src="@currentUser.ProfileImageUrl" class="avatar">
+													<img alt="Image" src="@imageUser" class="avatar">
 													<div>
 														<p class="fw-bold mb-0">@currentUser.FullName</p>
 														<p class="mb-0">@currentUser.Email</p>
