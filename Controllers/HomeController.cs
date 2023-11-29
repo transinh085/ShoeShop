@@ -37,6 +37,13 @@ namespace ShoeShop.Controllers
 				.OrderByDescending(p => p.CreatedAt)
 				.Take(8)
 				.ToListAsync();
+
+            ViewBag.SuggestPost = await _context.Blogs.Include(p => p.Thumbnail)
+                .Where (p => !p.IsDetele && p.IsPublic)
+				.Include(b => b.Topic)
+				.Include(b => b.User)
+				.OrderByDescending(blog => blog.CreatedAt)
+				.Take(4).ToListAsync();
 			return View();
         }
 

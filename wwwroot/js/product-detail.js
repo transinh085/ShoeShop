@@ -18,12 +18,14 @@
 		$(".variant-container").html(html);
 		renderSize(0);
 		renderImage(0);
+		setStock(0, $("#select-size").val())
 	}
 
 	const renderSize = (index) => {
 		let html = '';
 		variants[index].sizes.forEach((size, index) => {
-			html += `<option value="${index}" ${size.stock == 0 ? 'disabled' : ''}>${size.sizeName} ${size.stock == 0 ? `<span>(hết hàng)</span>` : ``}</option>`;
+			//${ size.stock == 0 ? 'disabled' : '' }
+			html += `<option value="${index}">${size.sizeName} ${size.stock == 0 ? `<span>(hết hàng)</span>` : ``}</option>`;
 		})
 		$("#select-size").html(html);
 		$("#select-size").niceSelect('update');
@@ -50,25 +52,74 @@
 		const index = $(this).data("id");
 		renderSize(index);
 		renderImage(index);
+		setStock(index, $("#select-size").val())
 	});
 
-	$('.btn_add_to_cart a').on('click', function () {
+	$("#select-size").change(function (e) {
+		let variantIndex = $(".variant-color.active").data("id");
+		let sizeIndex = $(this).val();
+		setStock(variantIndex, sizeIndex);
+	});
+
+	const setStock = (variantIndex, sizeIndex) => {
+		const stock = variants[variantIndex].sizes[sizeIndex].stock;
+		if (stock > 0) {
+			$(".color-stock").html(`Còn hàng (${stock})`);
+			$(".btn-cart-container").html(`<div class="btn_add_to_cart"><a href="#0" class="btn_1 add-cart">Add to Cart</a></div>`)
+		} else {
+			$(".color-stock").html(`Hết hàng`);
+			$(".btn-cart-container").html(`<div class="btn_add_to_cart"><a href="#0" class="btn_1 bg-danger">Hết hàng</a></div>`)
+		}
+		
+	}
+
+
+	$(document).on("click", ".btn_add_to_cart .add-cart", function (e) {
 		const size_index = $("#select-size").val();
 		const color_index = $('.variant-color.active').data("id");
-		const obj = {
-			title: $('h1').text(),
-			thumbnail: variants[color_index].thumbnail,
-			colorName: variants[color_index].colorName,
-			variantSizeId: variants[color_index].sizes[size_index].variantSizeId,
-			sizeName: variants[color_index].sizes[size_index].sizeName,
-			price: $('.product-price').data("price"),
-			quantity: parseInt($('#quantity_1').val())
-		};
 
-		const cartItem = { variantSizeId: obj.variantSizeId, quantity: obj.quantity };
-		addCart(cartItem);
-		loadCart();
-		showCartTopBar(obj);
+		const variant = variants[color_index].sizes[size_index];
+		const stock = variant.stock;
+		const quantity = parseInt($('#quantity_1').val());
+		const cartItem = getCartStorage().find(item => item.variantSizeId == variant.variantSizeId);
+
+		const cartQuantity = cartItem ? cartItem.quantity : 0;
+
+		if (quantity + cartQuantity > stock) {
+			if (quantity > stock) {
+				Swal.fire({
+					icon: "error",
+					title: "Oops...",
+					text: "The product does not have enough inventory"
+				});
+			} else {
+				Swal.fire({
+					icon: "error",
+					title: "Oops...",
+					text: "The product already exists in the shopping cart"
+				});
+			}
+			
+		} else {
+			const obj = {
+				title: $('h1').text(),
+				thumbnail: variants[color_index].thumbnail,
+				colorName: variants[color_index].colorName,
+				variantSizeId: variants[color_index].sizes[size_index].variantSizeId,
+				sizeName: variants[color_index].sizes[size_index].sizeName,
+				price: $('.product-price').data("price"),
+				quantity: quantity
+			};
+
+			const cartItem = { variantSizeId: obj.variantSizeId, quantity: obj.quantity };
+			addCart(cartItem);
+			loadCart();
+			showCartTopBar(obj);
+			var $topPnlCart = $('.top_panel_cart');
+			var $pnlMsk = $('.layer');
+			$topPnlCart.addClass('show');
+			$pnlMsk.addClass('layer-is-visible');
+		}
 	});
 
 	const showCartTopBar = (product) => {

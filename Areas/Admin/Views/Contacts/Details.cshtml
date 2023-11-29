@@ -21,15 +21,20 @@
                     </a>
                     <div class="block-options">
                             <div class="form-check form-switch">
-                                @{
-                                    var check = "";
-                                    if (@contact.IsSeen == true)
-                                    {
-                                        check = "checked";
-                                    }
+                            @{
+                                var check = "";
+                                if (@contact.IsSeen == true)
+                                {
+                                    check = "checked";
                                 }
-                                <a class="btn btn-sm btn-alt-info btn-checkbox" asp-route-id="@contact.Id" asp-action="Read">Mark as read</a>
-                                <input class="form-check-input" type="checkbox" disabled id="dm-post-edit-active" @check>
+                                else
+                                {
+                                    check = "";
+                                }
+                            }
+                            <input class="form-check-input" type="checkbox" disabled id="dm-post-edit-active" @check>                            
+                            <a class="btn btn-sm btn-alt-info btn-checkbox" asp-route-id="@contact.Id" asp-action="Read">Mark as read</a>
+                            <button data-id="@contact.Id" class="btn btn-sm btn-checkbox btn-delete btn-danger">Delete</button>
                             </div>
                     </div>
                 </div>
@@ -62,8 +67,48 @@
                         </div>
                     </div>
                 </div>
+               
+                </div>
+         
             </div>
-        </div>
     </main>
 
 </div>
+@section Scripts {
+    <script src="~/admin/js/plugins/sweetalert2/sweetalert2.min.js"></script>
+    <script src="~/admin/js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script src="~/admin/js/plugins/flatpickr/flatpickr.min.js"></script>
+    <script src="~/admin/js/plugins/jquery-validation/jquery.validate.min.js"></script>
+    <script src="~/admin/js/plugins/jquery-validation/additional-methods.js"></script>
+    <script src="~/admin/js/plugins/bootstrap-notify/bootstrap-notify.min.js"></script>
+    <script>Dashmix.helpersOnLoad(['js-flatpickr', 'jq-datepicker', 'jq-notify']);</script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/admin/js/pagination.js"></script>
+    <script src="~/admin/js/customer.js"></script>
+    <script src="~/admin/js/plugins/sweetalert2/sweetalert2.min.js"></script>
+    <script>
+        $(document).on("click", ".btn-delete", async function () {
+            let trid = $(this).data("id");
+            let result = await Swal.fire({
+                title: "Are you sure?",
+                text: "Would you like to delete this contact?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, I'm sure",
+                cancelButtonText: "Cannel"
+            });
+
+            if (result.value) {
+                try {
+                    let response = await $.post(`./Contacts/Delete/${trid}`);
+                    Swal.fire("Deleted!", "Successfully deleted the contact.", "success");
+                } catch (error) {
+                    console.error("Error:", error);
+                    Swal.fire("Lỗi !", "Deletion of the contact was not successful.", "error");
+                }
+            }
+        });
+    </script>
+}

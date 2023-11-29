@@ -68,7 +68,7 @@ namespace ShoeShop.Controllers
                 .Include(b => b.Topic)
 				.Include (b => b.User)
 				.OrderByDescending(blog => blog.CreatedAt)
-				.Take(8).ToListAsync();
+				.Take(5).ToListAsync();
 			return View();
 		}
 
@@ -76,7 +76,7 @@ namespace ShoeShop.Controllers
 		[HttpGet,ActionName("getallblogs")]
         public IActionResult GetAllBlogs(
         int page = 1,
-        int pageSize = 9,
+        int pageSize = 2,
         string query = "",
         string topics = ""
         )

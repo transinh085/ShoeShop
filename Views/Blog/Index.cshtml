@@ -100,7 +100,7 @@
 		var totalPage = null;
 		document.addEventListener("DOMContentLoaded", function () {
 			const topicsCheckboxes = document.querySelectorAll("input[name=topics]");
-			const inputSearch = document.getElementById("search-input");
+			const inputSearch = document.getElementById("search_blog");
 
 
 			// Add a flag to prevent infinite loop
@@ -159,7 +159,7 @@
 						totalPage = response.TotalPages;
 						let html = ``;
 						response?.Result.forEach(blog => {
-							const time = new Date(blog.CreatedAt).toLocaleDateString();
+							const time = new Date(blog.CreatedAt).toLocaleDateString;
 							html += `<div class="col-md-6">
 								<article class="blog">
 											<figure >
@@ -203,7 +203,7 @@
 												</li>`;
 							document.querySelector(".pagination").innerHTML = paginationHtml
 						} else if (response?.Result.length === 0) {
-							document.getElementById("posts").innerHTML = `<h2>Not found posts</h2><img class="img-fluid lazy loaded" src="img/not-found-post.png" alt="Not found posts" data-was-processed="true">`
+							document.getElementById("posts").innerHTML = `<h2>Not found posts</h2><img class="img-fluid lazy loaded" src="img/not-found-post.webp" alt="Not found posts" data-was-processed="true">`
 						}
 					},
 					error: function (err) {

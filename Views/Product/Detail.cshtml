@@ -7,6 +7,7 @@
 @section Styles {
 	<link href="~/css/product_page.css" rel="stylesheet">
 	<link href="~/css/leave_review.css" rel="stylesheet">
+	<link rel="stylesheet" href="~/admin/js/plugins/sweetalert2/sweetalert2.css">
 }
 
 <main>
@@ -43,6 +44,7 @@
 	                    <h1>@product.Name</h1>
 	                    <span class="rating"><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star"></i><em>4 reviews</em></span>
 	                    <div class="prod_options mt-2">
+						<p>Tình trạng: <span class="fw-semibold text-primary color-stock"></span></p>
 	                        <div class="row mb-2 variant-container">
 	                        </div>
 	                        <div class="row mb-2">
@@ -80,8 +82,8 @@
 								}
 							</div>
 	                        </div>
-	                        <div class="col-lg-4 col-md-6">
-	                            <div class="btn_add_to_cart"><a href="#0" class="btn_1">Add to Cart</a></div>
+	                        <div class="col-lg-4 col-md-6 btn-cart-container">
+	                            <div class="btn_add_to_cart"><a href="javascript:void(0);" class="btn_1">Add to Cart</a></div>
 	                        </div>
 	                    </div>
 	                </div>
@@ -389,6 +391,7 @@
 }
 
 @section Scripts {
+	<script src="~/admin/js/plugins/sweetalert2/sweetalert2.min.js"></script>
 	<script src="~/js/product-detail.js"></script>
 	<script src="~/lib/signalr/dist/browser/signalr.js"></script>
 	<script src="~/js/product_detail.js"></script>
