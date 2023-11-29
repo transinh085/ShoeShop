@@ -305,13 +305,15 @@ const showVariantSize = () => {
             <td>
                 <input data-size="${sizeId}" data-color="${variant.colorId}" type="number" class="form-control form-control-sm w-50 input-stock" value="${stock}">
             </td>
-            <td class="form-check form-switch mb-0">
-                <div class="form-check form-switch">
-                    <input data-size="${sizeId}" data-color="${variant.colorId}" class="form-check-input input-active" type="checkbox" checked="${active}">
-                </div>
-            </td></tr>`;
+            </tr>`;
         });
     })
+
+        //< td class="form-check form-switch mb-0" >
+        //    <div class="form-check form-switch">
+        //        <input data-size="${sizeId}" data-color="${variant.colorId}" class="form-check-input input-active" type="checkbox" checked="${active}">
+        //    </div>
+        //    </td >
 
     $("#table-variant").html(html);
 };
