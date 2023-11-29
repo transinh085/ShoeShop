@@ -68,7 +68,7 @@ namespace ShoeShop.Controllers
                 .Include(b => b.Topic)
 				.Include (b => b.User)
 				.OrderByDescending(blog => blog.CreatedAt)
-				.Take(8).ToListAsync();
+				.Take(5).ToListAsync();
 			return View();
 		}
 

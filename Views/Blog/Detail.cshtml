@@ -27,7 +27,7 @@
 					<div class="postmeta">
 						<ul>
 							<li><a href="#"><i class="ti-folder"></i> @blog.Topic.Name</a></li>
-							<li><i class="ti-calendar"></i> @blog.CreatedAt</li>
+							<li><i class="ti-calendar"></i> @blog.CreatedAt.ToString("dd/MM/yyyy")</li>
 							<li><a href="#"><i class="ti-user"></i> @blog.User.FullName</a></li>
 						</ul>
 					</div>
@@ -42,7 +42,17 @@
 			<!-- /col -->
 
 			<aside class="col-lg-3" id="suggest">
-				
+				<h3 class="widget-title">Lastest Posts</h3>
+				@foreach(var item in ViewBag.Related)
+				{
+						<div class="alignleft">
+							<a href="/blogs/@item.Slug"><img src="~/img/blogs/@item.Thumbnail.Name" alt=""></a>
+						</div>
+						<small>@item.Topic.Name - @item.CreatedAt.ToString("d")</small>
+					<p><a href="/blogs/@item.Slug" style="color:inherit; text-decoration:none;" onmouseover="this.style.color='blue'" onmouseout="this.style.color='inherit'">
+						@item.Name
+						</a></p>
+				}
 				<!-- /widget -->
 			</aside>
 			<!-- /aside -->
