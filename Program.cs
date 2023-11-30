@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using ShoeShop.Data;
+using ShoeShop.Helpers;
 using ShoeShop.Hubs;
 using ShoeShop.Models;
 using ShoeShop.Services;
@@ -12,6 +13,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddSignalR();
+builder.Services.AddTransient<ISendGridEmail, SendGridEmail>();
+builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration.GetSection("SendGrid"));
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
