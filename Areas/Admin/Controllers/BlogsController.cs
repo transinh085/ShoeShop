@@ -17,10 +17,12 @@ using System.Collections;
 using System.IO;
 using Microsoft.AspNetCore.Http;
 using ShoeShop.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ShoeShop.Areas.Admin.Controllers
 {
-    [Area("Admin")]
+	[Authorize(Roles = UserRoles.Admin)]
+	[Area("Admin")]
     public class BlogsController : Controller
     {
         private readonly AppDbContext _context;

@@ -1,11 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ShoeShop.Data;
 using ShoeShop.Models;
 
 namespace ShoeShop.Areas.Admin.Controllers
 {
-    [Area("Admin")]
+	[Authorize(Roles = UserRoles.Admin)]
+	[Area("Admin")]
     public class CategoriesController : Controller
     {
         private readonly AppDbContext _context;

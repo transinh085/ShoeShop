@@ -32,7 +32,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
-	options.AccessDeniedPath = new PathString("/Account/AccessDenied");
+	options.AccessDeniedPath = new PathString("/Errors/index");
 	options.Cookie.Name = "Cookie";
 	options.Cookie.HttpOnly = true;
 	options.ExpireTimeSpan = TimeSpan.FromMinutes(720);
