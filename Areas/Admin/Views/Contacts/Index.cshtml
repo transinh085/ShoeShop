@@ -7,8 +7,7 @@
 
 @section Styles {
     <link rel="stylesheet" href="~/admin/js/plugins/sweetalert2/sweetalert2.min.css">
-    <link rel="stylesheet" href="~/admin/js/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css">
-    <link rel="stylesheet" href="~/admin/js/plugins/flatpickr/flatpickr.min.css">
+    <link rel="stylesheet" href="~/admin/js/plugins/datatables-bs5/css/dataTables.bootstrap5.min.css">
 }
 
 <!-- Hero -->
@@ -34,21 +33,10 @@
             <h3 class="block-title">List Contacts</h3>
         </div>
         <div class="block-content">
-            <div class="row mb-3">
-                <form asp-controller="Contacts" asp-action="Index">
-
-                <div class="input-group">
-                    <input type="text" class="form-control form-control-alt" id="searchInput" name="searchInput" placeholder="TÌm kiếm...">
-                    <button type="submit" class="input-group-text bg-body border-0 btn-search" value="Search">
-                        <i class="fa fa-search"></i>
-                    </button>
-                </div>
-                </form>
-            </div>
-            <div class="table-responsive">
-                <table class="table table-vcenter">
+            <div class="block-content pb-4">
+                <table class="table table-striped table-vcenter" id="contact-table">
                     <thead>
-                        <tr class="bg-body-dark">
+                        <tr>
                             <th class="d-none d-sm-table-cell text-center" style="width: 40px;">#</th>
                             <th class="d-none d-sm-table-cell">Name</th>
                             <th class="d-none d-sm-table-cell">Email</th>
@@ -57,51 +45,8 @@
                             <th class="text-center" style="width: 80px;">Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        @for(int i = Model.Count()-1; i>=0;i--){
-                            var item = Model.ElementAt(i);
-                            if (item.IsDeleted == false)
-                            {
-                            <tr>
-                                <td>
-                                        @if(item.IsSeen == false)
-                                        {
-                                            <a >
-                                                <i class="fa fa-bell"></i>
-                                            </a>
-                                        }
-                                    </td>
-                                <th>
-                                    @Html.DisplayFor(modelItem => item.Name)
-                                </th>
-                                <th>
-                                    @Html.DisplayFor(modelItem => item.Email)
-                                </th>
-                                <th>
-                                    @Html.DisplayFor(modelItem => item.Message)
-                                </th>
-                                <th>
-                                     @Html.DisplayFor(modelItem => item.CreatedAt)
-                                </th>
-                                
-                                <th class="text-center">
-                                        <div class="btn-group">
-                                            <a asp-route-id="@item.Id" asp-action="Details" class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled" data-bs-toggle="tooltip">
-                                                <i class="fa  fa-eye"></i>
-                                    </a>
-                                    <button data-id="@item.Id" type="button" class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled btn-delete" data-bs-toggle="tooltip" aria-label="Delete" data-bs-original-title="Delete">
-                                    <i class="fa fa-times"></i>
-                                    </button>
-                                    </div>
-                                </th>
-                            </tr>
-                        }
-                        }
-                    </tbody>
                 </table>
-                <nav class="pagination-container">
-                    
-                </nav>
+                
             </div>
         </div>
     </div>
@@ -112,18 +57,8 @@
 
 @section Scripts {
     <script src="~/admin/js/plugins/sweetalert2/sweetalert2.min.js"></script>
-    <script src="~/admin/js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
-    <script src="~/admin/js/plugins/flatpickr/flatpickr.min.js"></script>
-    <script src="~/admin/js/plugins/jquery-validation/jquery.validate.min.js"></script>
-    <script src="~/admin/js/plugins/jquery-validation/additional-methods.js"></script>
-    <script src="~/admin/js/plugins/bootstrap-notify/bootstrap-notify.min.js"></script>
-    <script>Dashmix.helpersOnLoad(['js-flatpickr', 'jq-datepicker', 'jq-notify']);</script>
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-    <script src="~/admin/js/pagination.js"></script>
-    <script src="~/admin/js/customer.js"></script>
-    <script src="~/admin/js/plugins/sweetalert2/sweetalert2.min.js"></script>
+    <script src="~/admin/js/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/admin/js/plugins/datatables-bs5/js/dataTables.bootstrap5.min.js"></script>
     <script>
         $(document).on("click", ".btn-delete", async function () {
             let trid = $(this).data("id");
@@ -147,6 +82,79 @@
                 }
             }
         });
+
+        $(document).ready(function () {
+            jQuery.extend(jQuery.fn.dataTable.ext.classes, {
+                sWrapper: "dataTables_wrapper dt-bootstrap5",
+                sFilterInput: "form-control",
+                sLengthSelect: "form-select"
+            });
+            jQuery.extend(!0, jQuery.fn.dataTable.defaults, {
+                language: {
+                    lengthMenu: "_MENU_",
+                    search: "_INPUT_",
+                    searchPlaceholder: "Search..",
+                    info: "Page <strong>_PAGE_</strong> of <strong>_PAGES_</strong>",
+                    paginate: {
+                        first: '<i class="fa fa-angle-double-left"></i>',
+                        previous: '<i class="fa fa-angle-left"></i>',
+                        next: '<i class="fa fa-angle-right"></i>',
+                        last: '<i class="fa fa-angle-double-right"></i>'
+                    }
+                }
+            });
+            var table = $("#contact-table").dataTable({
+                pageLength: 5,
+                lengthMenu: [
+                    [5, 10, 20],
+                    [5, 10, 20]
+                ],
+                autoWidth: !1,
+                "processing": true,
+                "serverSide": true,
+                "filter": true,
+                "ajax": {
+                    "url": "/admin/contacts/GetContacts",
+                    "type": "POST",
+                    "datatype": "json"
+                },
+                "columnDefs": [
+                    {
+                        "targets": [0,1,2,3,4,5],
+                        "sortable": false
+                    }
+                ],
+                "columns": [
+                    {
+                        "data": "isseen", "name": "isseen", "autoWidth": true, "render": function (data, type, row) {
+                            return row.isSeen ? '' : '<i class="fa fa-bell"></i>';
+                        },
+                    },
+                    { "data": "name", "name": "Name", "autoWidth": true },
+                    { "data": "email", "name": "Email", "autoWidth": true },
+                    { "data": "message", "name": "Message", "autoWidth": true },
+                    {
+                        "data": "createdAt", "name": "Date", "autoWidth": true, "render": function (data, type, row) {
+                            return row.createdAt ? new Date(row.createdAt).toLocaleString() : '';
+                        }
+                    },
+                    {
+                        "render": function (data, type, row) {
+                            return `<div class="btn-group">
+                                                    <a href="/admin/contacts/details/${row.id}" class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled" data-bs-toggle="tooltip">
+                                                        <i class="fa  fa-eye"></i>
+                                            </a>
+                                            <button data-id="${row.id}" type="button" class="btn btn-sm btn-alt-secondary js-bs-tooltip-enabled btn-delete" data-bs-toggle="tooltip" aria-label="Delete" data-bs-original-title="Delete">
+                                            <i class="fa fa-times"></i>
+                                            </button>
+                                                </div>`;
+                        }, "className": "text-center"
+                    },
+                ]
+            });
+        });
+
     </script>
 }
+
 

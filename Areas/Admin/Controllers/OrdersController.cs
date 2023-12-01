@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using ShoeShop.Data;
@@ -7,7 +8,8 @@ using ShoeShop.Hubs;
 
 namespace ShoeShop.Areas.Admin.Controllers
 {
-    [Area("Admin")]
+	[Authorize(Roles = UserRoles.Admin)]
+	[Area("Admin")]
     public class OrdersController : Controller
     {
         public readonly AppDbContext _context;

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ShoeShop.Data;
 using ShoeShop.Data.Enum;
@@ -6,6 +7,7 @@ using System.Linq;
 
 namespace ShoeShop.Areas.Admin.Controllers
 {
+	[Authorize(Roles = UserRoles.Admin)]
 	[Area("Admin")]
 	public class HomeController : Controller
 	{

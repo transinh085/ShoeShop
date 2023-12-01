@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using ShoeShop.Data;
+using ShoeShop.Helpers;
 using ShoeShop.Hubs;
 using ShoeShop.Models;
 using ShoeShop.Services;
@@ -13,6 +14,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddSignalR();
 
+builder.Services.AddTransient<ISendMailService, SendMailService>();
+
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
+
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
 	options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnectionMySQL"));
@@ -21,7 +26,8 @@ builder.Services.AddControllers().AddJsonOptions(x =>
 				x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 builder.Services.AddIdentity<AppUser, IdentityRole>()
-	.AddEntityFrameworkStores<AppDbContext>();
+	.AddEntityFrameworkStores<AppDbContext>()
+	.AddDefaultTokenProviders();
 builder.Services.AddMemoryCache();
 builder.Services.AddSession();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -29,7 +35,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
-	options.AccessDeniedPath = new PathString("/Account/AccessDenied");
+	options.AccessDeniedPath = new PathString("/Errors/index");
 	options.Cookie.Name = "Cookie";
 	options.Cookie.HttpOnly = true;
 	options.ExpireTimeSpan = TimeSpan.FromMinutes(720);

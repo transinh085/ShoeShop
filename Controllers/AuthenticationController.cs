@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ShoeShop.ViewModels.Authentication;
 using System.Diagnostics;
+using ShoeShop.Services;
 
 namespace ShoeShop.Controllers
 {
@@ -13,14 +14,16 @@ namespace ShoeShop.Controllers
 		private readonly UserManager<AppUser> _userManager;
 		private readonly SignInManager<AppUser> _signInManager;
 		private readonly AppDbContext _context;
+		private readonly ISendMailService _mailService;
 
 		public AuthenticationController(UserManager<AppUser> userManager,
 			SignInManager<AppUser> signInManager,
-			AppDbContext context)
+			AppDbContext context, ISendMailService mailService)
 		{
 			_context = context;
 			_signInManager = signInManager;
 			_userManager = userManager;
+			_mailService = mailService;
 		}
 
 		public IActionResult Signin()
@@ -102,6 +105,72 @@ namespace ShoeShop.Controllers
 		{
 			await _signInManager.SignOutAsync();
 			return RedirectToAction("Index", "Home");
+		}
+
+		[HttpGet]
+		public IActionResult ForgotPasswordConfirmation()
+		{
+			return View();
+		}
+
+		[HttpGet]
+		public IActionResult ResetPasswordConfirmation()
+		{
+			return View();
+		}
+
+		[HttpGet]
+		public IActionResult ForgotPassword()
+		{
+			return View();
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+		{
+			if (ModelState.IsValid)
+			{
+				var user = await _userManager.FindByEmailAsync(model.Email);
+				if (user == null)
+				{
+					TempData["Error"] = "Account no found. Please try again";
+					return View(model);
+				}
+				var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+				var callbackurl = Url.Action("ResetPassword", "Authentication", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+
+				await _mailService.SendEmailAsync(model.Email, "Reset Email Confirmation", "Please reset email by going to this " +
+					"<a href=\"" + callbackurl + "\">link</a>");
+				return RedirectToAction("ForgotPasswordConfirmation");
+			}
+			return View(model);
+		}
+
+		[HttpGet]
+		public IActionResult ResetPassword(string code = null)
+		{
+			return code == null ? View("Error") : View();
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> ResetPassword(ResetPasswordViewModel resetPasswordViewModel)
+		{
+			if (ModelState.IsValid)
+			{
+				var user = await _userManager.FindByEmailAsync(resetPasswordViewModel.Email);
+				if (user == null)
+				{
+					TempData["Error"] = "User not found";
+					return View(resetPasswordViewModel);
+				}
+				var result = await _userManager.ResetPasswordAsync(user, resetPasswordViewModel.Code, resetPasswordViewModel.Password);
+				if (result.Succeeded)
+				{
+					return RedirectToAction("ResetPasswordConfirmation");
+				}
+			}
+			return View(resetPasswordViewModel);
 		}
 
 
