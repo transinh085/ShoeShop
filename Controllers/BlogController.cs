@@ -86,6 +86,7 @@ namespace ShoeShop.Controllers
                 .Include(blog => blog.Topic)
                 .Include(blog => blog.Thumbnail)
                 .Include(blog => blog.User)
+                .OrderByDescending(b => b.CreatedAt)
                 .AsQueryable();
 
             if (!string.IsNullOrEmpty(query))
