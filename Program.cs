@@ -13,8 +13,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddSignalR();
-builder.Services.AddTransient<ISendGridEmail, SendGridEmail>();
-builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration.GetSection("SendGrid"));
+
+builder.Services.AddTransient<ISendMailService, SendMailService>();
+
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
@@ -24,7 +26,8 @@ builder.Services.AddControllers().AddJsonOptions(x =>
 				x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 builder.Services.AddIdentity<AppUser, IdentityRole>()
-	.AddEntityFrameworkStores<AppDbContext>();
+	.AddEntityFrameworkStores<AppDbContext>()
+	.AddDefaultTokenProviders();
 builder.Services.AddMemoryCache();
 builder.Services.AddSession();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

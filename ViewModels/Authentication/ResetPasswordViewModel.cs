@@ -11,6 +11,8 @@ namespace ShoeShop.ViewModels.Authentication
 		[Required]
 		[DataType(DataType.Password)]
 		[Display(Name = "Password")]
+		[StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+		[RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W).+$", ErrorMessage = "Password must contain at least one lowercase letter, one uppercase letter, one digit, and one non-alphanumeric character.")]
 		public string Password { get; set; }
 		[DataType(DataType.Password)]
 		[Display(Name = "Confirm Password")]

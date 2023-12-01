@@ -14,16 +14,16 @@ namespace ShoeShop.Controllers
 		private readonly UserManager<AppUser> _userManager;
 		private readonly SignInManager<AppUser> _signInManager;
 		private readonly AppDbContext _context;
-		private readonly ISendGridEmail _sendGridEmail;
+		private readonly ISendMailService _mailService;
 
 		public AuthenticationController(UserManager<AppUser> userManager,
 			SignInManager<AppUser> signInManager,
-			AppDbContext context, ISendGridEmail sendGridEmail)
+			AppDbContext context, ISendMailService mailService)
 		{
 			_context = context;
 			_signInManager = signInManager;
 			_userManager = userManager;
-			_sendGridEmail = sendGridEmail;
+			_mailService = mailService;
 		}
 
 		public IActionResult Signin()
@@ -108,6 +108,18 @@ namespace ShoeShop.Controllers
 		}
 
 		[HttpGet]
+		public IActionResult ForgotPasswordConfirmation()
+		{
+			return View();
+		}
+
+		[HttpGet]
+		public IActionResult ResetPasswordConfirmation()
+		{
+			return View();
+		}
+
+		[HttpGet]
 		public IActionResult ForgotPassword()
 		{
 			return View();
@@ -121,12 +133,13 @@ namespace ShoeShop.Controllers
 				var user = await _userManager.FindByEmailAsync(model.Email);
 				if (user == null)
 				{
-					return RedirectToAction("ForgotPasswordConfirmation");
+					TempData["Error"] = "Account no found. Please try again";
+					return View(model);
 				}
 				var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-				var callbackurl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+				var callbackurl = Url.Action("ResetPassword", "Authentication", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
 
-				await _sendGridEmail.SendEmailAsync(model.Email, "Reset Email Confirmation", "Please reset email by going to this " +
+				await _mailService.SendEmailAsync(model.Email, "Reset Email Confirmation", "Please reset email by going to this " +
 					"<a href=\"" + callbackurl + "\">link</a>");
 				return RedirectToAction("ForgotPasswordConfirmation");
 			}
@@ -148,8 +161,8 @@ namespace ShoeShop.Controllers
 				var user = await _userManager.FindByEmailAsync(resetPasswordViewModel.Email);
 				if (user == null)
 				{
-					ModelState.AddModelError("Email", "User not found");
-					return View();
+					TempData["Error"] = "User not found";
+					return View(resetPasswordViewModel);
 				}
 				var result = await _userManager.ResetPasswordAsync(user, resetPasswordViewModel.Code, resetPasswordViewModel.Password);
 				if (result.Succeeded)
