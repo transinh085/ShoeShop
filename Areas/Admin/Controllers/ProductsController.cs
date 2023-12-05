@@ -361,7 +361,8 @@ namespace ShoeShop.Areas.Admin.Controllers
             }
         }
 
-        public async Task<IActionResult> GetVariant(int? id)
+		[AllowAnonymous]
+		public async Task<IActionResult> GetVariant(int? id)
         {
             if (id == null || _context.Products == null)
             {

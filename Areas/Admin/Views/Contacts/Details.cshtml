@@ -6,7 +6,11 @@
 }
 @section Styles {
     <link rel="stylesheet" href="~/css/detailcontact.css">
+    <link rel="stylesheet" href="~/admin/js/plugins/sweetalert2/sweetalert2.min.css">
+    <link rel="stylesheet" href="~/admin/js/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css">
+    <link rel="stylesheet" href="~/admin/js/plugins/flatpickr/flatpickr.min.css">
 }
+
 
 
 <div id="page-container" class="sidebar-o sidebar-dark enable-page-overlay side-scroll page-header-fixed">
@@ -34,7 +38,7 @@
                             }
                             <input class="form-check-input" type="checkbox" disabled id="dm-post-edit-active" @check>                            
                             <a class="btn btn-sm btn-alt-info btn-checkbox" asp-route-id="@contact.Id" asp-action="Read">Mark as read</a>
-                            <button data-id="@contact.Id" class="btn btn-sm btn-checkbox btn-delete btn-danger">Delete</button>
+                            <button type="button" data-id="@contact.Id" class="btn btn-sm btn-delete btn-delete btn-danger">Delete</button>
                             </div>
                     </div>
                 </div>
@@ -99,16 +103,27 @@
                 confirmButtonText: "Yes, I'm sure",
                 cancelButtonText: "Cannel"
             });
-
+            
             if (result.value) {
                 try {
-                    let response = await $.post(`./Contacts/Delete/${trid}`);
-                    Swal.fire("Deleted!", "Successfully deleted the contact.", "success");
+                    let response = await $.post(`/Admin/Contacts/Delete/${trid}`);
+                    $.ajax({
+                        type: 'POST',
+                        processData: false,
+                        contentType: false,
+                        success: function () {
+                            window.location.href = '/Admin/Blogs/Index';
+                        },
+                        error: function (xhr, status, error) {
+                            console.error(error);
+                        }
+                    });
                 } catch (error) {
                     console.error("Error:", error);
                     Swal.fire("Lỗi !", "Deletion of the contact was not successful.", "error");
                 }
             }
+           
         });
     </script>
 }
