@@ -159,7 +159,7 @@
 						totalPage = response.TotalPages;
 						let html = ``;
 						response?.Result.forEach(blog => {
-							const time = new Date(blog.CreatedAt).toLocaleDateString;
+							const time = new Date(blog.CreatedAt).toLocaleDateString();
 							html += `<div class="col-md-6">
 								<article class="blog">
 											<figure >

@@ -1,4 +1,5 @@
 ﻿using Bogus.DataSets;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +13,8 @@ using Image = ShoeShop.Models.Image;
 
 namespace ShoeShop.Areas.Admin.Controllers
 {
-    [Area("Admin")]
+	[Authorize(Roles = UserRoles.Admin)]
+	[Area("Admin")]
     public class ProductsController : Controller
     {
         private readonly AppDbContext _context;
