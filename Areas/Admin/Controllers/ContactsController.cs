@@ -108,7 +108,7 @@ namespace ShoeShop.Areas.Admin.Controllers
                 _context.Update(contact);
                 await _context.SaveChangesAsync();
             }
-            return Ok(new { message = "Delete successfully" });
+            return RedirectToAction("Index");
         }
 
         public async Task<IActionResult> Read(int? id)
