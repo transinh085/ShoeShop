@@ -247,10 +247,396 @@ namespace ShoeShop.Data.Seeder
 				Create(context, product1);
 				Create(context, product3);
 				Create(context, product4);
-			}
-		}
+                ProductSeedViewModel producth1 = new ProductSeedViewModel
+                {
+                    Name = "Giày VINTAS NAUDA EXT - LOW TOP - MONK'S ROBE",
+                    Slug = "AV00203",
+                    Description = "Đây là sản phẩm với bảng sze mới, tối ưu hơn khi Ananas có sự bổ sung thêm những size lẻ từ nganỳ 01/06/2023, số liệu có thể có sự khác đi đôi chút so với các thông số được in trong một số mẫu giày đã phát hành.",
+                    Price = 650000,
+                    Category = 2,
+                    Brand = 4,
+                    Status = true,
+                    Variants = new List<VariantViewModel>
+                    {
+                        new VariantViewModel
+                        {
+                            ColorId = 8,
+                            Images = new List<string>
+                            {
+                                "Pro_AV00203_1.jpeg",
+                                "Pro_AV00203_2.jpeg",
+                                "Pro_AV00203_3.jpeg",
+                                "Pro_AV00203_4.jpeg",
+                            },
+                            Thumbnail = 0,
+                            Sizes = new List<SizeViewModel>
+                            {
+                                new SizeViewModel
+                                {
+                                    SizeId = 2,
+                                    Active = false,
+                                    Stock = 10
+                                },
+                                new SizeViewModel
+                                {
+                                    SizeId = 3,
+                                    Active = false,
+                                    Stock = 10
+                                },
+                                new SizeViewModel
+                                {
+                                    SizeId = 4,
+                                    Active = true,
+                                    Stock = 10
+                                },
+                            },
 
-		public void Create(AppDbContext _context, ProductSeedViewModel productViewModel)
+                        },
+                    }
+                };
+                // Product hiu_prd2
+                ProductSeedViewModel producth2 = new ProductSeedViewModel
+                {
+                    Name = "Giày PATTAS TOMO - HIGH TOP - OFFWHITE",
+                    Slug = "AV00182",
+                    Description = "Đây là sản phẩm với bảng sze mới, tối ưu hơn khi Ananas có sự bổ sung thêm những size lẻ từ nganỳ 01/06/2023, số liệu có thể có sự khác đi đôi chút so với các thông số được in trong một số mẫu giày đã phát hành.",
+                    Price = 750000,
+                    Category = 2,
+                    Brand = 4,
+                    Status = true,
+                    Variants = new List<VariantViewModel>
+                    {
+                        new VariantViewModel
+                        {
+                            ColorId = 1,
+                            Images = new List<string>
+                            {
+                                "Pro_AV00182_1.jpeg",
+                                "Pro_AV00182_2.jpeg",
+                                "Pro_AV00182_3.jpeg",
+                                "Pro_AV00182_4.jpeg",
+                            },
+                            Thumbnail = 0,
+                            Sizes = new List<SizeViewModel>
+                            {
+                                new SizeViewModel
+                                {
+                                    SizeId = 2,
+                                    Active = false,
+                                    Stock = 10
+                                },
+                                new SizeViewModel
+                                {
+                                    SizeId = 3,
+                                    Active = false,
+                                    Stock = 10
+                                },
+                                new SizeViewModel
+                                {
+                                    SizeId = 4,
+                                    Active = true,
+                                    Stock = 10
+                                },
+                            },
+
+                        },
+
+                    }
+                };
+
+                // Product hiu_prd3
+                ProductSeedViewModel producth3 = new ProductSeedViewModel
+                {
+                    Name = "Giày TRACK 6 2.BLUES - LOW TOP - NAVY BLUE",
+                    Slug = "A6T014",
+                    Description = "Đây là sản phẩm với bảng sze mới, tối ưu hơn khi Ananas có sự bổ sung thêm những size lẻ từ nganỳ 01/06/2023, số liệu có thể có sự khác đi đôi chút so với các thông số được in trong một số mẫu giày đã phát hành.",
+                    Price = 1190000,
+                    Category = 2,
+                    Brand = 4,
+                    Status = true,
+                    Variants = new List<VariantViewModel>
+                    {
+                        new VariantViewModel
+                        {
+                            ColorId = 4,
+                            Images = new List<string>
+                            {
+                                "Pro_A6T014_1.jpeg",
+                                "Pro_A6T014_2.jpeg",
+                                "Pro_A6T014_3.jpeg",
+                                "Pro_A6T014_4.jpeg",
+                            },
+                            Thumbnail = 0,
+                            Sizes = new List<SizeViewModel>
+                            {
+                                new SizeViewModel
+                                {
+                                    SizeId = 2,
+                                    Active = false,
+                                    Stock = 10
+                                },
+                                new SizeViewModel
+                                {
+                                    SizeId = 3,
+                                    Active = false,
+                                    Stock = 10
+                                },
+                                new SizeViewModel
+                                {
+                                    SizeId = 4,
+                                    Active = true,
+                                    Stock = 10
+                                },
+                            },
+
+                        },
+                         new VariantViewModel
+                        {
+                            ColorId = 4,
+                            Images = new List<string>
+                            {
+                                "Pro_A6T015_1.jpeg",
+                                "Pro_A6T015_2.jpeg",
+                                "Pro_A6T015_3.jpeg",
+                                "Pro_A6T015_4.jpeg",
+                            },
+                            Thumbnail = 0,
+                            Sizes = new List<SizeViewModel>
+                            {
+                                new SizeViewModel
+                                {
+                                    SizeId = 2,
+                                    Active = false,
+                                    Stock = 10
+                                },
+                                new SizeViewModel
+                                {
+                                    SizeId = 3,
+                                    Active = false,
+                                    Stock = 10
+                                },
+                                new SizeViewModel
+                                {
+                                    SizeId = 4,
+                                    Active = true,
+                                    Stock = 10
+                                },
+                            },
+
+                        },
+                    }
+                };
+
+
+                // Product hiu_prd4
+                ProductSeedViewModel producth4 = new ProductSeedViewModel
+                {
+                    Name = "Giày URBAS SC - HIGH TOP - FOLIAGE",
+                    Slug = "AV00194",
+                    Description = "Đây là sản phẩm với bảng sze mới, tối ưu hơn khi Ananas có sự bổ sung thêm những size lẻ từ nganỳ 01/06/2023, số liệu có thể có sự khác đi đôi chút so với các thông số được in trong một số mẫu giày đã phát hành.",
+                    Price = 650000,
+                    Category = 2,
+                    Brand = 4,
+                    Status = true,
+                    Variants = new List<VariantViewModel>
+                    {
+                        new VariantViewModel
+                        {
+                            ColorId = 5,
+                            Images = new List<string>
+                            {
+                                "Pro_AV00194_1.jpeg",
+                                "Pro_AV00194_2.jpeg",
+                                "Pro_AV00194_3.jpeg",
+                                "Pro_AV00194_4.jpeg",
+                            },
+                            Thumbnail = 0,
+                            Sizes = new List<SizeViewModel>
+                            {
+                                new SizeViewModel
+                                {
+                                    SizeId = 2,
+                                    Active = false,
+                                    Stock = 10
+                                },
+                                new SizeViewModel
+                                {
+                                    SizeId = 3,
+                                    Active = false,
+                                    Stock = 10
+                                },
+                                new SizeViewModel
+                                {
+                                    SizeId = 4,
+                                    Active = true,
+                                    Stock = 10
+                                },
+                            },
+
+                        },
+                        new VariantViewModel
+                        {
+                            ColorId = 9,
+                            Images = new List<string>
+                            {
+                                "Pro_AV00192_1.jpeg",
+                                "Pro_AV00192_2.jpeg",
+                                "Pro_AV00192_3.jpeg",
+                                "Pro_AV00192_4.jpeg",
+                            },
+                            Thumbnail = 0,
+                            Sizes = new List<SizeViewModel>
+                            {
+                                new SizeViewModel
+                                {
+                                    SizeId = 2,
+                                    Active = false,
+                                    Stock = 10
+                                },
+                                new SizeViewModel
+                                {
+                                    SizeId = 3,
+                                    Active = false,
+                                    Stock = 10
+                                },
+                                new SizeViewModel
+                                {
+                                    SizeId = 4,
+                                    Active = true,
+                                    Stock = 10
+                                },
+                            },
+
+                        },
+                        new VariantViewModel
+                        {
+                            ColorId = 1,
+                            Images = new List<string>
+                            {
+                                "Pro_AV00174_1.jpeg",
+                                "Pro_AV00174_2.jpeg",
+                                "Pro_AV00174_3.jpeg",
+                                "Pro_AV00174_4.jpeg",
+                            },
+                            Thumbnail = 0,
+                            Sizes = new List<SizeViewModel>
+                            {
+                                new SizeViewModel
+                                {
+                                    SizeId = 2,
+                                    Active = false,
+                                    Stock = 10
+                                },
+                                new SizeViewModel
+                                {
+                                    SizeId = 3,
+                                    Active = false,
+                                    Stock = 10
+                                },
+                                new SizeViewModel
+                                {
+                                    SizeId = 4,
+                                    Active = true,
+                                    Stock = 10
+                                },
+                            },
+
+                        },
+                    }
+                };
+
+                // Product hiu_prd5
+                ProductSeedViewModel producth5 = new ProductSeedViewModel
+                {
+                    Name = "Giày URBAS SC - MULE - DARK PURPLE",
+                    Slug = " AV00197",
+                    Description = "Đây là sản phẩm với bảng sze mới, tối ưu hơn khi Ananas có sự bổ sung thêm những size lẻ từ nganỳ 01/06/2023, số liệu có thể có sự khác đi đôi chút so với các thông số được in trong một số mẫu giày đã phát hành.",
+                    Price = 580000,
+                    Category = 2,
+                    Brand = 4,
+                    Status = true,
+                    Variants = new List<VariantViewModel>
+                    {
+                        new VariantViewModel
+                        {
+                            ColorId = 10,
+                            Images = new List<string>
+                            {
+                                "Pro_AV00197_1.jpeg",
+                                "Pro_AV00197_2.jpeg",
+                                "Pro_AV00197_3.jpeg",
+                                "Pro_AV00197_4.jpeg",
+                            },
+                            Thumbnail = 0,
+                            Sizes = new List<SizeViewModel>
+                            {
+                                new SizeViewModel
+                                {
+                                    SizeId = 2,
+                                    Active = false,
+                                    Stock = 10
+                                },
+                                new SizeViewModel
+                                {
+                                    SizeId = 3,
+                                    Active = false,
+                                    Stock = 10
+                                },
+                                new SizeViewModel
+                                {
+                                    SizeId = 4,
+                                    Active = true,
+                                    Stock = 10
+                                },
+                            },
+
+                        },
+                        new VariantViewModel
+                        {
+                            ColorId = 9,
+                            Images = new List<string>
+                            {
+                                "Pro_AV00200_1.jpeg",
+                                "Pro_AV00200_2.jpeg",
+                                "Pro_AV00200_3.jpeg",
+                                "Pro_AV00200_4.jpeg",
+                            },
+                            Thumbnail = 0,
+                            Sizes = new List<SizeViewModel>
+                            {
+                                new SizeViewModel
+                                {
+                                    SizeId = 2,
+                                    Active = false,
+                                    Stock = 10
+                                },
+                                new SizeViewModel
+                                {
+                                    SizeId = 3,
+                                    Active = false,
+                                    Stock = 10
+                                },
+                                new SizeViewModel
+                                {
+                                    SizeId = 4,
+                                    Active = true,
+                                    Stock = 10
+                                },
+                            },
+
+                        },
+                    }
+                };
+                Create(context, producth1);
+                Create(context, producth2);
+                Create(context, producth3);
+                Create(context, producth4);
+                Create(context, producth5);
+            }
+        }
+        
+
+        public void Create(AppDbContext _context, ProductSeedViewModel productViewModel)
 		{
 			Product product = new Product()
 			{
