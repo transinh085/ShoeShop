@@ -20,7 +20,7 @@
 					</td>
 					<td>
 						<div class="numbers-row">
-							<input type="text" data-id="${item.variantSizeId}" value="${item.quantity}" id="quantity_1" class="qty2" name="quantity_1">
+							<input type="text" data-id="${item.variantSizeId}" value="${item.quantity}" class="qty2">
 							<div class="inc button_inc">+</div><div class="dec button_inc">-</div>
 					</td>
 					<td class="text-center">
@@ -55,6 +55,36 @@ $(document).on('click', '.button_inc', function () {
 	}
 	renderCartTable();
 });
+
+$(document).ready(function () {
+	$(".qty2").on("input", function () {
+		var newQuantity = $(this).val();
+		var dataId = $(this).data("id");
+		let varientS = cartData.find((vS) => vS.variantSizeId == dataId);
+
+		if (/^[1-9]\d*$/.test(newQuantity)) {
+			if (newQuantity > varientS.stock) {
+				Swal.fire({
+					icon: "error",
+					title: "Oops...",
+					text: "The product does not have enough inventory"
+				});
+				$(this).val(varientS.quantity);
+			} else {
+				handleChangeQuantity(dataId, parseInt(newQuantity));
+				renderCartTable();
+			}
+		} else {
+			Swal.fire({
+				icon: "error",
+				title: "Oops...",
+				text: "Please enter a valid positive number with no special characters"
+			});
+			$(this).val(varientS.quantity);
+		}
+	});
+});
+
 
 
 $(document).on('click', '.delete-cart-tbl', async function () {
