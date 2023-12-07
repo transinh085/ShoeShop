@@ -145,20 +145,19 @@ jQuery(".add-new-address-form").validate({
 		},
 		"checkout-email": {
 			required: !0,
-			number: !0
+			email: !0
 		},
 		"checkout-phone": {
 			required: !0
 		},
 		"checkout-address": {
 			required: !0,
-			number: !0
 		}
 	},
 	messages: {
 		"checkout-fullname": "Please enter fullname!",
 		"checkout-email": "Please enter a email!",
 		"checkout-phone": "Please enter a phone!",
-		"checkout-address": "Please select a address!",
+		"checkout-address": "Please enter a address!",
 	}
 });
