@@ -366,6 +366,9 @@
 					// Gọi lại hàm fetchData với trang mới
 					fetchData();
 				}
+				$('html, body').animate({
+					scrollTop: $("#stick_here").offset().top
+				}, 0);
 			});
 
 			function updateUrlParameter(key, value) {

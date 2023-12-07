@@ -87,9 +87,16 @@ namespace ShoeShop.Controllers
 				TempData["Error"] = "This email address is already in use";
 				return View(registerViewModel);
 			}
+			user = await _userManager.FindByNameAsync(registerViewModel.UserName);
+			if (user != null)
+			{
+				TempData["Error"] = "This username address is already in use";
+				return View(registerViewModel);
+			}
 
 			var newUser = new AppUser()
 			{
+				FullName = registerViewModel.FullName,
 				UserName = registerViewModel.UserName,
 				Email = registerViewModel.EmailAddress,
 			};

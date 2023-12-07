@@ -140,59 +140,59 @@
         ? '<span class="badge bg-success">Enable</span>'
         : '<span class="badge bg-danger">Disable</span>';
       htmlCus += `<tr>
-                                                    <td class="d-none d-sm-table-cell text-center">${index}</td>
-                                                    <td class="text-center">
-                                                                                                <img class="img-avatar img-avatar48" src="${
-                                                                                                  !item.profileImageUrl
-                                                                                                    ? "/admin/media/avatars/avatar1.jpg"
-                                                                                                    : item.profileImageUrl
-                                                                                                }" alt="">
-                                                    </td>
-                                                    <td class="d-none d-sm-table-cell">
-                                                                        <a href="javascript:void(0)">${
-                                                                          item.fullName
-                                                                        }</a>
-                                                    </td>
-                                                    <td class="d-none d-sm-table-cell">
-                                                                        ${
-                                                                          item.email
-                                                                        }
-                                                    </td>
-                                                    <td class="d-none d-sm-table-cell">
-                                                                        ${
-                                                                          item.phoneNumber
-                                                                        }
-                                                    </td>
-                                                    <td class="d-none d-sm-table-cell">
-                                                                        ${
-                                                                          item.gender ==
-                                                                          0
-                                                                            ? "Male"
-                                                                            : "Female"
-                                                                        }
-                                                    </td>
-                                                    <td class="d-none d-sm-table-cell">
-                                                                        ${formatDateFromString(
-                                                                          item.birthDay
-                                                                        )}
-                                                    </td>
-                                                    <td class="d-none d-lg-table-cell">
-                                                                        ${st}
-                                                    </td>
+                    <td class="d-none d-sm-table-cell text-center">${index}</td>
+                    <td class="text-center">
+                                                                <img class="img-avatar img-avatar48" src="${
+                                                                    !item.profileImageUrl
+                                                                    ? "/admin/media/avatars/avatar1.jpg"
+                                                                    : item.profileImageUrl
+                                                                }" alt="">
+                    </td>
+                    <td class="d-none d-sm-table-cell">
+                                        <a href="javascript:void(0)">${
+                                            item.fullName
+                                        }</a>
+                    </td>
+                    <td class="d-none d-sm-table-cell">
+                                        ${
+                                            item.email
+                                        }
+                    </td>
+                    <td class="d-none d-sm-table-cell">
+                                        ${
+                                            item.phoneNumber
+                                        }
+                    </td>
+                    <td class="d-none d-sm-table-cell">
+                                        ${
+                                            item.gender ==
+                                            0
+                                            ? "Male"
+                                            : "Female"
+                                        }
+                    </td>
+                    <td class="d-none d-sm-table-cell">
+                                        ${formatDateFromString(
+                                            item.birthDay
+                                        )}
+                    </td>
+                    <td class="d-none d-lg-table-cell">
+                                        ${st}
+                    </td>
 
-                                                                <td class="text-center col-action">
-                                                      <a class="btn btn-sm btn-alt-secondary user-edit show" href="javascript:void(0)" data-bs-toggle="tooltip" aria-label="Edit" data-bs-original-title="Edit" data-action="edit" data-id="${
-                                                        item.id
-                                                      }">
-                                          <i class="fa fa-fw fa-pencil"></i>
-                                      </a>
-                                                      <a class="btn btn-sm btn-alt-secondary user-delete show" href="javascript:void(0)" data-bs-toggle="tooltip" aria-label="Delete" data-bs-original-title="Delete" data-action="delete" data-id="${
-                                                        item.id
-                                                      }">
-                                          <i class="fa fa-fw fa-times"></i>
-                                      </a>
-                                  </td>
-                                                </tr>`;
+                                <td class="text-center col-action">
+                        <a class="btn btn-sm btn-alt-secondary user-edit show" href="javascript:void(0)" data-bs-toggle="tooltip" aria-label="Edit" data-bs-original-title="Edit" data-action="edit" data-id="${
+                        item.id
+                        }">
+            <i class="fa fa-fw fa-pencil"></i>
+        </a>
+                        <a class="btn btn-sm btn-alt-secondary user-delete show" href="javascript:void(0)" data-bs-toggle="tooltip" aria-label="Delete" data-bs-original-title="Delete" data-action="delete" data-id="${
+                        item.id
+                        }">
+            <i class="fa fa-fw fa-times"></i>
+        </a>
+    </td>
+                </tr>`;
     });
     document.getElementById("listCustomer").innerHTML = htmlCus;
   }
