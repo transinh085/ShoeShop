@@ -44,6 +44,7 @@ namespace ShoeShop.Areas.Admin.Controllers
                     u.BirthDay,
                     u.Email,
                     u.PhoneNumber,
+                    u.Status,
                     u.JoinTime,
                 })
                 .OrderByDescending(u => u.JoinTime)
