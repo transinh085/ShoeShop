@@ -251,7 +251,7 @@ namespace ShoeShop.Data.Seeder
                 {
                     Name = "Giày VINTAS NAUDA EXT - LOW TOP - MONK'S ROBE",
                     Slug = "AV00203",
-                    Description = "Đây là sản phẩm với bảng sze mới, tối ưu hơn khi Ananas có sự bổ sung thêm những size lẻ từ nganỳ 01/06/2023, số liệu có thể có sự khác đi đôi chút so với các thông số được in trong một số mẫu giày đã phát hành.",
+                    Description = "Đây là sản phẩm với bảng sze mới, tối ưu hơn khi Ananas có sự bổ sung thêm những size lẻ từ ngày 01/06/2023, số liệu có thể có sự khác đi đôi chút so với các thông số được in trong một số mẫu giày đã phát hành.",
                     Price = 650000,
                     Category = 2,
                     Brand = 4,
@@ -299,7 +299,7 @@ namespace ShoeShop.Data.Seeder
                 {
                     Name = "Giày PATTAS TOMO - HIGH TOP - OFFWHITE",
                     Slug = "AV00182",
-                    Description = "Đây là sản phẩm với bảng sze mới, tối ưu hơn khi Ananas có sự bổ sung thêm những size lẻ từ nganỳ 01/06/2023, số liệu có thể có sự khác đi đôi chút so với các thông số được in trong một số mẫu giày đã phát hành.",
+                    Description = "Đây là sản phẩm với bảng sze mới, tối ưu hơn khi Ananas có sự bổ sung thêm những size lẻ từ ngày 01/06/2023, số liệu có thể có sự khác đi đôi chút so với các thông số được in trong một số mẫu giày đã phát hành.",
                     Price = 750000,
                     Category = 2,
                     Brand = 4,
@@ -349,7 +349,7 @@ namespace ShoeShop.Data.Seeder
                 {
                     Name = "Giày TRACK 6 2.BLUES - LOW TOP - NAVY BLUE",
                     Slug = "A6T014",
-                    Description = "Đây là sản phẩm với bảng sze mới, tối ưu hơn khi Ananas có sự bổ sung thêm những size lẻ từ nganỳ 01/06/2023, số liệu có thể có sự khác đi đôi chút so với các thông số được in trong một số mẫu giày đã phát hành.",
+                    Description = "Đây là sản phẩm với bảng sze mới, tối ưu hơn khi Ananas có sự bổ sung thêm những size lẻ từ ngày 01/06/2023, số liệu có thể có sự khác đi đôi chút so với các thông số được in trong một số mẫu giày đã phát hành.",
                     Price = 1190000,
                     Category = 2,
                     Brand = 4,
@@ -433,7 +433,7 @@ namespace ShoeShop.Data.Seeder
                 {
                     Name = "Giày URBAS SC - HIGH TOP - FOLIAGE",
                     Slug = "AV00194",
-                    Description = "Đây là sản phẩm với bảng sze mới, tối ưu hơn khi Ananas có sự bổ sung thêm những size lẻ từ nganỳ 01/06/2023, số liệu có thể có sự khác đi đôi chút so với các thông số được in trong một số mẫu giày đã phát hành.",
+                    Description = "Đây là sản phẩm với bảng sze mới, tối ưu hơn khi Ananas có sự bổ sung thêm những size lẻ từ ngày 01/06/2023, số liệu có thể có sự khác đi đôi chút so với các thông số được in trong một số mẫu giày đã phát hành.",
                     Price = 650000,
                     Category = 2,
                     Brand = 4,
@@ -445,10 +445,10 @@ namespace ShoeShop.Data.Seeder
                             ColorId = 5,
                             Images = new List<string>
                             {
-                                "Pro_AV00194_1.jpeg",
-                                "Pro_AV00194_2.jpeg",
-                                "Pro_AV00194_3.jpeg",
-                                "Pro_AV00194_4.jpeg",
+                                "Pro_AV00194_1.jpg",
+                                "Pro_AV00194_2.jpg",
+                                "Pro_AV00194_3.jpg",
+                                "Pro_AV00194_4.jpg",
                             },
                             Thumbnail = 0,
                             Sizes = new List<SizeViewModel>
@@ -479,10 +479,10 @@ namespace ShoeShop.Data.Seeder
                             ColorId = 9,
                             Images = new List<string>
                             {
-                                "Pro_AV00192_1.jpeg",
-                                "Pro_AV00192_2.jpeg",
-                                "Pro_AV00192_3.jpeg",
-                                "Pro_AV00192_4.jpeg",
+                                "Pro_AV00192_1.jpg",
+                                "Pro_AV00192_2.jpg",
+                                "Pro_AV00192_3.jpg",
+                                "Pro_AV00192_4.jpg",
                             },
                             Thumbnail = 0,
                             Sizes = new List<SizeViewModel>
@@ -550,7 +550,7 @@ namespace ShoeShop.Data.Seeder
                 {
                     Name = "Giày URBAS SC - MULE - DARK PURPLE",
                     Slug = " AV00197",
-                    Description = "Đây là sản phẩm với bảng sze mới, tối ưu hơn khi Ananas có sự bổ sung thêm những size lẻ từ nganỳ 01/06/2023, số liệu có thể có sự khác đi đôi chút so với các thông số được in trong một số mẫu giày đã phát hành.",
+                    Description = "Đây là sản phẩm với bảng sze mới, tối ưu hơn khi Ananas có sự bổ sung thêm những size lẻ từ ngày 01/06/2023, số liệu có thể có sự khác đi đôi chút so với các thông số được in trong một số mẫu giày đã phát hành.",
                     Price = 580000,
                     Category = 2,
                     Brand = 4,
@@ -562,10 +562,10 @@ namespace ShoeShop.Data.Seeder
                             ColorId = 10,
                             Images = new List<string>
                             {
-                                "Pro_AV00197_1.jpeg",
-                                "Pro_AV00197_2.jpeg",
-                                "Pro_AV00197_3.jpeg",
-                                "Pro_AV00197_4.jpeg",
+                                "Pro_AV00197_1.jpg",
+                                "Pro_AV00197_2.jpg",
+                                "Pro_AV00197_3.jpg",
+                                "Pro_AV00197_4.jpg",
                             },
                             Thumbnail = 0,
                             Sizes = new List<SizeViewModel>
@@ -596,10 +596,10 @@ namespace ShoeShop.Data.Seeder
                             ColorId = 9,
                             Images = new List<string>
                             {
-                                "Pro_AV00200_1.jpeg",
-                                "Pro_AV00200_2.jpeg",
-                                "Pro_AV00200_3.jpeg",
-                                "Pro_AV00200_4.jpeg",
+                                "Pro_AV00200_1.jpg",
+                                "Pro_AV00200_2.jpg",
+                                "Pro_AV00200_3.jpg",
+                                "Pro_AV00200_4.jpg",
                             },
                             Thumbnail = 0,
                             Sizes = new List<SizeViewModel>
