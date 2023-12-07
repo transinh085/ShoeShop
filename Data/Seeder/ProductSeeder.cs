@@ -31,7 +31,8 @@ namespace ShoeShop.Data.Seeder
                     Category = 1,
 					Brand = 1,
 					Status = true,
-					Variants = new List<VariantViewModel>
+                    IsFeatured = true,
+                    Variants = new List<VariantViewModel>
 					{
 						new VariantViewModel
 						{
@@ -304,6 +305,7 @@ namespace ShoeShop.Data.Seeder
                     Category = 2,
                     Brand = 4,
                     Status = true,
+                    IsFeatured = true,
                     Variants = new List<VariantViewModel>
                     {
                         new VariantViewModel
@@ -438,6 +440,7 @@ namespace ShoeShop.Data.Seeder
                     Category = 2,
                     Brand = 4,
                     Status = true,
+                    IsFeatured = true,
                     Variants = new List<VariantViewModel>
                     {
                         new VariantViewModel
@@ -700,7 +703,8 @@ namespace ShoeShop.Data.Seeder
 					Category = 1,
 					Brand = 3,
 					Status = true,
-					Variants = new List<VariantViewModel>
+                    IsFeatured = true,
+                    Variants = new List<VariantViewModel>
 				{
 					new VariantViewModel
 					{
@@ -934,7 +938,8 @@ namespace ShoeShop.Data.Seeder
 					Category = 3,
 					Brand = 1,
 					Status = true,
-					Variants = new List<VariantViewModel>
+                    IsFeatured = true,
+                    Variants = new List<VariantViewModel>
 				{
 					new VariantViewModel
 					{
@@ -1033,6 +1038,7 @@ namespace ShoeShop.Data.Seeder
 				Slug = productViewModel.Slug,
 				CategoryId = productViewModel.Category,
 				BrandId = productViewModel.Category,
+				IsFeatured = productViewModel.IsFeatured,
 			};
 
 			_context.Add(product);
@@ -1094,7 +1100,8 @@ namespace ShoeShop.Data.Seeder
 		public int Category { get; set; }
 		public int Label { get; set; } = 0;
 		public int Brand { get; set; }
-		public List<VariantViewModel> Variants { get; set; }
+        public bool IsFeatured { get; set; } = false;
+        public List<VariantViewModel> Variants { get; set; }
 
 	}
 
