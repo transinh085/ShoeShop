@@ -134,7 +134,7 @@
   function getCustomerList(response) {
     customers = response;
     let htmlCus = ``;
-    customers.forEach((item, index) => {
+      customers.forEach((item, index) => {
       index++;
       let st = item.status
         ? '<span class="badge bg-success">Enable</span>'
