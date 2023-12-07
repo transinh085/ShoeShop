@@ -1,6 +1,7 @@
 ﻿const renderCartTable = () => {
 	let html = '';
 	if (cartData.length > 0) {
+		console.log('cartData', cartData);
 		cartData.forEach(item => {
 			html += `<tr>
 					<td>
@@ -41,7 +42,17 @@
 $(document).on('click', '.button_inc', function () {
 	var iEl = $(this).parent().find("input");
 	const variantSizeId = $(iEl).data('id');
-	handleChangeQuantity(variantSizeId, parseInt(iEl.val()));
+	const variantSizeQuantity = $(iEl).val();
+	let varientS = cartData.find((vS) => vS.variantSizeId == variantSizeId);
+	if (variantSizeQuantity > varientS.stock) {
+		Swal.fire({
+			icon: "error",
+			title: "Oops...",
+			text: "The product does not have enough inventory"
+		});
+	} else {
+		handleChangeQuantity(variantSizeId, parseInt(iEl.val()));
+	}
 	renderCartTable();
 });
 
