@@ -45,6 +45,12 @@ $(document).on('click', '.button_inc', function () {
 	renderCartTable();
 });
 
+$(document).on('change', '#quantity_1', function () {
+	const variantSizeId = $(this).data('id');
+	handleChangeQuantity(variantSizeId, parseInt($(this).val()));
+	renderCartTable();
+});
+
 
 $(document).on('click', '.delete-cart-tbl', async function () {
 	let result = await Swal.fire({
