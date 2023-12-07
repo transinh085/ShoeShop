@@ -167,24 +167,29 @@
             // Function để render lại địa chỉ
             function renderAddress(addresses) {
                 let addressItemHtml = '';
-                addresses.forEach(address => {
-                    addressItemHtml += `
-                            <div class="col-12">
-                                <div class="address-item alert alert-success d-flex justify-content-between" data-id="${address.id}">
-                                    <div>
-                                        <p class="fw-bold mb-0">${address.fullName} <span class="badge rounded-pill bg-success ms-2">${address.isDefault ? 'Default' : ''}</span></p>
-                                        <p class="mb-0">Address: ${address.specificAddress}</p>
-                                        <p class="mb-0">Phone: ${address.phone}</p>
-                                        <p class="mb-0">Email: ${address.email}</p>
+                if (addresses && addresses.length > 0) {
+                    addresses.forEach(address => {
+                        addressItemHtml += `
+                                    <div class="col-12">
+                                        <div class="address-item alert alert-success d-flex justify-content-between" data-id="${address.id}">
+                                            <div>
+                                                <p class="fw-bold mb-0">${address.fullName} <span class="badge rounded-pill bg-success ms-2">${address.isDefault ? 'Default' : ''}</span></p>
+                                                <p class="mb-0">Address: ${address.specificAddress}</p>
+                                                <p class="mb-0">Phone: ${address.phone}</p>
+                                                <p class="mb-0">Email: ${address.email}</p>
+                                            </div>
+                                            <div>
+                                                <button class="btn btn-success btn-sm btn-edit">Edit</button>
+                                                <button class="btn btn-danger btn-sm btn-delete">Delete</button>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <button class="btn btn-success btn-sm btn-edit">Edit</button>
-                                        <button class="btn btn-danger btn-sm btn-delete">Delete</button>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                })
+                                `;
+                    })
+                } else {
+                    addressItemHtml = '<p class="text-center d-flex flex-column gap-2"><i class="fa-regular fa-address-book fs-1"></i><span>No addresses added yet</span></p>';
+                }
+                
                 $('#list-address').html(addressItemHtml);
             }
 
@@ -213,6 +218,7 @@
                     },
                     phone: {
                         required: true,
+                        number: true
                     },
                     address: {
                         required: true

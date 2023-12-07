@@ -83,7 +83,7 @@ $('input[name="checkout-delivery"]').change(function () {
 	renderPrice();
 });
 
-$("#btn-complete").on('click', function (e) {
+$("#btn-complete").on('click', async function (e) {
 	const paymentMethod = $('input[name="checkout-payment"]:checked').val();
 	const AddressId = $('#choose-address').val();
 
@@ -102,25 +102,34 @@ $("#btn-complete").on('click', function (e) {
 	}
 
 	if (AddressId != -1 || (AddressId == -1 && $(".add-new-address-form").valid())) {
-		$.ajax({
-			url: '/payment/CreatePaymentUrl',
-			type: 'POST',
-			contentType: 'application/json',
-			data: JSON.stringify(checkoutData),
-			beforeSend: function () {
-				Dashmix.helpers('jq-notify', { type: 'info', icon: 'fa fa-spinner fa-spin me-1', align: 'center', message: 'Order is being processed !' });
-			},
-			success: function (response) {
-				location.href = response;
-				localStorage.setItem('cart', JSON.stringify([]));
-			},
-			error: function (error) {
-				console.error('Error:', error);
-			}
+		let result = await Swal.fire({
+			title: "Are you sure?",
+			text: "Are you sure you want to purchase?",
+			icon: "warning",
+			showCancelButton: true,
+			confirmButtonText: "Yes, I'm sure!",
+			cancelButtonText: "Cancel"
 		});
-	}
 
-	
+		if (result.value) {
+			$.ajax({
+				url: '/payment/CreatePaymentUrl',
+				type: 'POST',
+				contentType: 'application/json',
+				data: JSON.stringify(checkoutData),
+				beforeSend: function () {
+					Dashmix.helpers('jq-notify', { type: 'info', icon: 'fa fa-spinner fa-spin me-1', align: 'center', message: 'Order is being processed !' });
+				},
+				success: function (response) {
+					location.href = response;
+					localStorage.setItem('cart', JSON.stringify([]));
+				},
+				error: function (error) {
+					console.error('Error:', error);
+				}
+			});
+		}
+	}
 });
 
 const checkChooseAddress = () => {
@@ -148,7 +157,8 @@ jQuery(".add-new-address-form").validate({
 			email: !0
 		},
 		"checkout-phone": {
-			required: !0
+			required: !0,
+			number: !0
 		},
 		"checkout-address": {
 			required: !0,
