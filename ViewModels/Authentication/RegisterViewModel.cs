@@ -4,8 +4,13 @@ namespace ShoeShop.ViewModels.Authentication
 {
 	public class RegisterViewModel
 	{
+
 		[Display(Name = "Full name")]
 		[Required(ErrorMessage = "Full name address is required")]
+		public string FullName { get; set; }
+
+		[Display(Name = "User name")]
+		[Required(ErrorMessage = "User name address is required")]
 		public string UserName { get; set; }
 
 		[Display(Name = "Email address")]

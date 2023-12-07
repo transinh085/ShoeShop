@@ -18,10 +18,21 @@
 			<div class="col-xl-6 col-lg-6 col-md-8">
 				<div class="box_account">
 					<h3 class="new_client">New Client</h3> <small class="float-right pt-2">* Required Fields</small>
+					@if (TempData["Error"] != null)
+					{
+						<div class="col-md-12 alert alert-danger mt-3">
+							<span><b>Sorry!</b> - @TempData["Error"]</span>
+						</div>
+					}
 					<form class="form_container" asp-action="Register">
 						<div class="form-group">
+							<label asp-for="FullName" class="form-label"></label>
+							<input asp-for="FullName" class="form-control mb-1" placeholder="Alex hgbaodev">
+							<span asp-validation-for="FullName" class="d-block text-danger mt-1"></span>
+						</div>
+						<div class="form-group">
 							<label asp-for="UserName" class="form-label"></label>
-							<input asp-for="UserName" class="form-control mb-1" placeholder="Alex hgbaodev">
+							<input asp-for="UserName" class="form-control mb-1" placeholder="hgbaodev">
 							<span asp-validation-for="UserName" class="d-block text-danger mt-1"></span>
 						</div>
 						<div class="form-group">
