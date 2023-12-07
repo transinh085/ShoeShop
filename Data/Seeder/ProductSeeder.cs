@@ -632,8 +632,392 @@ namespace ShoeShop.Data.Seeder
                 Create(context, producth3);
                 Create(context, producth4);
                 Create(context, producth5);
-            }
-        }
+				//Product_An_1
+				ProductSeedViewModel product_an1 = new ProductSeedViewModel
+				{
+					Name = "Giày Thể Thao Nam Biti’s Hunter X Liteflex 2.0 - Midnight 2K23 HSM004401",
+					Slug = "hsm004401",
+					Description = "Giày Thể Thao Nam Biti’s Hunter X Lite Flex 2.0 - Midnight 2K23 HSM004401 trong bộ sưu tập BITI'S HUNTER STREET MIDNIGHT 2K23" +
+								" được rất nhiều người tiêu dùng Việt mê mẩn ngay từ lần đầu tiên. Bởi, không chỉ có màu sắc đẹp mắt, sản phẩm còn có chất lượng cao cấp và giá thành phải chăng. ",
+					Price = 150,
+					PriceSale = 120,
+					Label = 1,
+					Category = 2,
+					Brand = 3,
+					Status = true,
+					Variants = new List<VariantViewModel>
+				{
+					new VariantViewModel
+					{
+						ColorId = 2,
+						Images = new List<string>
+						{
+							"hsm004401den1.png",
+							"hsm004401den2.jpg",
+							"hsm004401den3.webp",
+							"hsm004401den4.jpg",
+							"hsm004401den5.jpg",
+						},
+						Thumbnail = 1,
+						Sizes = new List<SizeViewModel>
+						{
+							new SizeViewModel
+							{
+								SizeId = 1,
+								Active = true,
+								Stock = 10
+							},
+							new SizeViewModel
+							{
+								SizeId = 2,
+								Active = true,
+								Stock = 10
+							},
+							new SizeViewModel
+							{
+								SizeId = 3,
+								Active = true,
+								Stock = 10
+							},
+						},
+
+					},
+
+				}
+				};
+
+
+				//Product_An_2
+				ProductSeedViewModel product_an2 = new ProductSeedViewModel
+				{
+					Name = "Giày Thể Thao Nam Biti's Hunter Street HSM004700",
+					Slug = "hsm004700",
+					Description = "Giày Thể Thao Nam Biti's Hunter Street HSM004700 là một trong những sản phẩm dành riêng cho phái mạnh được đông đảo khách hàng Việt Nam yêu thích. " +
+								"Không chỉ bởi thiết kế đẹp mắt và thời trang, đôi giày để lại ấn tượng khác biệt vì chất lượng, màu sắc và giá thành.",
+					Price = 130,
+					PriceSale = 99,
+					Label = 1,
+					Category = 1,
+					Brand = 3,
+					Status = true,
+					Variants = new List<VariantViewModel>
+				{
+					new VariantViewModel
+					{
+						ColorId = 8,
+						Images = new List<string>
+						{
+							"hsm004700nau1.webp",
+							"hsm004700nau2.webp",
+							"hsm004700nau3.webp",
+							"hsm004700nau4.webp",
+							"hsm004700nau5.jpg",
+							"hsm004700nau6.webp",
+						},
+						Thumbnail = 1,
+						Sizes = new List<SizeViewModel>
+						{
+							new SizeViewModel
+							{
+								SizeId = 1,
+								Active = true,
+								Stock = 10
+							},
+							new SizeViewModel
+							{
+								SizeId = 2,
+								Active = true,
+								Stock = 10
+							},
+							new SizeViewModel
+							{
+								SizeId = 3,
+								Active = true,
+								Stock = 10
+							},
+						},
+					},
+					new VariantViewModel
+					{
+						ColorId = 4,
+						Images = new List<string>
+						{
+							"hsm004700xnh1.webp",
+							"hsm004700xnh2.webp",
+							"hsm004700xnh3.webp",
+							"hsm004700xnh4.webp",
+							"hsm004700xnh5.jpg",
+							"hsm004700xnh6.webp",
+						},
+						Thumbnail = 1,
+						Sizes = new List<SizeViewModel>
+						{
+							new SizeViewModel
+							{
+								SizeId = 1,
+								Active = true,
+								Stock = 10
+							},
+							new SizeViewModel
+							{
+								SizeId = 2,
+								Active = true,
+								Stock = 10
+							},
+							new SizeViewModel
+							{
+								SizeId = 3,
+								Active = true,
+								Stock = 10
+							},
+						},
+
+					},
+
+				}
+				};
+
+				//Product_An_3
+				ProductSeedViewModel product_an3 = new ProductSeedViewModel
+				{
+					Name = "Giày Thể Thao Cao Cấp Nam Biti's Hunter Layered Upper DSMH02800",
+					Slug = "dsmh02800",
+					Description = "Để luyện tập thể thao tốt thì chúng ta cần phải tìm được đôi giày đơn giản và phù hợp với mình. Giày thể thao cao cấp nam Biti's Hunter Layered Upper DSMH02800 là một trong mẫu giày nổi tiếng về cá tính và được sản xuất trên công nghệ hiện đại bậc nhất. " +
+					"Giày được thiết kế giúp hạn chế tối đa thương thích và đảm bảo sự cân bằng, độ bền bỉ khi di chuyển.",
+					Price = 150,
+					PriceSale = 120,
+					Label = 1,
+					Category = 2,
+					Brand = 3,
+					Status = true,
+					Variants = new List<VariantViewModel>
+				{
+					new VariantViewModel
+					{
+						ColorId = 2,
+						Images = new List<string>
+						{
+							"dsmh02800den1.webp",
+							"dsmh02800den2.webp",
+							"dsmh02800den3.webp",
+							"dsmh02800den4.webp",
+							"dsmh02800den5.webp",
+							"dsmh02800den6.webp",
+						},
+						Thumbnail = 0,
+						Sizes = new List<SizeViewModel>
+						{
+							new SizeViewModel
+							{
+								SizeId = 1,
+								Active = true,
+								Stock = 10
+							},
+							new SizeViewModel
+							{
+								SizeId = 2,
+								Active = true,
+								Stock = 10
+							},
+							new SizeViewModel
+							{
+								SizeId = 3,
+								Active = true,
+								Stock = 10
+							},
+						},
+					},
+					new VariantViewModel
+					{
+						ColorId = 1,
+						Images = new List<string>
+						{
+							"dsmh02800trang1.webp",
+							"dsmh02800trang2.webp",
+							"dsmh02800trang3.webp",
+							"dsmh02800trang4.webp",
+							"dsmh02800trang5.webp",
+							"dsmh02800trang6.webp",
+						},
+						Thumbnail = 1,
+						Sizes = new List<SizeViewModel>
+						{
+							new SizeViewModel
+							{
+								SizeId = 1,
+								Active = true,
+								Stock = 10
+							},
+							new SizeViewModel
+							{
+								SizeId = 2,
+								Active = true,
+								Stock = 10
+							},
+							new SizeViewModel
+							{
+								SizeId = 3,
+								Active = true,
+								Stock = 10
+							},
+						},
+
+					},
+
+				}
+				};
+				//Product_An_4
+				ProductSeedViewModel product_an4 = new ProductSeedViewModel
+				{
+					Name = "Giày Thể Thao Nam Biti's Hunter Street Z Collection DSMH06200",
+					Slug = "dsmh06200",
+					Description = "Một đôi giày thể thao chất lượng là một “người bạn đồng hành” không thể thiếu của những dân chơi thể thao chuyên nghiệp. " +
+					"Theo đó, nếu chưa biết lựa chọn mẫu giày nào phù hợp, bạn hãy cân nhắc sản phẩm “quốc dân” " +
+					"vừa được Biti’s trình làng: Giày Thể Thao Nam Biti's Hunter Street Z Collection DSMH06200. Cùng tìm hiểu chi tiết nhé!",
+					Price = 100,
+					PriceSale = 80,
+					Label = 1,
+					Category = 1,
+					Brand = 3,
+					Status = true,
+					Variants = new List<VariantViewModel>
+				{
+					new VariantViewModel
+					{
+						ColorId = 1,
+						Images = new List<string>
+						{
+							"dsmh02600_1.webp",
+							"dsmh02600_2.webp",
+							"dsmh02600_3.webp",
+							"dsmh02600_4.webp",
+							"dsmh02600_5.webp",
+							"dsmh02600_6.webp",
+						},
+						Thumbnail = 1,
+						Sizes = new List<SizeViewModel>
+						{
+							new SizeViewModel
+							{
+								SizeId = 1,
+								Active = true,
+								Stock = 10
+							},
+							new SizeViewModel
+							{
+								SizeId = 2,
+								Active = true,
+								Stock = 10
+							},
+							new SizeViewModel
+							{
+								SizeId = 3,
+								Active = true,
+								Stock = 10
+							},
+						},
+					},
+				}
+				};
+				//Product_An_5
+				ProductSeedViewModel product_an5 = new ProductSeedViewModel
+				{
+					Name = "GIÀY PUREBOOST 23",
+					Slug = "pureboost23",
+					Description = "Vui vẻ chinh phục cự ly mỗi ngày với đôi giày chạy bộ adidas Pureboost 23. Đế BOOST toàn phần cho khả năng hoàn trả năng lượng tối ưu, " +
+					"cùng các đường khoét bố trí hợp lý dọc đế ngoài bằng cao su cho phép mút foam nén chặt và giãn nở khi chạy bộ. " +
+					"Thân giày bằng vải lưới kỹ thuật siêu nhẹ, thoáng khí ở các vùng bàn chân tăng nhiệt và nâng đỡ ở những vị trí cần thiết, " +
+					"mang lại trải nghiệm chạy bộ thoải mái cho cả bàn chân.",
+					Price = 170,
+					PriceSale = 150,
+					Label = 1,
+					Category = 3,
+					Brand = 1,
+					Status = true,
+					Variants = new List<VariantViewModel>
+				{
+					new VariantViewModel
+					{
+						ColorId = 5,
+						Images = new List<string>
+						{
+							"pureboost_xanh_1.webp",
+							"pureboost_xanh_2.webp",
+							"pureboost_xanh_3.webp",
+							"pureboost_xanh_4.jpg",
+							"pureboost_xanh_5.webp",
+							"pureboost_xanh_6.webp",
+						},
+						Thumbnail = 0,
+						Sizes = new List<SizeViewModel>
+						{
+							new SizeViewModel
+							{
+								SizeId = 3,
+								Active = true,
+								Stock = 10
+							},
+							new SizeViewModel
+							{
+								SizeId = 4,
+								Active = true,
+								Stock = 10
+							},
+							new SizeViewModel
+							{
+								SizeId = 5,
+								Active = true,
+								Stock = 10
+							},
+						},
+					},
+					new VariantViewModel
+					{
+						ColorId = 1,
+						Images = new List<string>
+						{
+							"pureboost_t_1.webp",
+							"pureboost_t_2.webp",
+							"pureboost_t_3.webp",
+							"pureboost_t_4.webp",
+							"pureboost_t_5.webp",
+
+						},
+						Thumbnail = 1,
+						Sizes = new List<SizeViewModel>
+						{
+							new SizeViewModel
+							{
+								SizeId = 3,
+								Active = true,
+								Stock = 10
+							},
+							new SizeViewModel
+							{
+								SizeId = 4,
+								Active = true,
+								Stock = 10
+							},
+							new SizeViewModel
+							{
+								SizeId = 5,
+								Active = true,
+								Stock = 10
+							},
+						},
+
+					},
+
+				}
+				};
+				Create(context, product_an1);
+				Create(context, product_an2);
+				Create(context, product_an3);
+				Create(context, product_an4);
+				Create(context, product_an5);
+
+			}
+		}
         
 
         public void Create(AppDbContext _context, ProductSeedViewModel productViewModel)
