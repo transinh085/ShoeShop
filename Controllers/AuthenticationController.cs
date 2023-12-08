@@ -100,6 +100,11 @@ namespace ShoeShop.Controllers
 				UserName = registerViewModel.UserName,
 				Email = registerViewModel.EmailAddress,
 			};
+			if (newUser == null)
+			{
+				TempData["Error"] = "Create account errors";
+				return View(registerViewModel);
+			}
 			var newUserResponse = await _userManager.CreateAsync(newUser, registerViewModel.Password);
 			if (newUserResponse.Succeeded)
 				await _userManager.AddToRoleAsync(newUser, UserRoles.Customer);

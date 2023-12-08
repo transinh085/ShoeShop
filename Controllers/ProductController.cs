@@ -245,6 +245,7 @@ namespace ShoeShop.Controllers
 						Title = v.Variant.Product.Name,
 						Price = v.Variant.Product.Price,
 						PriceSale = v.Variant.Product.PriceSale,
+						Stock = v.Quantity
 					})
 					.ToListAsync();
 			return Ok(variantSize);
