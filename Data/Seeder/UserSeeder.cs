@@ -51,7 +51,7 @@ namespace ShoeShop.Data.Seeder
                     await userManager.AddToRoleAsync(newAdminUser, UserRoles.Admin);
                 }
 
-                var appUser = await userManager.FindByEmailAsync("hgbao2k3@gmail.com");
+                var appUser = await userManager.FindByEmailAsync("musicanime2501@gmail.com");
                 if (appUser == null)
                 {
 					var address = new List<Address>
@@ -60,15 +60,15 @@ namespace ShoeShop.Data.Seeder
 						{
 							FullName = "Nguyen Van A",
 							Phone = "0387913347",
-							Email = "transinh085@gmail.com",
-							SpecificAddress = "205 Tran Hung Dao B, Phuong 10, Quan 5",
+							Email = "hgba@gmail.com",
+							SpecificAddress = "Tan Binh",
 							IsDefault = true
 						},
 						new Address
 						{
 							FullName = "Nguyen Van B",
 							Phone = "0369765342",
-							Email = "transinh342@gmail.com",
+							Email = "hga@gmail.com",
 							SpecificAddress = "An Duc, Hoai An, Binh Dinh"
 						}
 					};
@@ -76,7 +76,7 @@ namespace ShoeShop.Data.Seeder
                     {
                         FullName = "Hoàng Gia Bảo",
                         UserName = "hgbaodev",
-                        Email = "hgbaodev@gmail.com",
+                        Email = "musicanime2501@gmail.com",
                         EmailConfirmed = true,
                         PhoneNumber = "0123456789",
                         ProfileImageUrl = "https://avatars.githubusercontent.com/u/120194990?v=4",
@@ -85,7 +85,7 @@ namespace ShoeShop.Data.Seeder
                         BirthDay = DateTime.Now,
 						Addresses = address,
 					};
-                    await userManager.CreateAsync(newAppUser, "123456Aa@");
+                    await userManager.CreateAsync(newAppUser, "Coding@1234?");
                     await userManager.AddToRoleAsync(newAppUser, UserRoles.Admin);
                 }
 
